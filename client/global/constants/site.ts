@@ -14,6 +14,10 @@ export const INVESTORS_URL = process.env.NEXT_PUBLIC_INVESTORS_URL || "";
 // (see next.config.ts); until then the project card opens its own deployment.
 export const NATHIAGALI_URL = process.env.NEXT_PUBLIC_NATHIAGALI_URL || "https://serene-nathiagali.vercel.app/";
 
+// The Serene Heights Lahore site, served at /serene-heights-lahore when LAHORE_ORIGIN is set; until then the
+// project card opens its own deployment.
+export const LAHORE_URL = process.env.NEXT_PUBLIC_LAHORE_URL || "https://serene-heights-lahore-five.vercel.app/";
+
 export const site = {
   name: "Serene Heights Group",
   short: "Serene Heights",
@@ -105,7 +109,7 @@ export const projects: Project[] = [
     since: "LDA approved",
     kind: "Mixed-use tower",
     image: "/media/lhr/tower.jpg",
-    url: "https://serene-heights-lahore-five.vercel.app/",
+    url: LAHORE_URL,
     email: "info@sereneheightslahore.com",
     phone: "0304-1111106",
     summary:

@@ -108,6 +108,7 @@ const rel = (f) => relative(ROOT, f).replaceAll("\\", "/");
     { name: "Booking", constant: "BOOKING_PATH", repo: "../../Serene Booking/client/next.config.mjs" },
     { name: "Investors", constant: "INVESTORS_PATH", repo: "../../stake-clone/next.config.mjs" },
     { name: "Nathia Gali", constant: "NATHIAGALI_PATH", repo: "../../serene nathiagali/vite.config.ts" },
+    { name: "Lahore", constant: "LAHORE_PATH", repo: "../../serene heights lahore/next.config.ts" },
   ];
   for (const z of zones) {
     const path = (cfg.match(new RegExp(`${z.constant} = "([^"]+)"`)) || [])[1];
