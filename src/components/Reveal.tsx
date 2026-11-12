@@ -5,13 +5,12 @@ import dynamic from "next/dynamic";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { Emblem } from "./Emblem";
 import { useInView } from "./useInView";
 import { site } from "@/lib/site";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Bloom = dynamic(() => import("./three/Bloom"), { ssr: false });
+const Galiyat = dynamic(() => import("./three/Galiyat"), { ssr: false });
 
 const STATS = [
   { n: 2017, label: "DM Consortium founded", pad: "" },
@@ -61,8 +60,7 @@ export function Reveal() {
           ease: "power3.in",
           onUpdate: () => dark.style.setProperty("--mask", `${proxy.m}vmax`),
         })
-          .from(".reveal__mark", { scale: 2.6, duration: 0.8, ease: "power2.out" }, 0)
-          .from(".reveal__label, .reveal__copy > *", { autoAlpha: 0, y: 24, stagger: 0.08, duration: 0.4 }, 0.85)
+          .from(".reveal__label, .reveal__caption, .reveal__copy > *", { autoAlpha: 0, y: 24, stagger: 0.08, duration: 0.4 }, 0.85)
           .from(".stat", { autoAlpha: 0, y: 24, stagger: 0.08, duration: 0.4 }, 0.95);
 
         el.querySelectorAll<HTMLElement>(".stat b").forEach((b) => {
@@ -100,10 +98,10 @@ export function Reveal() {
         <div className="reveal__dark">
           <div className="reveal__glow" />
           <div className="reveal__canvas" aria-hidden>
-            <Bloom progress={progress} active={active} />
+            <Galiyat progress={progress} active={active} />
           </div>
-          <Emblem className="reveal__mark" />
           <span className="reveal__label eyebrow">About the group</span>
+          <span className="reveal__caption">Real elevation of the Galiyat · 18 km across · contours every 100 m</span>
 
           <div className="reveal__copy">
             <h2 id="about-title" className="sr-only">

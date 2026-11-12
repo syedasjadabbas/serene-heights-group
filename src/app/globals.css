@@ -3,25 +3,25 @@
 /* ───────────────────────── Tokens ───────────────────────── */
 :root {
   --paper: #ffffff;
-  --frame: #f4f4f6;
-  --ink: #0a0b10;
-  --ink-2: #2a2c35;
-  --muted: #6b6e7b;
-  --line: #e6e6ec;
+  --frame: #f4f6f4;
+  --ink: #0f1f1b;
+  --ink-2: #2b3a35;
+  --muted: #66756f;
+  --line: #e3e8e5;
 
-  --night: #05060a;
-  --night-2: #0c0d14;
-  --on-night: #f5f5f7;
-  --on-night-muted: rgba(245, 245, 247, 0.56);
+  --night: #0f241e;
+  --night-2: #16302a;
+  --on-night: #f4f7f5;
+  --on-night-muted: rgba(244, 247, 245, 0.62);
   --line-night: rgba(255, 255, 255, 0.1);
 
-  /* Alpine dusk — the sky over the Galiyat after sunset */
-  --dusk-0: #070a2a;
-  --dusk-1: #141a6b;
-  --dusk-2: #3b2fd0;
-  --dusk-3: #7a5cff;
-  --glow: #f4b6ec;
-  --lavender: #a8a3ff;
+  /* Serene green — the pines and snow of the Galiyat (from the Nathia Gali brand) */
+  --dusk-0: #0b1d18;
+  --dusk-1: #18332a;
+  --dusk-2: #37584f;
+  --dusk-3: #5d8576;
+  --glow: #dfece4;
+  --lavender: #a9c7b8;
   --gold: #c8a46a;
 
   --radius: 22px;
@@ -143,7 +143,7 @@ button {
   color: var(--ink);
 }
 .btn--white:hover {
-  background: #ececf2;
+  background: #eaefec;
 }
 .btn--ghost {
   background: rgba(255, 255, 255, 0.1);
@@ -159,7 +159,7 @@ button {
   color: #fff;
 }
 .btn--ink:hover {
-  background: #23252f;
+  background: #1f332d;
 }
 .btn--line {
   border-color: var(--line);
@@ -167,7 +167,7 @@ button {
   background: #fff;
 }
 .btn--line:hover {
-  border-color: #c9c9d3;
+  border-color: #c7d1cc;
 }
 .btn .arr {
   transition: transform 0.35s var(--ease);
@@ -223,8 +223,8 @@ button {
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(14px) saturate(1.4);
-  border: 1px solid rgba(10, 11, 16, 0.08);
-  box-shadow: 0 8px 30px -12px rgba(10, 11, 16, 0.35);
+  border: 1px solid rgba(15, 31, 27, 0.08);
+  box-shadow: 0 8px 30px -12px rgba(15, 31, 27, 0.35);
   font-size: 13px;
   color: var(--ink);
 }
@@ -234,7 +234,7 @@ button {
   width: 32px;
   height: 32px;
   border-radius: 7px;
-  background: #ededf2;
+  background: #ecf1ee;
   color: var(--ink);
 }
 .nav__link {
@@ -245,7 +245,7 @@ button {
   transition: background 0.25s, color 0.25s;
 }
 .nav__link:hover {
-  background: #f0f0f4;
+  background: #eff3f1;
   color: var(--ink);
 }
 .nav__link[aria-current="true"] {
@@ -294,7 +294,7 @@ button {
   color: var(--ink);
 }
 .nav__sheet a:hover {
-  background: #f2f2f6;
+  background: #f1f5f2;
 }
 @media (max-width: 760px) {
   .nav {
@@ -352,13 +352,13 @@ button {
   overflow: hidden;
   color: #fff;
   background:
-    radial-gradient(60% 55% at 62% 110%, var(--glow) 0%, rgba(244, 182, 236, 0) 60%),
-    radial-gradient(70% 70% at 85% 70%, var(--dusk-3) 0%, rgba(122, 92, 255, 0) 65%),
-    radial-gradient(90% 90% at 20% 30%, var(--dusk-1) 0%, rgba(20, 26, 107, 0) 70%),
+    radial-gradient(60% 55% at 62% 110%, var(--glow) 0%, rgba(223, 236, 228, 0) 60%),
+    radial-gradient(70% 70% at 85% 70%, var(--dusk-3) 0%, rgba(93, 133, 118, 0) 65%),
+    radial-gradient(90% 90% at 20% 30%, var(--dusk-1) 0%, rgba(24, 51, 42, 0) 70%),
     linear-gradient(180deg, var(--dusk-0) 0%, var(--dusk-1) 55%, var(--dusk-2) 100%);
   transform-origin: 50% 60%;
   will-change: transform;
-  box-shadow: 0 60px 120px -40px rgba(20, 26, 107, 0.55);
+  box-shadow: 0 60px 120px -40px rgba(24, 51, 42, 0.55);
 }
 .hero__grain {
   position: absolute;
@@ -394,7 +394,7 @@ button {
   border-radius: 16px;
   overflow: hidden;
   z-index: 2;
-  box-shadow: 0 40px 80px -20px rgba(4, 6, 30, 0.7);
+  box-shadow: 0 40px 80px -20px rgba(4, 16, 12, 0.7);
 }
 .hero__media img {
   width: 100%;
@@ -523,7 +523,7 @@ button {
   border-radius: 1em;
   border: 2px solid var(--ink);
 }
-.ring {
+.orbit {
   position: relative;
   width: clamp(220px, 19vw, 300px);
   aspect-ratio: 3 / 4.2;
@@ -545,7 +545,7 @@ button {
   backface-visibility: hidden;
   color: #fff;
   background: var(--dusk-1);
-  box-shadow: 0 30px 60px -25px rgba(10, 11, 40, 0.55);
+  box-shadow: 0 30px 60px -25px rgba(10, 26, 21, 0.55);
 }
 .ring__card img {
   position: absolute;
@@ -558,7 +558,7 @@ button {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(7, 10, 42, 0.15) 30%, rgba(7, 10, 42, 0.85) 100%);
+  background: linear-gradient(180deg, rgba(10, 26, 21, 0.15) 30%, rgba(10, 26, 21, 0.85) 100%);
 }
 .ring__card .tag {
   position: absolute;
@@ -660,7 +660,7 @@ button {
   top: -20%;
   width: 55%;
   height: 50%;
-  background: radial-gradient(closest-side, rgba(122, 92, 255, 0.55), rgba(122, 92, 255, 0));
+  background: radial-gradient(closest-side, rgba(93, 133, 118, 0.55), rgba(93, 133, 118, 0));
   filter: blur(30px);
   pointer-events: none;
 }
@@ -675,7 +675,7 @@ button {
   width: clamp(34px, 3.4vw, 52px);
   translate: -50% -50%;
   color: #fff;
-  filter: drop-shadow(0 0 24px rgba(168, 163, 255, 0.9));
+  filter: drop-shadow(0 0 24px rgba(169, 199, 184, 0.9));
 }
 .reveal__label {
   position: absolute;
@@ -825,8 +825,8 @@ button {
   inset: 0;
   z-index: 0;
   background:
-    linear-gradient(180deg, rgba(5, 6, 10, 0.55) 0%, rgba(5, 6, 10, 0) 26%),
-    linear-gradient(0deg, rgba(5, 6, 10, 0.88) 0%, rgba(5, 6, 10, 0) 55%);
+    linear-gradient(180deg, rgba(15, 36, 30, 0.55) 0%, rgba(15, 36, 30, 0) 26%),
+    linear-gradient(0deg, rgba(15, 36, 30, 0.88) 0%, rgba(15, 36, 30, 0) 55%);
 }
 .pcard__meta {
   position: absolute;
@@ -1074,7 +1074,7 @@ button {
   transition: border-color 0.3s, background 0.3s, transform 0.4s var(--ease);
 }
 .room:hover {
-  border-color: rgba(168, 163, 255, 0.5);
+  border-color: rgba(169, 199, 184, 0.5);
   transform: translateY(-3px);
 }
 .room b {
@@ -1134,7 +1134,7 @@ button {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(20, 26, 107, 0.15), rgba(5, 6, 10, 0.75));
+  background: linear-gradient(180deg, rgba(24, 51, 42, 0.15), rgba(15, 36, 30, 0.75));
 }
 .teaser__num {
   position: absolute;
@@ -1185,7 +1185,7 @@ button {
   padding: 22px;
 }
 .teaser--cta::after {
-  background: radial-gradient(80% 60% at 70% 100%, rgba(244, 182, 236, 0.55), rgba(244, 182, 236, 0));
+  background: radial-gradient(80% 60% at 70% 100%, rgba(223, 236, 228, 0.55), rgba(223, 236, 228, 0));
   z-index: -1;
 }
 .teaser--cta h3 {
@@ -1222,7 +1222,7 @@ button {
   color: var(--muted);
 }
 .light .display .soft {
-  color: #9b97c9;
+  color: #8fb0a2;
 }
 
 /* Investors */
@@ -1243,8 +1243,8 @@ button {
   color: #fff;
   overflow: hidden;
   background:
-    radial-gradient(60% 50% at 80% 110%, rgba(244, 182, 236, 0.75), rgba(244, 182, 236, 0) 70%),
-    radial-gradient(70% 60% at 100% 40%, rgba(122, 92, 255, 0.9), rgba(122, 92, 255, 0) 70%),
+    radial-gradient(60% 50% at 80% 110%, rgba(223, 236, 228, 0.75), rgba(223, 236, 228, 0) 70%),
+    radial-gradient(70% 60% at 100% 40%, rgba(93, 133, 118, 0.9), rgba(93, 133, 118, 0) 70%),
     linear-gradient(170deg, var(--dusk-0), var(--dusk-1) 60%, var(--dusk-2));
 }
 .calc h3 {
@@ -1332,7 +1332,7 @@ button {
 }
 .calc__out div {
   padding: 14px;
-  background: rgba(7, 10, 42, 0.55);
+  background: rgba(10, 26, 21, 0.55);
 }
 .calc__out dt {
   font-size: 11px;
@@ -1422,8 +1422,8 @@ button {
   display: flex;
   align-items: center;
   background:
-    radial-gradient(55% 55% at 30% 105%, var(--glow) 0%, rgba(244, 182, 236, 0) 70%),
-    radial-gradient(60% 70% at 60% 60%, var(--dusk-3) 0%, rgba(122, 92, 255, 0) 70%),
+    radial-gradient(55% 55% at 30% 105%, var(--glow) 0%, rgba(223, 236, 228, 0) 70%),
+    radial-gradient(60% 70% at 60% 60%, var(--dusk-3) 0%, rgba(93, 133, 118, 0) 70%),
     linear-gradient(180deg, var(--dusk-0) 0%, var(--dusk-1) 55%, var(--dusk-2) 100%);
 }
 .finale__canvas {
@@ -1508,7 +1508,7 @@ button {
   font-weight: 600;
   letter-spacing: -0.06em;
   line-height: 0.8;
-  background: linear-gradient(180deg, var(--ink) 30%, #c9c9d6);
+  background: linear-gradient(180deg, var(--ink) 30%, #c3d2ca);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1569,7 +1569,7 @@ button {
   position: absolute;
   inset: -90px -140px;
   z-index: -1;
-  background: radial-gradient(closest-side, rgba(5, 6, 10, 0.92), rgba(5, 6, 10, 0.6) 60%, rgba(5, 6, 10, 0));
+  background: radial-gradient(closest-side, rgba(15, 36, 30, 0.92), rgba(15, 36, 30, 0.6) 60%, rgba(15, 36, 30, 0));
   pointer-events: none;
 }
 
@@ -1586,7 +1586,7 @@ button {
   backface-visibility: hidden;
 }
 @media (max-width: 760px) {
-  .ring {
+  .orbit {
     width: 44vw;
     --rz: 46vw !important;
   }
@@ -1603,5 +1603,82 @@ button {
 @media (max-width: 760px) {
   .stays {
     --k: 2.3;
+  }
+}
+
+/* Galiyat terrain */
+.reveal__caption {
+  position: absolute;
+  top: 78px;
+  right: var(--gutter);
+  font-size: 11px;
+  color: var(--on-night-muted);
+}
+.pin-label {
+  display: grid;
+  gap: 2px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin-top: -14px;
+  z-index: 2;
+  padding: 8px 12px;
+  border-radius: 10px;
+  white-space: nowrap;
+  text-align: center;
+  color: #fff;
+  font-family: var(--font-sans);
+  background: rgba(10, 26, 21, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+}
+.pin-label b {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.pin-label span {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+}
+@media (max-width: 760px) {
+  .reveal__caption {
+    top: 50px;
+    left: 20px;
+    right: auto;
+  }
+}
+
+/* Keep copy legible over the bright snow peaks */
+.reveal__dark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(0deg, var(--night) 4%, rgba(15, 36, 30, 0.75) 22%, rgba(15, 36, 30, 0) 48%),
+    linear-gradient(180deg, rgba(15, 36, 30, 0.7) 0%, rgba(15, 36, 30, 0) 18%);
+}
+.reveal__copy,
+.reveal__stats,
+.reveal__label,
+.reveal__caption {
+  z-index: 2;
+}
+@media (max-width: 760px) {
+  .reveal__canvas {
+    inset: 40px 0 46% 0;
+    -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
+    mask-image: linear-gradient(180deg, #000 70%, transparent);
+  }
+}
+@media (max-width: 760px) {
+  .reveal__caption {
+    display: none;
+  }
+  .reveal__canvas {
+    inset: 96px 0 44% 0;
   }
 }

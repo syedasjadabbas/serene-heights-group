@@ -62,7 +62,7 @@ function Emblem3D() {
         <meshPhysicalMaterial color="#ffffff" metalness={1} roughness={0.12} clearcoat={1} clearcoatRoughness={0.08} />
       </mesh>
       <mesh geometry={ring}>
-        <meshPhysicalMaterial color="#e9e6ff" metalness={1} roughness={0.08} clearcoat={1} />
+        <meshPhysicalMaterial color="#e6f0ea" metalness={1} roughness={0.08} clearcoat={1} />
       </mesh>
     </group>
   );
@@ -78,12 +78,12 @@ export default function ChromeEmblem({ active }: { active: boolean }) {
     >
       <Emblem3D />
       <Environment resolution={256}>
-        <color attach="background" args={["#0b0d3a"]} />
+        <color attach="background" args={["#0f241e"]} />
         <Lightformer form="rect" intensity={3} color="#ffffff" position={[0, 4, -2]} scale={[10, 1.2, 1]} />
         <Lightformer form="rect" intensity={2} color="#ffffff" position={[-4, 0, 2]} rotation-y={Math.PI / 2} scale={[8, 0.8, 1]} />
-        <Lightformer form="rect" intensity={4} color="#8f6bff" position={[4, -1, 1]} rotation-y={-Math.PI / 2} scale={[8, 3, 1]} />
-        <Lightformer form="ring" intensity={3} color="#f4b6ec" position={[0, -3, 3]} scale={3} />
-        <Lightformer form="rect" intensity={1.5} color="#3b2fd0" position={[0, 0, -5]} scale={[12, 12, 1]} />
+        <Lightformer form="rect" intensity={4} color="#7fa797" position={[4, -1, 1]} rotation-y={-Math.PI / 2} scale={[8, 3, 1]} />
+        <Lightformer form="ring" intensity={3} color="#eef5f0" position={[0, -3, 3]} scale={3} />
+        <Lightformer form="rect" intensity={1.5} color="#37584f" position={[0, 0, -5]} scale={[12, 12, 1]} />
       </Environment>
     </Canvas>
   );

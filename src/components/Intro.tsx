@@ -64,6 +64,7 @@ export function Intro() {
       const mm = gsap.matchMedia();
       mm.add("(min-width: 900px) and (prefers-reduced-motion: no-preference)", () => {
         el.dataset.motion = "on";
+        const cards = gsap.utils.toArray<HTMLElement>(".ring__card", el);
         const tl = gsap.timeline({
           defaults: { ease: "none" },
           scrollTrigger: {
@@ -80,8 +81,24 @@ export function Intro() {
           .to(".hero__card", { autoAlpha: 0, scale: 0.28, duration: 0.45 }, 0.85)
           .fromTo(".marquee", { xPercent: 4 }, { xPercent: -46, duration: 3.2 }, 0)
           .fromTo(".marquee", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35 }, 0.25)
-          .fromTo(".ring", { scale: 0.7, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.7, ease: "power2.out" }, 0.75)
-          .fromTo(".ring__spin", { rotateY: 40 }, { rotateY: -320, duration: 2.6 }, 0.6)
+          .fromTo(".orbit", { scale: 0.7, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.7, ease: "power2.out" }, 0.75)
+          .fromTo(
+            ".ring__spin",
+            { rotateY: 40 },
+            {
+              rotateY: -320,
+              duration: 2.6,
+              // Hide cards turned away from the viewer — backface-visibility alone leaves edge seams.
+              onUpdate: () => {
+                const spin = Number(gsap.getProperty(".ring__spin", "rotateY"));
+                cards.forEach((c, i) => {
+                  const facing = Math.cos(((spin + i * 60) * Math.PI) / 180);
+                  c.style.visibility = facing > -0.05 ? "visible" : "hidden";
+                });
+              },
+            },
+            0.6,
+          )
           .fromTo(".showcase__cta", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.4 }, 1.2);
         return () => {
           delete el.dataset.motion;
@@ -166,7 +183,7 @@ export function Intro() {
             )}
           </div>
 
-          <div className="ring" style={{ ["--rz" as string]: "clamp(232px, 20vw, 316px)" }}>
+          <div className="orbit" style={{ ["--rz" as string]: "clamp(232px, 20vw, 316px)" }}>
             <div className="ring__spin">
               {CARDS.map((c, i) => (
                 <div

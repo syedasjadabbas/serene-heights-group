@@ -16,7 +16,7 @@ Scripts call `node node_modules/next/...` directly because the `&` in the folder
 | Anchor | Section | Notes |
 |---|---|---|
 | `#top` | Hero → card ring | Hero card tilts away into a marquee + rotating project cards |
-| `#about` | About the group | Capsule-emblem window opens onto a WebGL particle bloom |
+| `#about` | About the group | Capsule-emblem window opens onto a 3D model of the real Galiyat terrain (`public/data/galiyat-dem.bin`) with the resort marked |
 | `#projects` | Ongoing projects | Horizontal pinned gallery → Nathia Gali, Lahore sites |
 | `#stays` | Serene Booking | Fly-through gallery + availability form → Booking app `/rooms` |
 | `#upcoming` | Upcoming projects | Unnamed teasers + WhatsApp interest |
