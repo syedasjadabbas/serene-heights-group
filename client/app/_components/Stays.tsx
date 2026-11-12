@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { BOOKING_URL, rooms, stayImages } from "@/global/constants/site";
+import { HAS_BOOKING, rooms, stayImages } from "@/global/constants/site";
+import { roomUrl, searchUrl } from "@/global/lib/booking";
+import { BookingForm } from "./BookingForm";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -30,21 +32,8 @@ const SPOTS: { x: number; y: number; w: number; r: number }[] = [
   { x: 44, y: 30, w: 13, r: 1 },
 ];
 
-const iso = (d: Date) => d.toISOString().slice(0, 10);
-
 export function Stays() {
   const root = useRef<HTMLElement>(null);
-  const [dates, setDates] = useState({ min: "", inD: "", outD: "" });
-
-  useEffect(() => {
-    const now = new Date();
-    const a = new Date(now);
-    a.setDate(a.getDate() + 14);
-    const b = new Date(a);
-    b.setDate(b.getDate() + 2);
-    setDates({ min: iso(now), inD: iso(a), outD: iso(b) });
-  }, []);
-
   useGSAP(
     () => {
       const el = root.current!;
@@ -133,31 +122,7 @@ export function Stays() {
             Book a fully furnished hotel apartment at Serene Heights Nathia Gali — heated glass-roof pool, rooftop
             dining, ski slope and trails through the pines, two hours from Islamabad.
           </p>
-          <form className="booker" action={`${BOOKING_URL}/rooms`} method="get" target="_blank">
-            <label>
-              Check in
-              <input type="date" name="checkIn" required min={dates.min} defaultValue={dates.inD} key={`in-${dates.inD}`} />
-            </label>
-            <label>
-              Check out
-              <input type="date" name="checkOut" required min={dates.min} defaultValue={dates.outD} key={`out-${dates.outD}`} />
-            </label>
-            <label>
-              Guests
-              <select name="adults" defaultValue="2">
-                {[1, 2, 3, 4].map((n) => (
-                  <option key={n} value={n}>
-                    {n} adult{n > 1 ? "s" : ""}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <input type="hidden" name="children" value="0" />
-            <input type="hidden" name="rooms" value="1" />
-            <button type="submit" className="btn btn--white">
-              Check availability <span className="arr">→</span>
-            </button>
-          </form>
+          <BookingForm />
         </div>
       </div>
 
@@ -168,13 +133,13 @@ export function Stays() {
             Five ways <span className="soft">to stay</span>
           </h3>
         </div>
-        <a className="btn btn--ghost" href={`${BOOKING_URL}/rooms`} target="_blank" rel="noopener">
-          Browse all rooms <span className="arr">↗</span>
+        <a className="btn btn--ghost" href={searchUrl()} target="_blank" rel="noopener">
+          {HAS_BOOKING ? "Browse all rooms" : "Ask about availability"} <span className="arr">↗</span>
         </a>
       </div>
       <div className="rooms" aria-label="Room types">
         {rooms.map((r, i) => (
-          <a key={r.slug} className="room" href={`${BOOKING_URL}/rooms/${r.slug}`} target="_blank" rel="noopener">
+          <a key={r.slug} className="room" href={roomUrl(r)} target="_blank" rel="noopener">
             <img src={r.image} alt="" loading="lazy" />
             <div className="room__top">
               <i>0{i + 1}</i>

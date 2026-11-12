@@ -59,3 +59,13 @@ server/                      # (added when the first API feature lands: Express 
 - Every fly-through image in Stays has a placed position.
 - Every `_styles` file is imported by `globals.css`, with no dangling imports.
 - No `.env` files are committed (only `.env.example`).
+
+## Deploying to Vercel
+1. Import `syedasjadabbas/serene-heights-group` in Vercel and set **Root Directory** to `client`
+   (framework, build command and output are detected automatically).
+2. Environment variables (all optional — see `client/.env.example`):
+   - `NEXT_PUBLIC_BOOKING_URL` — leave empty until Serene Booking is live; booking buttons open WhatsApp meanwhile.
+   - `NEXT_PUBLIC_SITE_URL` — only needed once a custom domain is attached.
+   - `NEXT_PUBLIC_ALLOW_INDEXING=true` — only on the real public domain after facts are signed off
+     (pages are `noindex` otherwise, so a client preview never shows up in Google).
+3. Every push to `main` redeploys.

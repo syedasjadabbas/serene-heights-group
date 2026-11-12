@@ -2,12 +2,19 @@
 // Every figure here is taken from the sibling Serene project sites; items marked
 // "CONFIRM" still need sign-off from the client before launch.
 
-export const BOOKING_URL = (process.env.NEXT_PUBLIC_BOOKING_URL || "http://localhost:3000").replace(/\/$/, "");
+// Where the Serene Booking guest app is deployed. Empty until it goes live — booking links then
+// fall back to a pre-filled WhatsApp enquiry (see global/lib/booking.ts).
+export const BOOKING_URL = (process.env.NEXT_PUBLIC_BOOKING_URL || "").replace(/\/$/, "");
+export const HAS_BOOKING = BOOKING_URL !== "";
 
 export const site = {
   name: "Serene Heights Group",
   short: "Serene Heights",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.sereneheightsgroup.com",
+  // Public URL: explicit env, else the Vercel production URL, else the intended group domain.
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "") ||
+    "https://www.sereneheightsgroup.com",
   developer: "DM Consortium",
   founded: 2017,
   ceo: "Fahad Masud Lone",

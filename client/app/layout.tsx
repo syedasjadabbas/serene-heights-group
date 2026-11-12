@@ -14,11 +14,17 @@ export const metadata: Metadata = {
     description: site.description,
     url: site.url,
     siteName: site.name,
-    images: [{ url: "/media/ng/tower-forest-mist-xl.webp", width: 2048, height: 1152 }],
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Serene Heights Nathia Gali in the pines" }],
     locale: "en_PK",
     type: "website",
   },
+  twitter: { card: "summary_large_image", title: site.name, description: site.description, images: ["/og.jpg"] },
   icons: { icon: "/icon.svg" },
+  // Client preview: keep search engines out until the facts are signed off and the real domain is live.
+  robots:
+    process.env.NEXT_PUBLIC_ALLOW_INDEXING === "true"
+      ? { index: true, follow: true }
+      : { index: false, follow: false, googleBot: { index: false, follow: false } },
 };
 
 export const viewport: Viewport = { themeColor: "#18332a" };

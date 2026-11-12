@@ -75,7 +75,22 @@ const rel = (f) => relative(ROOT, f).replaceAll("\\", "/");
   check("All _styles files imported, no dangling imports", !notImported.length && !dangling.length, [...notImported, ...dangling].join(", "));
 }
 
-// 7. No secrets or .env files tracked by git (only .env.example).
+// 7. Nothing shipped points at a local dev server.
+{
+  const offenders = sources.filter((f) => /localhost|127\.0\.0\.1/.test(read(f))).map(rel);
+  check("No localhost links in shipped code", offenders.length === 0, offenders.join(", "));
+}
+
+// 8. Booking links only go through global/lib/booking (so they fall back to WhatsApp until booking is live).
+{
+  const offenders = sources
+    .filter((f) => !/global[\\/](lib[\\/]booking|constants[\\/]site)\.ts$/.test(f))
+    .filter((f) => /\bBOOKING_URL\b/.test(read(f)))
+    .map(rel);
+  check("Booking links use global/lib/booking", offenders.length === 0, offenders.join(", "));
+}
+
+// 9. No secrets or .env files tracked by git (only .env.example).
 {
   let tracked = [];
   try {

@@ -1,4 +1,5 @@
-import { BOOKING_URL, projects, site } from "@/global/constants/site";
+import { HAS_BOOKING, projects, site } from "@/global/constants/site";
+import { manageUrl, searchUrl } from "@/global/lib/booking";
 
 export function SiteFooter() {
   return (
@@ -33,15 +34,17 @@ export function SiteFooter() {
           <h4>Stay</h4>
           <ul>
             <li>
-              <a href={BOOKING_URL} target="_blank" rel="noopener">
-                Serene Booking ↗
+              <a href={searchUrl()} target="_blank" rel="noopener">
+                {HAS_BOOKING ? "Serene Booking ↗" : "Book a stay ↗"}
               </a>
             </li>
-            <li>
-              <a href={`${BOOKING_URL}/manage`} target="_blank" rel="noopener">
-                Manage a booking ↗
-              </a>
-            </li>
+            {manageUrl && (
+              <li>
+                <a href={manageUrl} target="_blank" rel="noopener">
+                  Manage a booking ↗
+                </a>
+              </li>
+            )}
             {site.social.map((s) => (
               <li key={s.label}>
                 <a href={s.href} target="_blank" rel="noopener">

@@ -388,3 +388,13 @@
       scroll-snap-align: start;
     }
 }
+
+.booker__error {
+  grid-column: 1 / -1;
+  margin: 2px 10px 6px;
+  font-size: 12px;
+  color: #f3c9a8;
+}
+.booker input[aria-invalid="true"] {
+  color: #f3c9a8;
+}
