@@ -1682,3 +1682,17 @@ button {
     inset: 96px 0 44% 0;
   }
 }
+
+/* Splash: larger "serene heights group" lockup */
+.loader__lockup {
+  gap: clamp(14px, 1.6vw, 22px);
+  font-size: clamp(30px, 4.6vw, 64px);
+  letter-spacing: -0.045em;
+  line-height: 1;
+  padding: 0 16px;
+  text-align: left;
+}
+.loader__mark {
+  width: clamp(26px, 3vw, 44px);
+  flex: none;
+}

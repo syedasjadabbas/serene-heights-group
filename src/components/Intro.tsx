@@ -49,7 +49,7 @@ export function Intro() {
         enter();
       };
       window.addEventListener("serene:ready", onReady, { once: true });
-      const fallback = window.setTimeout(onReady, 3200);
+      const fallback = window.setTimeout(onReady, 4800);
 
       // Pointer parallax on the floating image.
       const qx = gsap.quickTo(".hero__media", "x", { duration: 1.2, ease: "power3" });
