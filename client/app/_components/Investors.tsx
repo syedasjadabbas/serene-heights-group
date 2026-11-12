@@ -4,18 +4,10 @@ import { useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { investorReasons, plans, site } from "@/lib/site";
+import { investorReasons, plans, site } from "@/global/constants/site";
+import { pkr, spoken } from "@/global/lib/format";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const pkr = (n: number) => `PKR ${Math.round(n).toLocaleString("en-US")}`;
-/** As people here say amounts: 2.25 lakh, 2.67 crore. */
-const spoken = (n: number) => {
-  const two = (x: number) => String(Number(x.toFixed(2)));
-  if (n >= 1e7) return `${two(n / 1e7)} crore`;
-  if (n >= 1e5) return `${two(n / 1e5)} lakh`;
-  return Math.round(n).toLocaleString("en-US");
-};
 
 function Calculator() {
   const [id, setId] = useState(plans[0].id);

@@ -1,0 +1,16 @@
+/* Entry stylesheet: Tailwind, then the design tokens and one file per section.
+   Import order matters — later files win ties, as later rules did before the split. */
+@import "tailwindcss";
+@import "./_styles/tokens.css";
+@import "./_styles/base.css";
+@import "./_styles/ui.css";
+@import "./_styles/loader.css";
+@import "./_styles/header.css";
+@import "./_styles/intro.css";
+@import "./_styles/about.css";
+@import "./_styles/projects.css";
+@import "./_styles/stays.css";
+@import "./_styles/upcoming.css";
+@import "./_styles/investors.css";
+@import "./_styles/finale.css";
+@import "./_styles/footer.css";

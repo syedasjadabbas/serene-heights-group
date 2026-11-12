@@ -1,0 +1,408 @@
+/* Intro: full-bleed hero, frame, fold, marquee and card ring */
+
+/* ───────────────────────── Intro (hero + showcase) ───────────────────────── */
+.intro {
+  position: relative;
+  background: var(--paper);
+}
+
+.intro__stage {
+  position: relative;
+}
+
+.intro[data-motion="on"] .intro__stage {
+  height: 100svh;
+  overflow: hidden;
+  perspective: 1400px;
+}
+
+.intro[data-motion="on"] .showcase {
+  position: absolute;
+  inset: 0;
+}
+
+.hero {
+  position: relative;
+  z-index: 2;
+  padding: var(--gutter);
+  height: 100svh;
+  min-height: 640px;
+  box-sizing: border-box;
+}
+
+.hero__card {
+  position: relative;
+  height: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(60% 55% at 62% 110%, var(--glow) 0%, rgba(223, 236, 228, 0) 60%),
+    radial-gradient(70% 70% at 85% 70%, var(--dusk-3) 0%, rgba(93, 133, 118, 0) 65%),
+    radial-gradient(90% 90% at 20% 30%, var(--dusk-1) 0%, rgba(24, 51, 42, 0) 70%),
+    linear-gradient(180deg, var(--dusk-0) 0%, var(--dusk-1) 55%, var(--dusk-2) 100%);
+  transform-origin: 50% 60%;
+  will-change: transform;
+  box-shadow: 0 60px 120px -40px rgba(24, 51, 42, 0.55);
+}
+
+.hero__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  pointer-events: none;
+}
+
+.hero__title {
+  position: absolute;
+  top: clamp(64px, 9vh, 96px);
+  left: clamp(20px, 3vw, 44px);
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(48px, 8.4vw, 132px);
+}
+
+.hero__title .line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.hero__title .line > span {
+  display: block;
+}
+
+.hero__media {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(220px, 23vw, 360px);
+  aspect-ratio: 3 / 4;
+  translate: -15% -46%;
+  border-radius: 16px;
+  overflow: hidden;
+  z-index: 2;
+  box-shadow: 0 40px 80px -20px rgba(4, 16, 12, 0.7);
+}
+
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scale: 1.15;
+}
+
+.hero__media figcaption {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.hero__bottom {
+  position: absolute;
+  left: clamp(20px, 3vw, 44px);
+  right: clamp(20px, 3vw, 44px);
+  bottom: clamp(20px, 3vw, 36px);
+  z-index: 3;
+}
+
+.hero__copy {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.hero__copy .lede {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hero__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.trust {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 12px 4px 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.trust__faces {
+  display: flex;
+}
+
+.trust__faces img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--dusk-1);
+  margin-left: -8px;
+}
+
+.trust__faces img:first-child {
+  margin-left: 0;
+}
+
+.hero__note {
+  max-width: 42ch;
+  text-align: right;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .hero__media {
+      width: 46vw;
+      translate: -10% -62%;
+    }
+  .hero__note {
+      display: none;
+    }
+  .hero__title {
+      top: 84px;
+    }
+}
+
+/* Showcase — marquee + rotating card ring */
+.showcase {
+  position: relative;
+  z-index: 1;
+  height: 100svh;
+  min-height: 620px;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.marquee {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  translate: 0 -50%;
+  display: flex;
+  white-space: nowrap;
+  font-size: clamp(56px, 8vw, 128px);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+  will-change: transform;
+}
+
+.marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding-right: 0.35em;
+}
+
+.marquee__dot {
+  width: 0.16em;
+  height: 0.22em;
+  border-radius: 1em;
+  border: 2px solid var(--ink);
+}
+
+.orbit {
+  position: relative;
+  width: clamp(220px, 19vw, 300px);
+  aspect-ratio: 3 / 4.2;
+  transform-style: preserve-3d;
+  perspective: 1600px;
+  z-index: 2;
+}
+
+.ring__spin {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.ring__card {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  color: #fff;
+  background: var(--dusk-1);
+  box-shadow: 0 30px 60px -25px rgba(10, 26, 21, 0.55);
+}
+
+.ring__card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ring__card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 26, 21, 0.15) 30%, rgba(10, 26, 21, 0.85) 100%);
+}
+
+.ring__card .tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(8px);
+}
+
+.ring__card .cap {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1;
+  font-size: 24px;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+.ring__card .cap b {
+  font-weight: 700;
+  display: block;
+}
+
+.ring__card--violet {
+  background:
+    radial-gradient(80% 60% at 50% 25%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 60%),
+    linear-gradient(180deg, var(--dusk-3), var(--dusk-2));
+}
+
+.ring__card--violet::after {
+  display: none;
+}
+
+.ring__card--violet svg {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  translate: -50% -50%;
+  width: 34%;
+  color: #fff;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.25));
+}
+
+.showcase__cta {
+  position: absolute;
+  bottom: clamp(28px, 7vh, 64px);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .intro:not([data-motion="on"]) .marquee {
+      animation: marquee 40s linear infinite;
+    }
+  .intro:not([data-motion="on"]) .ring__spin {
+      animation: spin 24s linear infinite;
+    }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotateY(-360deg);
+  }
+}
+
+/* Card ring: hide back faces of everything inside each card, not just the card */
+.ring__card > * {
+  backface-visibility: hidden;
+}
+
+/* Full-bleed hero; JS scales the card down to reveal the white frame on scroll */
+.hero {
+  padding: 0;
+}
+
+.hero__card {
+  border-radius: 0;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+      padding: var(--gutter);
+    }
+  .hero__card {
+      border-radius: var(--radius);
+    }
+}
+
+/* White frame overlay: a transparent rounded window whose huge spread shadow paints the frame.
+   Cheap to animate (solid colour), so the big hero card itself never has to repaint. */
+.hero {
+  overflow: hidden;
+}
+
+.hero__frame {
+  --f: 0px;
+  --r: 0px;
+  position: absolute;
+  inset: var(--f);
+  z-index: 3;
+  border-radius: var(--r);
+  box-shadow: 0 0 0 100vmax var(--paper);
+  pointer-events: none;
+}
+
+/* Card ring sized by width and height so "Explore the portfolio" always clears the front card */
+.orbit {
+  --w: clamp(200px, min(19vw, 36vh), 300px);
+  width: var(--w);
+  --rz: calc(var(--w) * 1.05);
+  margin-top: -4vh;
+}
+
+@media (max-width: 760px) {
+  .orbit {
+      --w: min(44vw, 34vh);
+      --rz: calc(var(--w) * 1.05);
+    }
+}

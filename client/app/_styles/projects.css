@@ -1,0 +1,238 @@
+/* Ongoing projects: horizontal gallery */
+
+/* Projects — horizontal gallery */
+.projects {
+  position: relative;
+  padding: 120px 0 80px;
+}
+
+.projects__track {
+  display: flex;
+  gap: 14px;
+  padding: 0 var(--gutter);
+  will-change: transform;
+}
+
+.pcard {
+  position: relative;
+  flex: 0 0 min(64vw, 920px);
+  height: min(72svh, 640px);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--night-2);
+  isolation: isolate;
+}
+
+.pcard img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scale: 1.08;
+  transition: scale 1.2s var(--ease);
+}
+
+.pcard:hover img {
+  scale: 1.02;
+}
+
+.pcard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(180deg, rgba(15, 36, 30, 0.55) 0%, rgba(15, 36, 30, 0) 26%),
+    linear-gradient(0deg, rgba(15, 36, 30, 0.88) 0%, rgba(15, 36, 30, 0) 55%);
+}
+
+.pcard__meta {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  right: 20px;
+  z-index: 1;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.pcard__meta span + span::before {
+  content: "·";
+  margin-right: 10px;
+  opacity: 0.6;
+}
+
+.pcard__status {
+  margin-left: auto;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
+}
+
+.pcard__status::before {
+  display: none;
+}
+
+.pcard__body {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+}
+
+.pcard__name {
+  margin: 0;
+  font-size: clamp(56px, 8vw, 128px);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.85;
+}
+
+.pcard__name small {
+  display: block;
+  font-size: 13px;
+  letter-spacing: 0;
+  font-weight: 500;
+  margin-bottom: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.pcard__side {
+  max-width: 300px;
+  display: grid;
+  gap: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.pcard__side p {
+  margin: 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  font-size: 11px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.pcard--note {
+  flex-basis: min(30vw, 420px);
+  background: linear-gradient(160deg, var(--dusk-1), var(--dusk-0));
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pcard--note::after {
+  display: none;
+}
+
+.pcard--note h3 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.pcard--note p {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--on-night-muted);
+}
+
+@media (max-width: 900px) {
+  .projects__track {
+      flex-direction: column;
+    }
+  .pcard,
+    .pcard--note {
+      flex-basis: auto;
+      height: 78svh;
+      min-height: 520px;
+    }
+  .pcard--note {
+      height: auto;
+      min-height: 260px;
+    }
+  .pcard__body {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+}
+
+/* Projects — pinned horizontal mode */
+.projects[data-motion="on"] {
+  height: 100svh;
+  padding: 92px 0 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.projects[data-motion="on"] .section-head {
+  margin-bottom: 24px;
+}
+
+.projects[data-motion="on"] .section-head h2 {
+  font-size: clamp(40px, 4.4vw, 72px);
+}
+
+.projects[data-motion="on"] .pcard {
+  height: calc(100svh - 92px - 24px - clamp(130px, 13vw, 190px) - var(--gutter));
+  min-height: 380px;
+}
+
+/* Completed-project card with a photo: image behind, readable text on a gradient */
+.pcard--note.pcard--photo > img {
+  z-index: -1;
+}
+
+.pcard--note.pcard--photo::after {
+  display: block;
+  z-index: -1;
+}
+
+.pcard--note.pcard--photo > * {
+  position: relative;
+}
+
+.pcard--note.pcard--photo > img {
+  position: absolute;
+}
+
+.pcard--note.pcard--photo > img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 75%;
+}
+
+.pcard--note.pcard--photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(10, 26, 21, 0.55) 0%, rgba(10, 26, 21, 0) 30%),
+    linear-gradient(0deg, rgba(10, 26, 21, 0.92) 0%, rgba(10, 26, 21, 0.6) 45%, rgba(10, 26, 21, 0.1) 75%);
+}

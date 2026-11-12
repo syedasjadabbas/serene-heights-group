@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { site } from "@/lib/site";
+import { site } from "@/global/constants/site";
 
 gsap.registerPlugin(ScrollTrigger);
 

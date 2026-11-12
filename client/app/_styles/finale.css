@@ -1,0 +1,64 @@
+/* Enquire: closing card with chrome emblem */
+
+/* Final CTA */
+.finale {
+  padding: var(--gutter);
+  background: var(--paper);
+}
+
+.finale__card {
+  position: relative;
+  min-height: min(86svh, 760px);
+  border-radius: var(--radius);
+  overflow: hidden;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  background:
+    radial-gradient(55% 55% at 30% 105%, var(--glow) 0%, rgba(223, 236, 228, 0) 70%),
+    radial-gradient(60% 70% at 60% 60%, var(--dusk-3) 0%, rgba(93, 133, 118, 0) 70%),
+    linear-gradient(180deg, var(--dusk-0) 0%, var(--dusk-1) 55%, var(--dusk-2) 100%);
+}
+
+.finale__canvas {
+  position: absolute;
+  inset: 0;
+  left: 30%;
+}
+
+.finale__copy {
+  position: relative;
+  z-index: 1;
+  padding: clamp(24px, 4vw, 64px);
+  display: grid;
+  gap: 18px;
+  max-width: 560px;
+}
+
+.finale__copy h2 {
+  margin: 0;
+  font-size: clamp(48px, 7vw, 112px);
+}
+
+.finale__copy p {
+  margin: 0;
+  max-width: 36ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+@media (max-width: 760px) {
+  .finale__card {
+      align-items: flex-end;
+      min-height: 92svh;
+    }
+  .finale__canvas {
+      left: 0;
+      bottom: 40%;
+    }
+}
+
+.finale__copy {
+  max-width: 760px;
+}

@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { nav } from "@/lib/site";
+import { nav } from "@/global/constants/site";
 import { Emblem } from "./Emblem";
 
-export function Nav() {
+export function SiteHeader() {
   const [active, setActive] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [shown, setShown] = useState(false);

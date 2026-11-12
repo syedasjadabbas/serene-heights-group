@@ -1,0 +1,39 @@
+/* Design tokens: colours, radii, spacing, easing, Tailwind theme bridge */
+
+/* ───────────────────────── Tokens ───────────────────────── */
+:root {
+  /* Warm snow white (from the Nathia Gali brand palette) instead of plain #fff */
+  --paper: #f3ecdf;
+  --card: #faf5ea;
+  --frame: #ebe2d2;
+  --ink: #0f1f1b;
+  --ink-2: #2b3a35;
+  --muted: #6f6a5e;
+  --line: #e2d8c6;
+
+  --night: #0f241e;
+  --night-2: #16302a;
+  --on-night: #f4f7f5;
+  --on-night-muted: rgba(244, 247, 245, 0.62);
+  --line-night: rgba(255, 255, 255, 0.1);
+
+  /* Serene green — the pines and snow of the Galiyat (from the Nathia Gali brand) */
+  --dusk-0: #0b1d18;
+  --dusk-1: #18332a;
+  --dusk-2: #37584f;
+  --dusk-3: #5d8576;
+  --glow: #dfece4;
+  --lavender: #a9c7b8;
+  --gold: #c8a46a;
+
+  --radius: 22px;
+  --radius-sm: 12px;
+  --gutter: clamp(16px, 2.2vw, 28px);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@theme inline {
+  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+}

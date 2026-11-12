@@ -1,0 +1,127 @@
+/* Upcoming projects */
+
+/* Upcoming */
+.upcoming {
+  padding: 120px 0 140px;
+  border-top: 1px solid var(--line-night);
+}
+
+.teasers {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 12px;
+  padding: 0 var(--gutter);
+}
+
+.teaser {
+  position: relative;
+  height: 440px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--night-2);
+  isolation: isolate;
+}
+
+.teaser img {
+  position: absolute;
+  inset: -20px;
+  width: calc(100% + 40px);
+  height: calc(100% + 40px);
+  object-fit: cover;
+  filter: blur(18px) saturate(1.2) brightness(0.65);
+  transition: filter 1s var(--ease);
+}
+
+.teaser:hover img {
+  filter: blur(10px) saturate(1.2) brightness(0.75);
+}
+
+.teaser::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(24, 51, 42, 0.15), rgba(15, 36, 30, 0.75));
+}
+
+.teaser__num {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  z-index: 1;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.teaser__body {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1;
+}
+
+.teaser__body h3 {
+  margin: 0 0 8px;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.teaser__body p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--on-night-muted);
+}
+
+.teaser__lock {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.teaser--cta {
+  background: linear-gradient(160deg, var(--dusk-2), var(--dusk-1));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 22px;
+}
+
+.teaser--cta::after {
+  background: radial-gradient(80% 60% at 70% 100%, rgba(223, 236, 228, 0.55), rgba(223, 236, 228, 0));
+  z-index: -1;
+}
+
+.teaser--cta h3 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.teaser--cta p {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+@media (max-width: 900px) {
+  .teasers {
+      grid-template-columns: 1fr;
+    }
+  .teaser {
+      height: 320px;
+    }
+}

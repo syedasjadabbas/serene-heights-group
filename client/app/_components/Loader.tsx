@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { Emblem } from "./Emblem";
+import { Emblem } from "@/global/components/Emblem";
 
 /** Short brand moment while fonts and the first image settle. */
 export function Loader() {

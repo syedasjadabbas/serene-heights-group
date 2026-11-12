@@ -6,7 +6,8 @@
     "dev": "node node_modules/next/dist/bin/next dev -p 3010",
     "build": "node node_modules/next/dist/bin/next build",
     "start": "node node_modules/next/dist/bin/next start -p 3010",
-    "typecheck": "node node_modules/typescript/bin/tsc --noEmit"
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
+    "check": "node --no-warnings scripts/check.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

@@ -1,6 +1,6 @@
-import { BOOKING_URL, projects, site } from "@/lib/site";
+import { BOOKING_URL, projects, site } from "@/global/constants/site";
 
-export function Footer() {
+export function SiteFooter() {
   return (
     <footer className="footer" data-nav="light">
       <div className="footer__top">

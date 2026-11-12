@@ -1,18 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 
 import * as THREE from "three";
+import { project, sample } from "@/global/lib/galiyat";
+import { useDem } from "@/global/hooks/useDem";
 
-// Real relief of the Galiyat around Serene Heights Nathia Gali.
-// public/data/galiyat-dem.bin: Int16 metres on a 200 m grid (AWS Terrain Tiles),
-// origin at 33.95° N, 73.26° E — the same file the Nathia Gali site's map uses.
-const DEM = { x0: -40, z0: -44, step: 0.2, nx: 371, nz: 461 };
-const LAT0 = 33.95;
-const LON0 = 73.26;
-const project = (lat: number, lon: number) => [(lon - LON0) * 92.3, -(lat - LAT0) * 111.3] as const;
-
+// Real relief of the Galiyat around Serene Heights Nathia Gali (data + sampling in global/lib/galiyat).
 const NG = { lat: 34.0745, lon: 73.379 }; // Serene Heights Nathia Gali
 const LHR = { lat: 31.5154, lon: 74.3487 }; // Serene Heights Lahore, Gulberg Main Boulevard
 const [CX, CZ] = project(NG.lat, NG.lon);
@@ -37,20 +32,6 @@ const RADIUS = 9; // km of terrain shown around the resort
 const SEG = 220;
 const EXAG = 1.7;
 const BASE = 0.8; // km — valley floor sits at y = 0
-
-function sample(d: Int16Array, x: number, z: number) {
-  const fx = Math.min(DEM.nx - 1.001, Math.max(0, (x - DEM.x0) / DEM.step));
-  const fz = Math.min(DEM.nz - 1.001, Math.max(0, (z - DEM.z0) / DEM.step));
-  const i = Math.floor(fx);
-  const j = Math.floor(fz);
-  const tx = fx - i;
-  const tz = fz - j;
-  const r0 = j * DEM.nx;
-  const r1 = r0 + DEM.nx;
-  return (
-    ((d[r0 + i] * (1 - tx) + d[r0 + i + 1] * tx) * (1 - tz) + (d[r1 + i] * (1 - tx) + d[r1 + i + 1] * tx) * tz) / 1000
-  );
-}
 
 const vert = /* glsl */ `
   varying float vH;
@@ -102,21 +83,6 @@ const frag = /* glsl */ `
     gl_FragColor = vec4(col, edge);
   }
 `;
-
-function useDem() {
-  const [dem, setDem] = useState<Int16Array | null>(null);
-  useEffect(() => {
-    let live = true;
-    fetch("/data/galiyat-dem.bin")
-      .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(r.statusText))))
-      .then((b) => live && setDem(new Int16Array(b)))
-      .catch((e) => console.warn("Galiyat elevation data unavailable", e));
-    return () => {
-      live = false;
-    };
-  }, []);
-  return dem;
-}
 
 type Labels = { ng: React.RefObject<HTMLDivElement | null>; lhr: React.RefObject<HTMLDivElement | null> };
 

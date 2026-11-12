@@ -1,6 +1,17 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "group-web", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 3010 }
+    {
+      "name": "web",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["client/node_modules/next/dist/bin/next", "dev", "client", "-p", "3010"],
+      "port": 3010
+    },
+    {
+      "name": "web-prod",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["client/node_modules/next/dist/bin/next", "start", "client", "-p", "3011"],
+      "port": 3011
+    }
   ]
 }

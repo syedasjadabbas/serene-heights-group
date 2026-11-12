@@ -4,7 +4,7 @@ import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
-import { RIDGE } from "../Emblem";
+import { RIDGE } from "@/global/components/Emblem";
 
 // SVG space (100 × 136, y down) → world space (centred, y up, 1 unit = 50 px).
 const X = (x: number) => (x - 50) / 50;

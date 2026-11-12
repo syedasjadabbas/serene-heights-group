@@ -5,8 +5,8 @@ import dynamic from "next/dynamic";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { useInView } from "./useInView";
-import { site } from "@/lib/site";
+import { useInView } from "@/global/hooks/useInView";
+import { site } from "@/global/constants/site";
 
 gsap.registerPlugin(ScrollTrigger);
 

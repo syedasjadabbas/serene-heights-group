@@ -1,0 +1,390 @@
+/* Serene Booking: fly-through, booking panel, room cards */
+
+/* Stays — fly-through gallery */
+.stays {
+  position: relative;
+}
+
+.stays__stage {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  perspective: 900px;
+  padding: 120px var(--gutter);
+  box-sizing: border-box;
+}
+
+.stays[data-motion="on"] .stays__stage {
+  height: 100svh;
+  padding: 0 var(--gutter);
+}
+
+.stays__world {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.stays__img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 10px;
+  overflow: hidden;
+  will-change: transform, opacity;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+}
+
+.stays__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stays[data-motion="off"] .stays__world {
+  display: none;
+}
+
+.stays__panel {
+  position: relative;
+  z-index: 2;
+  width: min(560px, 100%);
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+
+.stays__panel h2 {
+  margin: 0;
+  font-size: clamp(44px, 6vw, 96px);
+}
+
+.stays__panel > p {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--on-night-muted);
+}
+
+.booker {
+  margin-top: 10px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.8fr auto;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  text-align: left;
+}
+
+.booker label {
+  display: grid;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 11px;
+  color: var(--on-night-muted);
+  transition: background 0.25s;
+}
+
+.booker label:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.booker input,
+.booker select {
+  all: unset;
+  font-size: 14px;
+  color: #fff;
+  color-scheme: dark;
+}
+
+.booker select option {
+  color: var(--ink);
+}
+
+.booker .btn {
+  height: auto;
+  border-radius: 10px;
+}
+
+@media (max-width: 640px) {
+  .booker {
+      grid-template-columns: 1fr 1fr;
+    }
+  .booker .btn {
+      grid-column: 1 / -1;
+      justify-content: center;
+      height: 46px;
+    }
+}
+
+.rooms {
+  padding: 40px var(--gutter) 120px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.room {
+  display: grid;
+  gap: 40px;
+  align-content: space-between;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid var(--line-night);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+  transition: border-color 0.3s, background 0.3s, transform 0.4s var(--ease);
+}
+
+.room:hover {
+  border-color: rgba(169, 199, 184, 0.5);
+  transform: translateY(-3px);
+}
+
+.room b {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.room span {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--on-night-muted);
+}
+
+.room i {
+  font-style: normal;
+  font-size: 12px;
+  color: var(--lavender);
+}
+
+@media (max-width: 1000px) {
+  .rooms {
+      grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Keep the booking panel legible while images fly past */
+.stays__panel::before {
+  content: "";
+  position: absolute;
+  inset: -90px -140px;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(15, 36, 30, 0.92), rgba(15, 36, 30, 0.6) 60%, rgba(15, 36, 30, 0));
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .stays {
+      --k: 2.3;
+    }
+}
+
+/* Section labels ("Ongoing projects", "Upcoming projects", …) read as proper headings */
+.section-head .eyebrow,
+.stays__panel .eyebrow,
+.reveal__label {
+  font-size: clamp(15px, 1.3vw, 22px);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-night);
+  gap: 12px;
+}
+
+.section-head .eyebrow::before,
+.stays__panel .eyebrow::before,
+.reveal__label::before {
+  width: 8px;
+  height: 8px;
+}
+
+/* Keep "7,906 ft" on one line */
+.stays__panel h2 .soft {
+  white-space: nowrap;
+}
+
+/* ───────── Room types: photo cards ───────── */
+.rooms-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 72px var(--gutter) 28px;
+}
+
+.rooms-head h3 {
+  margin: 12px 0 0;
+  font-size: clamp(34px, 4vw, 60px);
+}
+
+.rooms {
+  padding: 0 var(--gutter) 130px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.room {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0;
+  aspect-ratio: 3 / 4.3;
+  padding: 16px;
+  border-radius: 18px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid var(--line-night);
+  background: var(--night-2);
+  transition:
+    transform 0.6s var(--ease),
+    border-color 0.4s,
+    box-shadow 0.6s var(--ease);
+}
+
+.room img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 1.2s var(--ease);
+  scale: 1.04;
+}
+
+.room::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(10, 26, 21, 0.55) 0%, rgba(10, 26, 21, 0) 28%),
+    linear-gradient(0deg, rgba(10, 26, 21, 0.95) 0%, rgba(10, 26, 21, 0.55) 38%, rgba(10, 26, 21, 0) 62%);
+}
+
+.room:hover {
+  transform: translateY(-6px);
+  border-color: rgba(169, 199, 184, 0.45);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+}
+
+.room:hover img {
+  scale: 1.12;
+}
+
+.room__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.room__top i {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.room__count {
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
+}
+
+.room__body {
+  padding-right: 44px;
+}
+
+.room__body b {
+  display: block;
+  font-size: clamp(18px, 1.5vw, 22px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.room__body p {
+  margin: 6px 0 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.room__specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.room__specs span {
+  font-size: 11px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.room__go {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink);
+  font-size: 15px;
+  transition:
+    transform 0.5s var(--ease),
+    background 0.3s;
+}
+
+.room:hover .room__go {
+  transform: rotate(-45deg);
+  background: var(--glow);
+}
+
+@media (max-width: 1100px) {
+  .rooms {
+      grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 760px) {
+  .rooms-head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  .rooms {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 100px;
+      scrollbar-width: none;
+    }
+  .room {
+      flex: 0 0 72vw;
+      scroll-snap-align: start;
+    }
+}

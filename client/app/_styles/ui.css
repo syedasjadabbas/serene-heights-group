@@ -1,0 +1,161 @@
+/* Shared UI: type styles, buttons, eyebrow labels, section heads, dark/light surfaces */
+
+/* ───────────────────────── Type ───────────────────────── */
+.display {
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+}
+
+.display .soft {
+  color: var(--lavender);
+  opacity: 0.85;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--on-night-muted);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--dusk-3);
+  box-shadow: 0 0 12px var(--dusk-3);
+}
+
+.lede {
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 34ch;
+}
+
+/* ───────────────────────── Buttons ───────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border: 1px solid transparent;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease), transform 0.3s var(--ease), border-color 0.3s;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--white {
+  background: var(--card);
+  color: var(--ink);
+}
+
+.btn--white:hover {
+  background: #ebe2d0;
+}
+
+.btn--ghost {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+}
+
+.btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.btn--ink {
+  background: var(--ink);
+  color: #fff;
+}
+
+.btn--ink:hover {
+  background: #1f332d;
+}
+
+.btn--line {
+  border-color: var(--line);
+  color: var(--ink);
+  background: var(--card);
+}
+
+.btn--line:hover {
+  border-color: #c7d1cc;
+}
+
+.btn .arr {
+  transition: transform 0.35s var(--ease);
+}
+
+.btn:hover .arr {
+  transform: translateX(3px);
+}
+
+/* ───────────────────────── Dark sections ───────────────────────── */
+.dark {
+  background: var(--night);
+  color: var(--on-night);
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  padding: 0 var(--gutter);
+  margin-bottom: 36px;
+}
+
+.section-head h2 {
+  margin: 14px 0 0;
+  font-size: clamp(40px, 5.4vw, 84px);
+}
+
+.section-head p {
+  margin: 0;
+  max-width: 38ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--on-night-muted);
+}
+
+@media (max-width: 760px) {
+  .section-head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+}
+
+/* ───────────────────────── Light sections ───────────────────────── */
+.light {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.light .eyebrow {
+  color: var(--muted);
+}
+
+.light .section-head p {
+  color: var(--muted);
+}
+
+.light .display .soft {
+  color: #8fb0a2;
+}
+
+.light .section-head .eyebrow {
+  color: var(--ink);
+}

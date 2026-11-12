@@ -1,0 +1,52 @@
+/* Splash screen */
+
+/* ───────────────────────── Loader ───────────────────────── */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--night);
+  color: #fff;
+  pointer-events: none;
+}
+
+.loader__lockup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  font-size: 20px;
+}
+
+.loader__lockup span {
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 500;
+}
+
+.loader__line {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  top: var(--gutter);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+  transform-origin: left;
+}
+
+/* Splash: larger "serene heights group" lockup */
+.loader__lockup {
+  gap: clamp(14px, 1.6vw, 22px);
+  font-size: clamp(30px, 4.6vw, 64px);
+  letter-spacing: -0.045em;
+  line-height: 1;
+  padding: 0 16px;
+  text-align: left;
+}
+
+.loader__mark {
+  width: clamp(26px, 3vw, 44px);
+  flex: none;
+}

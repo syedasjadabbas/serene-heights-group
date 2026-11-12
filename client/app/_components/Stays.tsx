@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { BOOKING_URL, rooms, stayImages } from "@/lib/site";
+import { BOOKING_URL, rooms, stayImages } from "@/global/constants/site";
 
 gsap.registerPlugin(ScrollTrigger);
 
