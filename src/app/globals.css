@@ -1978,3 +1978,33 @@ button {
     scroll-snap-align: start;
   }
 }
+
+/* Completed-project card with a photo: image behind, readable text on a gradient */
+.pcard--note.pcard--photo > img {
+  z-index: -1;
+}
+.pcard--note.pcard--photo::after {
+  display: block;
+  z-index: -1;
+}
+.pcard--note.pcard--photo > * {
+  position: relative;
+}
+.pcard--note.pcard--photo > img {
+  position: absolute;
+}
+.pcard--note.pcard--photo > img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 75%;
+}
+.pcard--note.pcard--photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(10, 26, 21, 0.55) 0%, rgba(10, 26, 21, 0) 30%),
+    linear-gradient(0deg, rgba(10, 26, 21, 0.92) 0%, rgba(10, 26, 21, 0.6) 45%, rgba(10, 26, 21, 0.1) 75%);
+}

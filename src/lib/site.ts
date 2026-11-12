@@ -85,8 +85,16 @@ export const projects: Project[] = [
   },
 ];
 
-export const completed = [
-  { name: "Serene Farms", place: "Barki Road, Lahore", note: "Completed horizontal development" },
+// To show a photo on a completed-project card, put the file in public/media/ and set `image`
+// (e.g. image: "/media/farms/serene-farms.jpg"). Without one the card stays text-only.
+export const completed: { name: string; place: string; note: string; image?: string }[] = [
+  {
+    name: "Serene Farms",
+    place: "Barki Road, Lahore",
+    note: "Completed horizontal development",
+    // Mood image of the Galiyat (no Serene Farms photo exists yet) — swap for a real photo when available.
+    image: "/media/farms/mist-valley.webp",
+  },
 ];
 
 // Room types and counts as defined in the Serene Booking inventory (official floor plans).

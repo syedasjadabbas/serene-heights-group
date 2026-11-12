@@ -118,7 +118,8 @@ export function Projects() {
           </a>
         ))}
 
-        <div className="pcard pcard--note">
+        <div className={`pcard pcard--note${completed[0]?.image ? " pcard--photo" : ""}`}>
+          {completed[0]?.image && <img src={completed[0].image} alt={completed[0].name} loading="lazy" />}
           <span className="eyebrow">Completed</span>
           <div>
             {completed.map((c) => (
