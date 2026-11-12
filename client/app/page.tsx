@@ -1,6 +1,7 @@
 import { SmoothScroll } from "@/global/components/SmoothScroll";
 import { SiteHeader } from "@/global/components/SiteHeader";
 import { SiteFooter } from "@/global/components/SiteFooter";
+import { structuredDataJson } from "@/global/lib/structuredData";
 import { Loader } from "./_components/Loader";
 import { Intro } from "./_components/Intro";
 import { Reveal } from "./_components/Reveal";
@@ -13,6 +14,7 @@ import { Finale } from "./_components/Finale";
 export default function Home() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredDataJson() }} />
       <SmoothScroll />
       <Loader />
       <SiteHeader />

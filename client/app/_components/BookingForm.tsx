@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { bookingSchema, type BookingInput, type BookingValues } from "../_lib/bookingSchema";
 import { HAS_BOOKING } from "@/global/constants/site";
-import { searchUrl } from "@/global/lib/booking";
+import { openBooking, searchUrl } from "@/global/lib/booking";
 
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 const addDays = (d: Date, n: number) => {
@@ -33,7 +33,7 @@ export function BookingForm() {
   }, [reset]);
 
   const onSubmit = (v: BookingValues) => {
-    window.open(searchUrl(v), "_blank", "noopener");
+    openBooking(searchUrl(v));
   };
 
   const err = errors.checkIn?.message || errors.checkOut?.message || errors.adults?.message;

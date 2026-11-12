@@ -1,5 +1,5 @@
 import { HAS_BOOKING, projects, site } from "@/global/constants/site";
-import { manageUrl, searchUrl } from "@/global/lib/booking";
+import { bookingHomeUrl, linkTarget, manageUrl } from "@/global/lib/booking";
 
 export function SiteFooter() {
   return (
@@ -34,14 +34,14 @@ export function SiteFooter() {
           <h4>Stay</h4>
           <ul>
             <li>
-              <a href={searchUrl()} target="_blank" rel="noopener">
-                {HAS_BOOKING ? "Serene Booking ↗" : "Book a stay ↗"}
+              <a href={bookingHomeUrl()} {...linkTarget(bookingHomeUrl())}>
+                {HAS_BOOKING ? "Serene Booking" : "Book a stay ↗"}
               </a>
             </li>
             {manageUrl && (
               <li>
-                <a href={manageUrl} target="_blank" rel="noopener">
-                  Manage a booking ↗
+                <a href={manageUrl} {...linkTarget(manageUrl)}>
+                  Manage a booking
                 </a>
               </li>
             )}

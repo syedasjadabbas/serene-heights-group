@@ -64,8 +64,21 @@ server/                      # (added when the first API feature lands: Express 
 1. Import `syedasjadabbas/serene-heights-group` in Vercel and set **Root Directory** to `client`
    (framework, build command and output are detected automatically).
 2. Environment variables (all optional — see `client/.env.example`):
-   - `NEXT_PUBLIC_BOOKING_URL` — leave empty until Serene Booking is live; booking buttons open WhatsApp meanwhile.
+   - `BOOKING_ORIGIN` — the Serene Booking website's Vercel URL (e.g. `https://serene-booking.vercel.app`).
+     When set, this site serves Booking at **`/booking`** and every booking button opens it in the same tab.
+     Leave empty and booking buttons open a pre-filled WhatsApp enquiry instead.
    - `NEXT_PUBLIC_SITE_URL` — only needed once a custom domain is attached.
    - `NEXT_PUBLIC_ALLOW_INDEXING=true` — only on the real public domain after facts are signed off
      (pages are `noindex` otherwise, so a client preview never shows up in Google).
 3. Every push to `main` redeploys.
+
+## Serene Booking at `/booking` (Multi-Zones)
+Serene Booking stays its own repo and Vercel project but appears inside this site at `/booking`.
+`client/next.config.ts` rewrites `/booking` and `/booking/:path*` to `BOOKING_ORIGIN`; Booking is built with
+`basePath: "/booking"` and sets its login cookie on `/booking/api/v1/auth`. Moving between the two apps is a
+normal page load. `npm run check` confirms the rewrite exists and (when the Booking repo sits alongside)
+that both apps agree on the path.
+
+**Run both locally:** start Serene Booking's API and website (website on any port, e.g. 3020), then put
+`BOOKING_ORIGIN=http://localhost:3020` in `client/.env.local` and start this site — `localhost:3010/booking`
+is Booking.

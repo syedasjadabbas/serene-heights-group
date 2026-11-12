@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { HAS_BOOKING, rooms, stayImages } from "@/global/constants/site";
-import { roomUrl, searchUrl } from "@/global/lib/booking";
+import { isInternal, linkTarget, roomUrl, searchUrl } from "@/global/lib/booking";
 import { BookingForm } from "./BookingForm";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -133,13 +133,14 @@ export function Stays() {
             Five ways <span className="soft">to stay</span>
           </h3>
         </div>
-        <a className="btn btn--ghost" href={searchUrl()} target="_blank" rel="noopener">
-          {HAS_BOOKING ? "Browse all rooms" : "Ask about availability"} <span className="arr">↗</span>
+        <a className="btn btn--ghost" href={searchUrl()} {...linkTarget(searchUrl())}>
+          {HAS_BOOKING ? "Browse all rooms" : "Ask about availability"}{" "}
+          <span className="arr">{isInternal(searchUrl()) ? "→" : "↗"}</span>
         </a>
       </div>
       <div className="rooms" aria-label="Room types">
         {rooms.map((r, i) => (
-          <a key={r.slug} className="room" href={roomUrl(r)} target="_blank" rel="noopener">
+          <a key={r.slug} className="room" href={roomUrl(r)} {...linkTarget(roomUrl(r))}>
             <img src={r.image} alt="" loading="lazy" />
             <div className="room__top">
               <i>0{i + 1}</i>

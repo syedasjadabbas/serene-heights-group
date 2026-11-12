@@ -90,7 +90,35 @@ const rel = (f) => relative(ROOT, f).replaceAll("\\", "/");
   check("Booking links use global/lib/booking", offenders.length === 0, offenders.join(", "));
 }
 
-// 9. No secrets or .env files tracked by git (only .env.example).
+// 9. Share metadata fits where it is shown: title ≤ 60 and description ≤ 160 characters (Google/WhatsApp
+//    truncate beyond), and the share card's background photo exists.
+{
+  const problems = [];
+  if (site.site.title.length > 60) problems.push(`title is ${site.site.title.length} chars`);
+  if (site.site.description.length > 160) problems.push(`description is ${site.site.description.length} chars`);
+  if (!existsSync(join(ROOT, "public/media/og/background.jpg"))) problems.push("share card background missing");
+  check("Share metadata fits previews", problems.length === 0, problems.join(", "));
+}
+
+// 10. Booking zone: /booking is rewritten (page + sub-paths) and matches Serene Booking's base path.
+{
+  const cfg = read(join(ROOT, "next.config.ts"));
+  const path = (cfg.match(/BOOKING_PATH = "([^"]+)"/) || [])[1];
+  const problems = [];
+  if (!path) problems.push("BOOKING_PATH missing in next.config.ts");
+  if (!/source: BOOKING_PATH,/.test(cfg) || !/source: `\$\{BOOKING_PATH\}\/:path\*`/.test(cfg)) problems.push("rewrites must cover /booking and /booking/:path*");
+  // When the Serene Booking repo sits next to this one (local dev), compare base paths directly.
+  const sibling = join(ROOT, "../../Serene Booking/client/next.config.mjs");
+  let note = "";
+  if (existsSync(sibling)) {
+    const bp = (read(sibling).match(/NEXT_PUBLIC_BASE_PATH \?\? "([^"]*)"/) || [])[1];
+    if (bp !== path) problems.push(`Serene Booking basePath is "${bp}", group site expects "${path}"`);
+    else note = `matches Serene Booking basePath "${bp}"`;
+  } else note = "Serene Booking repo not alongside — base path not compared";
+  check("Booking zone wired at " + (path || "?"), problems.length === 0, problems.length ? problems.join(", ") : note);
+}
+
+// 11. No secrets or .env files tracked by git (only .env.example).
 {
   let tracked = [];
   try {

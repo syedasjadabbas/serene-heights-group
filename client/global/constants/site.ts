@@ -18,8 +18,23 @@ export const site = {
   developer: "DM Consortium",
   founded: 2017,
   ceo: "Fahad Masud Lone",
+  title: "Serene Heights Group — Hotels, Resorts & City Addresses",
+  // ~155 characters: fits Google's snippet and WhatsApp/LinkedIn previews without truncation.
   description:
-    "Serene Heights Group brings together DM Consortium's developments — Serene Heights Nathia Gali, Serene Heights Lahore and Serene Booking — with ways to stay, own and invest.",
+    "Serene Heights Nathia Gali, Pakistan's first winter resort at 7,906 ft, and Serene Heights Lahore on Gulberg Main Boulevard. Explore, book a stay or invest.",
+  keywords: [
+    "Serene Heights",
+    "Serene Heights Group",
+    "Serene Heights Nathia Gali",
+    "Serene Heights Lahore",
+    "DM Consortium",
+    "Nathia Gali hotel apartments",
+    "Nathia Gali resort",
+    "winter resort Pakistan",
+    "Gulberg Main Boulevard",
+    "smart property units",
+    "hotel apartment investment Pakistan",
+  ],
   contact: {
     uan: "042-111-111-744",
     uanHref: "tel:+9242111111744",
