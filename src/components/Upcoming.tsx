@@ -46,7 +46,7 @@ export function Upcoming() {
   );
 
   return (
-    <section ref={root} id="upcoming" className="upcoming dark" aria-labelledby="upcoming-title">
+    <section ref={root} id="upcoming" className="upcoming dark" data-nav="dark" aria-labelledby="upcoming-title">
       <div className="section-head">
         <div>
           <span className="eyebrow">Upcoming projects</span>

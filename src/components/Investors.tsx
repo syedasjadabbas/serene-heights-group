@@ -130,7 +130,7 @@ export function Investors() {
   );
 
   return (
-    <section ref={root} id="investors" className="investors light" aria-labelledby="investors-title">
+    <section ref={root} id="investors" className="investors light" data-nav="light" aria-labelledby="investors-title">
       <div className="section-head">
         <div>
           <span className="eyebrow">Serene Investors</span>

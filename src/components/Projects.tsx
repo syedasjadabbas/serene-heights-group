@@ -72,7 +72,7 @@ export function Projects() {
   );
 
   return (
-    <section ref={root} id="projects" className="projects dark" aria-labelledby="projects-title">
+    <section ref={root} id="projects" className="projects dark" data-nav="dark" aria-labelledby="projects-title">
       <div className="section-head">
         <div>
           <span className="eyebrow">Ongoing projects</span>

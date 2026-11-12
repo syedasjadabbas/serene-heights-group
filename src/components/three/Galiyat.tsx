@@ -13,7 +13,26 @@ const LAT0 = 33.95;
 const LON0 = 73.26;
 const project = (lat: number, lon: number) => [(lon - LON0) * 92.3, -(lat - LAT0) * 111.3] as const;
 
-const [CX, CZ] = project(34.0745, 73.379); // Serene Heights Nathia Gali
+const NG = { lat: 34.0745, lon: 73.379 }; // Serene Heights Nathia Gali
+const LHR = { lat: 31.5154, lon: 74.3487 }; // Serene Heights Lahore, Gulberg Main Boulevard
+const [CX, CZ] = project(NG.lat, NG.lon);
+
+// Lahore is ~300 km away — far outside the terrain — so it is pinned at the terrain's edge in its
+// true compass direction, with a route line from the resort and the straight-line distance.
+const LHR_KM = (() => {
+  const R = 6371;
+  const toRad = Math.PI / 180;
+  const dLat = (LHR.lat - NG.lat) * toRad;
+  const dLon = (LHR.lon - NG.lon) * toRad;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(NG.lat * toRad) * Math.cos(LHR.lat * toRad) * Math.sin(dLon / 2) ** 2;
+  return Math.round((2 * R * Math.asin(Math.sqrt(a))) / 10) * 10;
+})();
+const LHR_DIR = (() => {
+  const east = (LHR.lon - NG.lon) * 111.32 * Math.cos(((NG.lat + LHR.lat) / 2) * (Math.PI / 180));
+  const south = (NG.lat - LHR.lat) * 111.32;
+  const len = Math.hypot(east, south);
+  return [east / len, south / len] as const; // world x = east, world z = south
+})();
 const RADIUS = 9; // km of terrain shown around the resort
 const SEG = 220;
 const EXAG = 1.7;
@@ -99,17 +118,37 @@ function useDem() {
   return dem;
 }
 
-function Terrain({
-  dem,
-  progress,
-  label,
-}: {
-  dem: Int16Array;
-  progress: React.RefObject<number>;
-  label: React.RefObject<HTMLDivElement | null>;
-}) {
-  const resortY = (sample(dem, CX, CZ) - BASE) * EXAG;
+type Labels = { ng: React.RefObject<HTMLDivElement | null>; lhr: React.RefObject<HTMLDivElement | null> };
+
+function Terrain({ dem, progress, labels }: { dem: Int16Array; progress: React.RefObject<number>; labels: Labels }) {
+  const height = (x: number, z: number) => (sample(dem, CX + x, CZ + z) - BASE) * EXAG;
+  const resortY = height(0, 0);
   const tip = useMemo(() => new THREE.Vector3(), []);
+
+  // Lahore marker sits on the terrain, 60% of the way to the edge, in Lahore's direction.
+  const lhrX = LHR_DIR[0] * RADIUS * 0.6;
+  const lhrZ = LHR_DIR[1] * RADIUS * 0.6;
+  const lhrY = height(lhrX, lhrZ);
+
+  // Route from the resort toward Lahore, draped over the ridges.
+  const route = useMemo(() => {
+    const pts: THREE.Vector3[] = [];
+    for (let i = 0; i <= 80; i++) {
+      const t = i / 80;
+      const x = lhrX * t;
+      const z = lhrZ * t;
+      pts.push(new THREE.Vector3(x, height(x, z) + 0.07, z));
+    }
+    const curve = new THREE.CatmullRomCurve3(pts);
+    const line = new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints(curve.getPoints(240)),
+      new THREE.LineDashedMaterial({ color: "#eef5f0", dashSize: 0.22, gapSize: 0.14, transparent: true, opacity: 0.9 }),
+    );
+    line.computeLineDistances();
+    return { curve, line };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dem]);
+  const runner = useRef<THREE.Mesh>(null);
 
   const geo = useMemo(() => {
     const g = new THREE.PlaneGeometry(RADIUS * 2, RADIUS * 2, SEG, SEG);
@@ -156,18 +195,25 @@ function Terrain({
       const s = 1 + Math.sin(state.clock.elapsedTime * 2.2) * 0.15;
       beam.current.scale.set(s, 1, s);
     }
-    // Pin the DOM label to the top of the beam.
-    const el = label.current;
-    if (el) {
-      tip.set(0, resortY + 3.25, 0).project(cam);
-      const x = (tip.x * 0.5 + 0.5) * state.size.width;
-      const y = (-tip.y * 0.5 + 0.5) * state.size.height;
+    // Moving light along the route to Lahore.
+    if (runner.current) {
+      const t = (state.clock.elapsedTime * 0.12) % 1;
+      runner.current.position.copy(route.curve.getPointAt(t));
+    }
+    // Pin the DOM labels to the tops of the beams.
+    const place = (el: HTMLDivElement | null, x: number, y: number, z: number) => {
+      if (!el) return;
+      tip.set(x, y, z).project(cam);
+      const px = (tip.x * 0.5 + 0.5) * state.size.width;
+      const py = (-tip.y * 0.5 + 0.5) * state.size.height;
       // Above the beam on wide screens; beside it on phones, where the canvas top would clip it.
       el.style.transform = narrow
-        ? `translate(${x}px, ${y}px) translate(14px, -30%)`
-        : `translate(${x}px, ${y}px) translate(-50%, -100%)`;
+        ? `translate(${px}px, ${py}px) translate(14px, -30%)`
+        : `translate(${px}px, ${py}px) translate(-50%, -100%)`;
       el.style.opacity = tip.z < 1 ? "1" : "0";
-    }
+    };
+    place(labels.ng.current, 0, resortY + 3.25, 0);
+    place(labels.lhr.current, lhrX, lhrY + 1.95, lhrZ);
   });
 
   return (
@@ -197,13 +243,35 @@ function Terrain({
           <meshBasicMaterial color="#ffffff" transparent opacity={0.9} side={THREE.DoubleSide} />
         </mesh>
       </group>
+
+      {/* Route + Lahore marker (direction-true, at the terrain's edge) */}
+      <primitive object={route.line} />
+      <mesh ref={runner}>
+        <sphereGeometry args={[0.07, 16, 16]} />
+        <meshBasicMaterial color="#ffffff" />
+      </mesh>
+      <group position={[lhrX, lhrY, lhrZ]}>
+        <mesh position={[0, 0.95, 0]}>
+          <cylinderGeometry args={[0.02, 0.02, 1.9, 12, 1, true]} />
+          <meshBasicMaterial color="#c8a46a" transparent opacity={0.9} blending={THREE.AdditiveBlending} depthWrite={false} />
+        </mesh>
+        <mesh position={[0, 1.95, 0]}>
+          <sphereGeometry args={[0.1, 24, 24]} />
+          <meshBasicMaterial color="#f3e2c2" />
+        </mesh>
+        <mesh rotation-x={-Math.PI / 2} position={[0, 0.03, 0]}>
+          <ringGeometry args={[0.14, 0.24, 48]} />
+          <meshBasicMaterial color="#f3e2c2" transparent opacity={0.9} side={THREE.DoubleSide} />
+        </mesh>
+      </group>
     </group>
   );
 }
 
 export default function Galiyat({ progress, active }: { progress: React.RefObject<number>; active: boolean }) {
   const dem = useDem();
-  const label = useRef<HTMLDivElement>(null);
+  const ng = useRef<HTMLDivElement>(null);
+  const lhr = useRef<HTMLDivElement>(null);
   return (
     <>
       <Canvas
@@ -212,11 +280,15 @@ export default function Galiyat({ progress, active }: { progress: React.RefObjec
         frameloop={active ? "always" : "never"}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
-        {dem && <Terrain dem={dem} progress={progress} label={label} />}
+        {dem && <Terrain dem={dem} progress={progress} labels={{ ng, lhr }} />}
       </Canvas>
-      <div ref={label} className="pin-label" style={{ opacity: 0 }}>
-        <b>Serene Heights</b>
-        <span>Nathia Gali · 7,906 ft</span>
+      <div ref={ng} className="pin-label" style={{ opacity: 0 }}>
+        <b>Serene Heights Nathia Gali</b>
+        <span>Kala Bagh Road · 7,906 ft</span>
+      </div>
+      <div ref={lhr} className="pin-label pin-label--far" style={{ opacity: 0 }}>
+        <b>Serene Heights Lahore</b>
+        <span>{LHR_KM} km this way · Gulberg</span>
       </div>
     </>
   );

@@ -98,7 +98,7 @@ export function Stays() {
   );
 
   return (
-    <section ref={root} id="stays" className="stays dark" data-motion="off" aria-labelledby="stays-title">
+    <section ref={root} id="stays" className="stays dark" data-nav="dark" data-motion="off" aria-labelledby="stays-title">
       <div className="stays__stage">
         <div className="stays__world" aria-hidden>
           {stayImages.map((img, i) => (

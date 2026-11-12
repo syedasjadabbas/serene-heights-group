@@ -2,7 +2,7 @@ import { BOOKING_URL, projects, site } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="footer">
+    <footer className="footer" data-nav="light">
       <div className="footer__top">
         <div className="footer__brand">
           <img src="/media/brand/logo-blue.png" alt="Serene Heights" />

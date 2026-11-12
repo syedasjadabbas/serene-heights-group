@@ -248,7 +248,7 @@ export function Intro() {
           <div className="hero__frame" aria-hidden />
         </div>
 
-        <div className="showcase" aria-label="Highlights">
+        <div className="showcase" aria-label="Highlights" data-nav="light">
           <div className="marquee" aria-hidden>
             {[0, 1].map((k) =>
               PHRASES.map((p) => (

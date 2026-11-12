@@ -95,7 +95,7 @@ export function Reveal() {
   return (
     <section ref={root} id="about" className="reveal" aria-labelledby="about-title">
       <div className="reveal__stage">
-        <div className="reveal__dark">
+        <div className="reveal__dark" data-nav="dark">
           <div className="reveal__glow" />
           <div className="reveal__canvas" aria-hidden>
             <Galiyat progress={progress} active={active} />

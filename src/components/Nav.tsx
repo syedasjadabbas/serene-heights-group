@@ -8,6 +8,7 @@ export function Nav() {
   const [active, setActive] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [shown, setShown] = useState(false);
+  const [dark, setDark] = useState(false);
 
   // The bar stays out of the way on the hero and slides in once the hero has gone.
   useEffect(() => {
@@ -18,6 +19,11 @@ export function Nav() {
       if (!card) return setShown(true);
       const gone = getComputedStyle(card).visibility === "hidden" || card.getBoundingClientRect().bottom < 140;
       setShown(gone);
+      // Over a dark section the bar turns transparent glass with white text.
+      const under = document
+        .elementsFromPoint(window.innerWidth / 2, 40)
+        .find((n) => !n.closest(".nav") && n.closest("[data-nav]"));
+      setDark(under?.closest<HTMLElement>("[data-nav]")?.dataset.nav === "dark");
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(check);
@@ -54,7 +60,7 @@ export function Nav() {
 
   return (
     <>
-      <nav className="nav" aria-label="Primary" data-hidden={!shown && !open ? "true" : undefined}>
+      <nav className="nav" aria-label="Primary" data-hidden={!shown && !open ? "true" : undefined} data-theme={dark && !open ? "dark" : undefined}>
         <a href="#top" className="nav__mark" aria-label="Serene Heights Group — back to top">
           <Emblem className="w-[13px]" />
         </a>

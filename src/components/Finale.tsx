@@ -49,7 +49,7 @@ export function Finale() {
 
   return (
     <section ref={root} id="contact" className="finale" aria-labelledby="finale-title">
-      <div className="finale__card">
+      <div className="finale__card" data-nav="dark">
         <div className="finale__canvas" aria-hidden>
           <ChromeEmblem active={active} />
         </div>
