@@ -406,3 +406,12 @@
       --rz: calc(var(--w) * 1.05);
     }
 }
+
+/* The hero container stays layered over the card ring after the card has folded away; let clicks
+   through to "Explore the portfolio" (the card itself still takes clicks while it is visible). */
+.intro[data-motion="on"] .hero {
+  pointer-events: none;
+}
+.intro[data-motion="on"] .hero__card {
+  pointer-events: auto;
+}

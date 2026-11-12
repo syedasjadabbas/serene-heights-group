@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Emblem } from "@/global/components/Emblem";
+import { isReturning } from "@/global/lib/scrollMemory";
 
 /** Short brand moment while fonts and the first image settle. */
 export function Loader() {
@@ -12,6 +13,12 @@ export function Loader() {
 
   useGSAP(
     () => {
+      // Back from another page (e.g. /booking): no splash, straight back to where the visitor was.
+      if (isReturning()) {
+        setDone(true);
+        setTimeout(() => window.dispatchEvent(new Event("serene:ready")), 0);
+        return;
+      }
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const tl = gsap.timeline({ onComplete: () => setDone(true) });
       if (reduce) {
@@ -20,7 +27,7 @@ export function Loader() {
       }
       tl.from(".loader__line", { scaleX: 0, duration: 0.9, ease: "power3.inOut" })
         .from(".loader__lockup > *", { y: 14, autoAlpha: 0, stagger: 0.08, duration: 0.6, ease: "power3.out" }, 0.15)
-        .to(".loader__lockup", { autoAlpha: 0, y: -10, duration: 0.45, ease: "power2.in" }, "+=1.35")
+        .to(".loader__lockup", { autoAlpha: 0, y: -10, duration: 0.45, ease: "power2.in" }, "+=0.85")
         .to(root.current, { autoAlpha: 0, duration: 0.6, ease: "power2.out" }, "-=0.1")
         .add(() => window.dispatchEvent(new Event("serene:ready")), "-=0.5");
     },

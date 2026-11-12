@@ -83,7 +83,7 @@ export const projects: Project[] = [
     since: "Since 2021",
     kind: "Hotel & Resort",
     image: "/media/ng/tower-forest-mist.webp",
-    url: "https://www.sereneheightsnathiagali.com",
+    url: "https://serene-nathiagali.vercel.app/",
     email: "info@sereneheightsnathiagali.com",
     phone: "042-111-111-744",
     summary:
@@ -98,7 +98,7 @@ export const projects: Project[] = [
     since: "LDA approved",
     kind: "Mixed-use tower",
     image: "/media/lhr/tower.jpg",
-    url: "https://www.sereneheightslahore.com",
+    url: "https://serene-heights-lahore-five.vercel.app/",
     email: "info@sereneheightslahore.com",
     phone: "0304-1111106",
     summary:
