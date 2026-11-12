@@ -33,14 +33,15 @@ export function Intro() {
 
       // Entrance once the loader hands over.
       const enter = () => {
-        if (reduce) return;
+        if (reduce || !el.isConnected) return;
+        const q = gsap.utils.selector(el);
         gsap
           .timeline({ defaults: { ease: "expo.out" } })
-          .from(".hero__card", { scale: 0.94, borderRadius: 40, duration: 1.6 })
-          .from(".hero__title .line > span", { yPercent: 110, duration: 1.3, stagger: 0.1 }, 0.1)
-          .from(".hero__media", { y: 80, autoAlpha: 0, rotate: 4, duration: 1.4 }, 0.25)
-          .from(".hero__media img", { scale: 1.5, duration: 2 }, 0.25)
-          .from(".hero__bottom > *", { y: 24, autoAlpha: 0, duration: 1, stagger: 0.08 }, 0.45);
+          .from(q(".hero__card"), { scale: 1.06, duration: 1.8 })
+          .from(q(".hero__title .line > span"), { yPercent: 110, duration: 1.3, stagger: 0.1 }, 0.1)
+          .from(q(".hero__media"), { y: 80, autoAlpha: 0, rotate: 4, duration: 1.4 }, 0.25)
+          .from(q(".hero__media img"), { scale: 1.5, duration: 2 }, 0.25)
+          .from(q(".hero__bottom > *"), { y: 24, autoAlpha: 0, duration: 1, stagger: 0.08 }, 0.45);
       };
       let entered = false;
       const onReady = () => {
@@ -49,7 +50,7 @@ export function Intro() {
         enter();
       };
       window.addEventListener("serene:ready", onReady, { once: true });
-      const fallback = window.setTimeout(onReady, 4800);
+      const fallback = window.setTimeout(onReady, 4300);
 
       // Pointer parallax on the floating image.
       const qx = gsap.quickTo(".hero__media", "x", { duration: 1.2, ease: "power3" });
@@ -61,24 +62,81 @@ export function Intro() {
       };
       el.querySelector(".hero__card")?.addEventListener("pointermove", onMove as EventListener);
 
+      // ── Hero framing ─────────────────────────────────────────────────────────────
+      // On load the hero is edge to edge. Over the first FRAME_PX of scroll it stays pinned and
+      // shrinks into a rounded card; it then holds for HOLD_PX before the page moves on.
+      // Only GPU-cheap work per frame: the card is scaled (one composited layer) and a separate
+      // light overlay paints the white frame + rounded corners, so the big card never repaints.
+      const FRAME_PX = 260;
+      const HOLD_PX = 200;
+      const frame = () => (window.innerWidth < 768 ? 8 : 12);
+      const radius = () => (window.innerWidth < 768 ? 28 : 32);
+      // Scale by the longer side so the card always fills the frame's window on both axes
+      // (the overlay trims the few extra px on the shorter side).
+      const fitScale = () => 1 - (2 * frame()) / Math.max(window.innerWidth, window.innerHeight);
+
+      const framing = () =>
+        gsap
+          .timeline({
+            defaults: { ease: "power2.out" }, // frame appears quickly, then settles
+            scrollTrigger: { start: 0, end: FRAME_PX, scrub: true, invalidateOnRefresh: true },
+          })
+          .fromTo(".hero__card", { scale: 1 }, { scale: fitScale }, 0)
+          .fromTo(
+            ".hero__frame",
+            { "--f": "0px", "--r": "0px" },
+            { "--f": () => `${frame()}px`, "--r": () => `${radius()}px` },
+            0,
+          );
+
       const mm = gsap.matchMedia();
       mm.add("(min-width: 900px) and (prefers-reduced-motion: no-preference)", () => {
         el.dataset.motion = "on";
         const cards = gsap.utils.toArray<HTMLElement>(".ring__card", el);
+        const spinEl = el.querySelector<HTMLElement>(".ring__spin")!;
+        const SHOW = () => window.innerHeight * 2.6; // length of the tilt + card-ring sequence
+
+        ScrollTrigger.create({
+          trigger: ".intro__stage",
+          start: "top top",
+          end: () => `+=${FRAME_PX + HOLD_PX + SHOW()}`,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        });
+        framing();
+
         const tl = gsap.timeline({
           defaults: { ease: "none" },
           scrollTrigger: {
-            trigger: ".intro__stage",
-            start: "top top",
-            end: "+=260%",
-            scrub: 1,
-            pin: true,
-            anticipatePin: 1,
+            start: FRAME_PX + HOLD_PX,
+            end: () => `+=${SHOW()}`,
+            scrub: 0.8,
+            invalidateOnRefresh: true,
           },
         });
-        tl.to(".hero__card", { transformPerspective: 1400, rotateX: 42, rotateZ: -24, scale: 0.5, yPercent: -6, duration: 1, ease: "power1.in" }, 0)
-          .to(".hero__title, .hero__bottom", { autoAlpha: 0, duration: 0.5 }, 0.1)
-          .to(".hero__card", { autoAlpha: 0, scale: 0.28, duration: 0.45 }, 0.85)
+        // Fold-away: one continuous transform tween for the card (no two tweens sharing a property),
+        // with the fade, the content and the frame hand-off on their own non-overlapping tracks.
+        tl.set(".hero__card", { borderRadius: () => radius() / fitScale() }, 0.001)
+          .to(".hero__frame", { autoAlpha: 0, duration: 0.2 }, 0.001)
+          .fromTo(
+            ".hero__card",
+            { transformPerspective: 1600, scale: fitScale, rotateX: 0, rotateZ: 0, yPercent: 0 },
+            {
+              transformPerspective: 1600,
+              scale: 0.32,
+              rotateX: 50,
+              rotateZ: -22,
+              yPercent: -8,
+              duration: 1.3,
+              ease: "power2.inOut",
+              immediateRender: false,
+            },
+            0.001,
+          )
+          .to(".hero__title, .hero__bottom", { autoAlpha: 0, yPercent: -12, duration: 0.45, ease: "power1.out" }, 0.04)
+          .to(".hero__media", { yPercent: -10, rotate: -3, duration: 1, ease: "sine.inOut" }, 0.001)
+          .to(".hero__card", { autoAlpha: 0, duration: 0.5, ease: "power1.in" }, 0.8)
           .fromTo(".marquee", { xPercent: 4 }, { xPercent: -46, duration: 3.2 }, 0)
           .fromTo(".marquee", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35 }, 0.25)
           .fromTo(".orbit", { scale: 0.7, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.7, ease: "power2.out" }, 0.75)
@@ -90,7 +148,7 @@ export function Intro() {
               duration: 2.6,
               // Hide cards turned away from the viewer — backface-visibility alone leaves edge seams.
               onUpdate: () => {
-                const spin = Number(gsap.getProperty(".ring__spin", "rotateY"));
+                const spin = Number(gsap.getProperty(spinEl, "rotateY"));
                 cards.forEach((c, i) => {
                   const facing = Math.cos(((spin + i * 60) * Math.PI) / 180);
                   c.style.visibility = facing > -0.05 ? "visible" : "hidden";
@@ -103,6 +161,18 @@ export function Intro() {
         return () => {
           delete el.dataset.motion;
         };
+      });
+
+      // Phones and narrow screens: same pinned framing and hold, then the page scrolls on normally.
+      mm.add("(max-width: 899px) and (prefers-reduced-motion: no-preference)", () => {
+        ScrollTrigger.create({
+          trigger: ".hero",
+          start: "top top",
+          end: `+=${FRAME_PX + HOLD_PX}`,
+          pin: true,
+          anticipatePin: 1,
+        });
+        framing();
       });
 
       return () => {
@@ -169,6 +239,7 @@ export function Intro() {
               </div>
             </div>
           </div>
+          <div className="hero__frame" aria-hidden />
         </div>
 
         <div className="showcase" aria-label="Highlights">

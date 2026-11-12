@@ -7,6 +7,30 @@ import { Emblem } from "./Emblem";
 export function Nav() {
   const [active, setActive] = useState<string>("");
   const [open, setOpen] = useState(false);
+  const [shown, setShown] = useState(false);
+
+  // The bar stays out of the way on the hero and slides in once the hero has gone.
+  useEffect(() => {
+    let raf = 0;
+    const check = () => {
+      raf = 0;
+      const card = document.querySelector<HTMLElement>(".hero__card");
+      if (!card) return setShown(true);
+      const gone = getComputedStyle(card).visibility === "hidden" || card.getBoundingClientRect().bottom < 140;
+      setShown(gone);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const ids = nav.map((n) => n.href.slice(1));
@@ -30,7 +54,7 @@ export function Nav() {
 
   return (
     <>
-      <nav className="nav" aria-label="Primary">
+      <nav className="nav" aria-label="Primary" data-hidden={!shown && !open ? "true" : undefined}>
         <a href="#top" className="nav__mark" aria-label="Serene Heights Group — back to top">
           <Emblem className="w-[13px]" />
         </a>

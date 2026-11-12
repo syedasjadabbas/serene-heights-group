@@ -16,11 +16,18 @@ declare global {
 /** Lenis smooth scroll driven by GSAP's ticker so ScrollTrigger stays in sync. */
 export function SmoothScroll() {
   useEffect(() => {
+    // A refresh always starts the story from the top: no restored scroll, no #section jump.
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+    window.scrollTo(0, 0);
+
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
 
     const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 0.9 });
     window.__lenis = lenis;
+    lenis.scrollTo(0, { immediate: true, force: true });
+    requestAnimationFrame(() => ScrollTrigger.refresh());
     lenis.on("scroll", ScrollTrigger.update);
     const tick = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);

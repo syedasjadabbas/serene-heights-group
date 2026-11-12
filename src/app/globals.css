@@ -1696,3 +1696,49 @@ button {
   width: clamp(26px, 3vw, 44px);
   flex: none;
 }
+
+/* Full-bleed hero; JS scales the card down to reveal the white frame on scroll */
+.hero {
+  padding: 0;
+}
+.hero__card {
+  border-radius: 0;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    padding: var(--gutter);
+  }
+  .hero__card {
+    border-radius: var(--radius);
+  }
+}
+
+/* Nav slides in after the hero */
+.nav {
+  transition:
+    transform 0.7s var(--ease),
+    opacity 0.45s var(--ease);
+}
+.nav[data-hidden="true"] {
+  transform: translateY(calc(-100% - 24px));
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* White frame overlay: a transparent rounded window whose huge spread shadow paints the frame.
+   Cheap to animate (solid colour), so the big hero card itself never has to repaint. */
+.hero {
+  overflow: hidden;
+}
+.hero__frame {
+  --f: 0px;
+  --r: 0px;
+  position: absolute;
+  inset: var(--f);
+  z-index: 3;
+  border-radius: var(--r);
+  box-shadow: 0 0 0 100vmax var(--paper);
+  pointer-events: none;
+}
