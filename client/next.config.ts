@@ -1,19 +1,23 @@
 import type { NextConfig } from "next";
 
-// Serene Booking and Serene Investors are separate Next.js apps (own repos and Vercel projects) served
-// inside this site under their own paths — Next.js Multi-Zones. Each path is rewritten to that app's
-// deployment, which is built with the matching basePath, so visitors stay on the group domain throughout.
+// Serene Booking, Serene Investors (Next.js) and Serene Heights Nathia Gali (Vite) are separate apps (own
+// repos and Vercel projects) served inside this site under their own paths — Next.js Multi-Zones. Each path
+// is rewritten to that app's deployment, which is built with the matching base path, so visitors stay on
+// the group domain throughout.
 // *_ORIGIN = that deployment's URL, e.g. https://serene-booking-web.vercel.app (no trailing slash).
 export const BOOKING_PATH = "/booking";
 export const INVESTORS_PATH = "/serene-investors";
+export const NATHIAGALI_PATH = "/serene-heights-nathiagali";
 const BOOKING_ORIGIN = (process.env.BOOKING_ORIGIN || "").replace(/\/$/, "");
 const INVESTORS_ORIGIN = (process.env.INVESTORS_ORIGIN || "").replace(/\/$/, "");
+const NATHIAGALI_ORIGIN = (process.env.NATHIAGALI_ORIGIN || "").replace(/\/$/, "");
 
-/** Rewrites that serve another app's deployment at `path` (and everything under it). */
-const zone = (path: string, origin: string) =>
+/** Rewrites that serve another app's deployment at `path` (and everything under it). A Vite app's home
+ *  page is asked for with the trailing slash (`rootSlash`), which is where its base path starts. */
+const zone = (path: string, origin: string, { rootSlash = false } = {}) =>
   origin
     ? [
-        { source: path, destination: `${origin}${path}` },
+        { source: path, destination: `${origin}${path}${rootSlash ? "/" : ""}` },
         { source: `${path}/:path*`, destination: `${origin}${path}/:path*` },
       ]
     : [];
@@ -22,13 +26,19 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   // Links point at a zone whenever it is wired up. For Booking an explicit NEXT_PUBLIC_BOOKING_URL still
-  // wins, and with neither its buttons fall back to WhatsApp; the Investors button only shows when wired.
+  // wins, and with neither its buttons fall back to WhatsApp; the Investors button only shows when wired;
+  // the Nathia Gali project card opens that site's own deployment until it is wired.
   env: {
     NEXT_PUBLIC_BOOKING_URL: process.env.NEXT_PUBLIC_BOOKING_URL || (BOOKING_ORIGIN ? BOOKING_PATH : ""),
     NEXT_PUBLIC_INVESTORS_URL: INVESTORS_ORIGIN ? INVESTORS_PATH : "",
+    NEXT_PUBLIC_NATHIAGALI_URL: NATHIAGALI_ORIGIN ? NATHIAGALI_PATH : "",
   },
   async rewrites() {
-    return [...zone(BOOKING_PATH, BOOKING_ORIGIN), ...zone(INVESTORS_PATH, INVESTORS_ORIGIN)];
+    return [
+      ...zone(BOOKING_PATH, BOOKING_ORIGIN),
+      ...zone(INVESTORS_PATH, INVESTORS_ORIGIN),
+      ...zone(NATHIAGALI_PATH, NATHIAGALI_ORIGIN, { rootSlash: true }),
+    ];
   },
   async headers() {
     return [

@@ -1,5 +1,6 @@
 import { HAS_BOOKING, projects, site } from "@/global/constants/site";
-import { bookingHomeUrl, linkTarget, manageUrl } from "@/global/lib/booking";
+import { bookingHomeUrl, manageUrl } from "@/global/lib/booking";
+import { linkArrow, linkTarget } from "@/global/lib/links";
 
 export function SiteFooter() {
   return (
@@ -17,8 +18,8 @@ export function SiteFooter() {
           <ul>
             {projects.map((p) => (
               <li key={p.slug}>
-                <a href={p.url} target="_blank" rel="noopener">
-                  Serene Heights {p.name} ↗
+                <a href={p.url} {...linkTarget(p.url)}>
+                  Serene Heights {p.name} {linkArrow(p.url)}
                 </a>
               </li>
             ))}

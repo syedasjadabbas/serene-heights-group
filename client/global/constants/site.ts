@@ -10,6 +10,10 @@ export const HAS_BOOKING = BOOKING_URL !== "";
 // Serene Investors, served at /serene-investors when INVESTORS_ORIGIN is set (see next.config.ts).
 export const INVESTORS_URL = process.env.NEXT_PUBLIC_INVESTORS_URL || "";
 
+// The Serene Heights Nathia Gali site, served at /serene-heights-nathiagali when NATHIAGALI_ORIGIN is set
+// (see next.config.ts); until then the project card opens its own deployment.
+export const NATHIAGALI_URL = process.env.NEXT_PUBLIC_NATHIAGALI_URL || "https://serene-nathiagali.vercel.app/";
+
 export const site = {
   name: "Serene Heights Group",
   short: "Serene Heights",
@@ -86,7 +90,7 @@ export const projects: Project[] = [
     since: "Since 2021",
     kind: "Hotel & Resort",
     image: "/media/ng/tower-forest-mist.webp",
-    url: "https://serene-nathiagali.vercel.app/",
+    url: NATHIAGALI_URL,
     email: "info@sereneheightsnathiagali.com",
     phone: "042-111-111-744",
     summary:

@@ -41,7 +41,7 @@ export function structuredData() {
         "@id": `${site.url}/#${p.slug}`,
         name: `Serene Heights ${p.name}`,
         description: p.summary,
-        url: p.url,
+        url: new URL(p.url, site.url).toString(),
         address: {
           "@type": "PostalAddress",
           streetAddress: p.place,

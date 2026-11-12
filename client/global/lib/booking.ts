@@ -2,6 +2,9 @@
 // /booking on this same domain and open in the same tab; until then every booking action opens a
 // pre-filled WhatsApp enquiry instead of a dead link.
 import { BOOKING_URL, HAS_BOOKING, site } from "@/global/constants/site";
+import { isInternal, linkTarget } from "@/global/lib/links";
+
+export { isInternal, linkTarget };
 
 export const whatsapp = (text: string) => `${site.contact.whatsappHref}?text=${encodeURIComponent(text)}`;
 
@@ -42,10 +45,6 @@ export function roomUrl(room: { slug: string; name: string }) {
     ? `${BOOKING_URL}/rooms/${room.slug}`
     : whatsapp(`Hello Serene Heights, I'm interested in the ${room.name} in Nathia Gali. Could you share availability and rates?`);
 }
-
-/** Same-site paths (/booking/…) open in this tab; WhatsApp and other sites open in a new one. */
-export const isInternal = (url: string) => url.startsWith("/") && !url.startsWith("//");
-export const linkTarget = (url: string) => (isInternal(url) ? {} : { target: "_blank", rel: "noopener" });
 
 /** Go to a booking URL from code (e.g. after the search form validates). */
 export function openBooking(url: string) {

@@ -107,6 +107,7 @@ const rel = (f) => relative(ROOT, f).replaceAll("\\", "/");
   const zones = [
     { name: "Booking", constant: "BOOKING_PATH", repo: "../../Serene Booking/client/next.config.mjs" },
     { name: "Investors", constant: "INVESTORS_PATH", repo: "../../stake-clone/next.config.mjs" },
+    { name: "Nathia Gali", constant: "NATHIAGALI_PATH", repo: "../../serene nathiagali/vite.config.ts" },
   ];
   for (const z of zones) {
     const path = (cfg.match(new RegExp(`${z.constant} = "([^"]+)"`)) || [])[1];
@@ -116,7 +117,8 @@ const rel = (f) => relative(ROOT, f).replaceAll("\\", "/");
     let note = "";
     const sibling = join(ROOT, z.repo);
     if (existsSync(sibling)) {
-      const bp = (read(sibling).match(/NEXT_PUBLIC_BASE_PATH \?\? ["']([^"']*)["']/) || [])[1];
+      // NEXT_PUBLIC_BASE_PATH ?? "/x" (Next.js apps) or VITE_BASE_PATH ?? '/x' (Vite)
+      const bp = (read(sibling).match(/BASE_PATH \?\? ["']([^"']*)["']/) || [])[1];
       if (bp !== path) problems.push(`${z.name} basePath is "${bp}", group site expects "${path}"`);
       else note = `matches ${z.name} basePath "${bp}"`;
     } else note = `${z.name} repo not alongside — base path not compared`;

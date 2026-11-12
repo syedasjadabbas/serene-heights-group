@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { completed, projects } from "@/global/constants/site";
+import { linkArrow, linkTarget } from "@/global/lib/links";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -88,7 +89,7 @@ export function Projects() {
 
       <div className="projects__track">
         {projects.map((p) => (
-          <a key={p.slug} href={p.url} target="_blank" rel="noopener" className="pcard">
+          <a key={p.slug} href={p.url} {...linkTarget(p.url)} className="pcard">
             <img src={p.image} alt={`Serene Heights ${p.name}`} loading="lazy" />
             <div className="pcard__meta">
               <span>Serene Heights</span>
@@ -111,7 +112,7 @@ export function Projects() {
                   ))}
                 </div>
                 <span className="btn btn--white" style={{ justifySelf: "start" }}>
-                  Visit project site <span className="arr">↗</span>
+                  Visit project site <span className="arr">{linkArrow(p.url)}</span>
                 </span>
               </div>
             </div>
