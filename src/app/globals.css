@@ -1795,3 +1795,24 @@ button {
 .pin-label--far {
   border-color: rgba(200, 164, 106, 0.45);
 }
+
+/* Section labels ("Ongoing projects", "Upcoming projects", …) read as proper headings */
+.section-head .eyebrow,
+.stays__panel .eyebrow,
+.reveal__label {
+  font-size: clamp(15px, 1.3vw, 22px);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-night);
+  gap: 12px;
+}
+.section-head .eyebrow::before,
+.stays__panel .eyebrow::before,
+.reveal__label::before {
+  width: 8px;
+  height: 8px;
+}
+.light .section-head .eyebrow {
+  color: var(--ink);
+}

@@ -20,16 +20,26 @@ export function Projects() {
       mm.add("(min-width: 901px) and (prefers-reduced-motion: no-preference)", () => {
         el.dataset.motion = "on";
         const dist = () => Math.max(0, track.scrollWidth - window.innerWidth);
+        // Arrive, settle on the first card, then move sideways: the section pins as soon as it
+        // reaches the top, holds for HOLD px, and only then starts the horizontal scroll.
+        const hold = () => window.innerHeight * 0.35;
+        const tail = () => window.innerHeight * 0.15;
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top top",
+          end: () => `+=${hold() + dist() + tail()}`,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        });
         const tween = gsap.to(track, {
           x: () => -dist(),
           ease: "none",
           scrollTrigger: {
             trigger: el,
-            start: "top top",
-            end: () => `+=${dist() + window.innerHeight * 0.4}`,
-            scrub: 1,
-            pin: true,
-            anticipatePin: 1,
+            start: () => `top top-=${hold()}`,
+            end: () => `+=${dist()}`,
+            scrub: 0.8,
             invalidateOnRefresh: true,
           },
         });
