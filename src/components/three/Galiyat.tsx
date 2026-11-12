@@ -205,14 +205,17 @@ function Terrain({ dem, progress, labels }: { dem: Int16Array; progress: React.R
       if (!el) return;
       tip.set(x, y, z).project(cam);
       const px = (tip.x * 0.5 + 0.5) * state.size.width;
-      const py = (-tip.y * 0.5 + 0.5) * state.size.height;
+      // Never let a label rise under the fixed nav bar at the top of the screen.
+      const canvasTop = state.gl.domElement.getBoundingClientRect().top;
+      const minY = Math.max(0, 180 - canvasTop);
+      const py = Math.max((-tip.y * 0.5 + 0.5) * state.size.height, minY);
       // Above the beam on wide screens; beside it on phones, where the canvas top would clip it.
       el.style.transform = narrow
         ? `translate(${px}px, ${py}px) translate(14px, -30%)`
         : `translate(${px}px, ${py}px) translate(-50%, -100%)`;
       el.style.opacity = tip.z < 1 ? "1" : "0";
     };
-    place(labels.ng.current, 0, resortY + 3.25, 0);
+    place(labels.ng.current, 0, resortY + 2.35, 0);
     place(labels.lhr.current, lhrX, lhrY + 1.95, lhrZ);
   });
 
@@ -230,11 +233,11 @@ function Terrain({ dem, progress, labels }: { dem: Int16Array; progress: React.R
 
       {/* Resort marker */}
       <group position={[0, resortY, 0]}>
-        <mesh ref={beam} position={[0, 1.6, 0]}>
-          <cylinderGeometry args={[0.025, 0.025, 3.2, 12, 1, true]} />
+        <mesh ref={beam} position={[0, 1.15, 0]}>
+          <cylinderGeometry args={[0.025, 0.025, 2.3, 12, 1, true]} />
           <meshBasicMaterial color="#dfece4" transparent opacity={0.85} blending={THREE.AdditiveBlending} depthWrite={false} />
         </mesh>
-        <mesh position={[0, 3.25, 0]}>
+        <mesh position={[0, 2.35, 0]}>
           <sphereGeometry args={[0.13, 24, 24]} />
           <meshBasicMaterial color="#ffffff" />
         </mesh>
