@@ -98,7 +98,7 @@ export function Stays() {
           stagger: 0.06,
           duration: 1,
           ease: "expo.out",
-          scrollTrigger: { trigger: ".rooms", start: "top 85%" },
+          scrollTrigger: { trigger: ".rooms", start: "top 88%" },
         });
         return () => {
           el.dataset.motion = "off";
@@ -161,14 +161,36 @@ export function Stays() {
         </div>
       </div>
 
+      <div className="rooms-head">
+        <div>
+          <span className="eyebrow">Room types</span>
+          <h3 className="display">
+            Five ways <span className="soft">to stay</span>
+          </h3>
+        </div>
+        <a className="btn btn--ghost" href={`${BOOKING_URL}/rooms`} target="_blank" rel="noopener">
+          Browse all rooms <span className="arr">↗</span>
+        </a>
+      </div>
       <div className="rooms" aria-label="Room types">
         {rooms.map((r, i) => (
           <a key={r.slug} className="room" href={`${BOOKING_URL}/rooms/${r.slug}`} target="_blank" rel="noopener">
-            <i>0{i + 1}</i>
-            <div>
-              <b>{r.name}</b>
-              <span>{r.note}</span>
+            <img src={r.image} alt="" loading="lazy" />
+            <div className="room__top">
+              <i>0{i + 1}</i>
+              <span className="room__count">{r.units} apartments</span>
             </div>
+            <div className="room__body">
+              <b>{r.name}</b>
+              <p>{r.tagline}</p>
+              <div className="room__specs">
+                <span>{r.size}</span>
+                <span>{r.guests}</span>
+              </div>
+            </div>
+            <span className="room__go" aria-hidden>
+              →
+            </span>
           </a>
         ))}
       </div>

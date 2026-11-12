@@ -20,47 +20,28 @@ export function Projects() {
       mm.add("(min-width: 901px) and (prefers-reduced-motion: no-preference)", () => {
         el.dataset.motion = "on";
         const dist = () => Math.max(0, track.scrollWidth - window.innerWidth);
-        // Arrive, settle on the first card, then move sideways: the section pins as soon as it
-        // reaches the top, holds for HOLD px, and only then starts the horizontal scroll.
-        const hold = () => window.innerHeight * 0.35;
-        const tail = () => window.innerHeight * 0.15;
-        ScrollTrigger.create({
-          trigger: el,
-          start: "top top",
-          end: () => `+=${hold() + dist() + tail()}`,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        });
-        const tween = gsap.to(track, {
-          x: () => -dist(),
-          ease: "none",
+        // One pinned, scrubbed timeline: settle on the first card, slide across, brief rest.
+        // Durations are in scroll pixels so the slide maps 1:1 to the track width.
+        const HOLD = Math.round(window.innerHeight * 0.35);
+        const TAIL = Math.round(window.innerHeight * 0.12);
+        const MOVE = Math.max(1, dist());
+        const tl = gsap.timeline({
+          defaults: { ease: "none" },
           scrollTrigger: {
             trigger: el,
-            start: () => `top top-=${hold()}`,
-            end: () => `+=${dist()}`,
+            start: "top top",
+            end: () => `+=${HOLD + dist() + TAIL}`,
             scrub: 0.8,
+            pin: true,
+            anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
-        // Each image drifts against the scroll for depth.
-        el.querySelectorAll<HTMLElement>(".pcard img").forEach((img) => {
-          gsap.fromTo(
-            img,
-            { xPercent: -6 },
-            {
-              xPercent: 6,
-              ease: "none",
-              scrollTrigger: {
-                trigger: img.parentElement,
-                containerAnimation: tween,
-                start: "left right",
-                end: "right left",
-                scrub: true,
-              },
-            },
-          );
-        });
+        tl.to({}, { duration: HOLD })
+          .to(track, { x: () => -dist(), duration: MOVE }, HOLD)
+          // Images drift against the slide for depth.
+          .fromTo(".pcard img", { xPercent: -6 }, { xPercent: 6, duration: MOVE }, HOLD)
+          .to({}, { duration: TAIL });
         return () => {
           delete el.dataset.motion;
         };

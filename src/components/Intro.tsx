@@ -156,12 +156,14 @@ export function Intro() {
             c.style.visibility = facing > -0.05 ? "visible" : "hidden";
           });
         };
-        gsap.set(spinEl, { rotateY: 30 });
+        // Open on the Serene Investors card (card 1 → -60°), then turn the same 330° as before.
+        const START = -60;
+        gsap.set(spinEl, { rotateY: START });
         face();
         tl.fromTo(
           spinEl,
-          { rotateY: 30 },
-          { rotateY: -300, duration: SPIN, ease: "none", onUpdate: face, immediateRender: false },
+          { rotateY: START },
+          { rotateY: START - 330, duration: SPIN, ease: "none", onUpdate: face, immediateRender: false },
           RING_IN + 0.3,
         );
         return () => {

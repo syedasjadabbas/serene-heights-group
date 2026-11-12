@@ -81,7 +81,12 @@ export function Reveal() {
             0.95,
           );
         });
-        tl.to({}, { duration: 0.5 });
+        // Hand off to Projects: the map and copy lift away, leaving clean dark green.
+        tl.to(
+          ".reveal__canvas, .reveal__copy, .reveal__stats, .reveal__label, .reveal__caption",
+          { autoAlpha: 0, yPercent: -6, duration: 0.5, ease: "power1.in" },
+          "+=0.35",
+        );
         return () => {
           dark.style.removeProperty("--mask");
           progress.current = 1;

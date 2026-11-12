@@ -89,12 +89,53 @@ export const completed = [
   { name: "Serene Farms", place: "Barki Road, Lahore", note: "Completed horizontal development" },
 ];
 
+// Room types and counts as defined in the Serene Booking inventory (official floor plans).
 export const rooms = [
-  { slug: "classic-one-bedroom", name: "Classic One-Bedroom", note: "Valley-facing, fully furnished" },
-  { slug: "premier-one-bedroom", name: "Premier One-Bedroom", note: "More room, wider views" },
-  { slug: "grand-one-bedroom", name: "Grand One-Bedroom", note: "Our largest standard plan" },
-  { slug: "signature-corner-suite", name: "Signature Corner Suite", note: "800+ sq ft, two aspects" },
-  { slug: "terrace-apartment", name: "Terrace Apartment", note: "Eighth floor, private terrace" },
+  {
+    slug: "classic-one-bedroom",
+    name: "Classic One-Bedroom",
+    tagline: "A cosy mountain base with its own balcony",
+    size: "Under 600 sq ft",
+    guests: "Up to 3 guests",
+    units: 37,
+    image: "/media/ng/tower-closeup.webp",
+  },
+  {
+    slug: "premier-one-bedroom",
+    name: "Premier One-Bedroom",
+    tagline: "More room, with a sofa bed for the family",
+    size: "600–699 sq ft",
+    guests: "Up to 4 guests",
+    units: 44,
+    image: "/media/stay/tower-sunset-forest.jpg",
+  },
+  {
+    slug: "grand-one-bedroom",
+    name: "Grand One-Bedroom",
+    tagline: "A wide balcony facing the Galiyat",
+    size: "700–799 sq ft",
+    guests: "Up to 4 guests",
+    units: 25,
+    image: "/media/ng/snow-tower.webp",
+  },
+  {
+    slug: "signature-corner-suite",
+    name: "Signature Corner Suite",
+    tagline: "Corner living with views on two sides",
+    size: "800+ sq ft",
+    guests: "Up to 4 guests",
+    units: 4,
+    image: "/media/stay/rooftop-crown.jpg",
+  },
+  {
+    slug: "terrace-apartment",
+    name: "Terrace Apartment",
+    tagline: "Eighth floor, with a private terrace",
+    size: "500–980 sq ft",
+    guests: "Up to 4 guests",
+    units: 20,
+    image: "/media/stay/sunset-terrace.jpg",
+  },
 ];
 
 export const stayImages = [
