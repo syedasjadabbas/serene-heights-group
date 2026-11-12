@@ -1586,10 +1586,6 @@ button {
   backface-visibility: hidden;
 }
 @media (max-width: 760px) {
-  .orbit {
-    width: 44vw;
-    --rz: 46vw !important;
-  }
   .reveal__dark {
     overflow: hidden;
   }
@@ -1743,11 +1739,16 @@ button {
   pointer-events: none;
 }
 
-/* Hero loop fills the floating card like the still did */
-.hero__media video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  scale: 1.12;
-  display: block;
+/* Card ring sized by width and height so "Explore the portfolio" always clears the front card */
+.orbit {
+  --w: clamp(200px, min(19vw, 36vh), 300px);
+  width: var(--w);
+  --rz: calc(var(--w) * 1.05);
+  margin-top: -4vh;
+}
+@media (max-width: 760px) {
+  .orbit {
+    --w: min(44vw, 34vh);
+    --rz: calc(var(--w) * 1.05);
+  }
 }
