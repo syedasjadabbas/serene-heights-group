@@ -40,7 +40,7 @@ export function Intro() {
           .from(q(".hero__card"), { scale: 1.06, duration: 1.8 })
           .from(q(".hero__title .line > span"), { yPercent: 110, duration: 1.3, stagger: 0.1 }, 0.1)
           .from(q(".hero__media"), { y: 80, autoAlpha: 0, rotate: 4, duration: 1.4 }, 0.25)
-          .from(q(".hero__media img"), { scale: 1.5, duration: 2 }, 0.25)
+          .from(q(".hero__media video"), { scale: 1.5, duration: 2 }, 0.25)
           .from(q(".hero__bottom > *"), { y: 24, autoAlpha: 0, duration: 1, stagger: 0.08 }, 0.45);
       };
       let entered = false;
@@ -51,6 +51,8 @@ export function Intro() {
       };
       window.addEventListener("serene:ready", onReady, { once: true });
       const fallback = window.setTimeout(onReady, 4300);
+
+      if (reduce) el.querySelector<HTMLVideoElement>(".hero__video")?.pause();
 
       // Pointer parallax on the floating image.
       const qx = gsap.quickTo(".hero__media", "x", { duration: 1.2, ease: "power3" });
@@ -94,7 +96,14 @@ export function Intro() {
         el.dataset.motion = "on";
         const cards = gsap.utils.toArray<HTMLElement>(".ring__card", el);
         const spinEl = el.querySelector<HTMLElement>(".ring__spin")!;
-        const SHOW = () => window.innerHeight * 2.6; // length of the tilt + card-ring sequence
+        // Timeline units → scroll: the whole fold + ring sequence spans SHOW px of pinned scroll.
+        const CARD_GONE = 1.3; // hero card fully faded at this point
+        const RING_IN = CARD_GONE + 0.05; // ring only starts once the hero card has gone
+        const STEP = 0.5; // turn to the next card
+        const READ = 0.45; // pause on each card so it can be read
+        const STEPS = cards.length - 1; // show every card once
+        const END = RING_IN + 0.5 + READ + STEPS * (STEP + READ) + 0.2;
+        const SHOW = () => window.innerHeight * 0.8 * END;
 
         ScrollTrigger.create({
           trigger: ".intro__stage",
@@ -137,27 +146,32 @@ export function Intro() {
           .to(".hero__title, .hero__bottom", { autoAlpha: 0, yPercent: -12, duration: 0.45, ease: "power1.out" }, 0.04)
           .to(".hero__media", { yPercent: -10, rotate: -3, duration: 1, ease: "sine.inOut" }, 0.001)
           .to(".hero__card", { autoAlpha: 0, duration: 0.5, ease: "power1.in" }, 0.8)
-          .fromTo(".marquee", { xPercent: 4 }, { xPercent: -46, duration: 3.2 }, 0)
+          .fromTo(".marquee", { xPercent: 4 }, { xPercent: -46, duration: END }, 0)
           .fromTo(".marquee", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35 }, 0.25)
-          .fromTo(".orbit", { scale: 0.7, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.7, ease: "power2.out" }, 0.75)
-          .fromTo(
-            ".ring__spin",
-            { rotateY: 40 },
-            {
-              rotateY: -320,
-              duration: 2.6,
-              // Hide cards turned away from the viewer — backface-visibility alone leaves edge seams.
-              onUpdate: () => {
-                const spin = Number(gsap.getProperty(spinEl, "rotateY"));
-                cards.forEach((c, i) => {
-                  const facing = Math.cos(((spin + i * 60) * Math.PI) / 180);
-                  c.style.visibility = facing > -0.05 ? "visible" : "hidden";
-                });
-              },
-            },
-            0.6,
-          )
-          .fromTo(".showcase__cta", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.4 }, 1.2);
+          .fromTo(".orbit", { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.5, ease: "power2.out" }, RING_IN)
+          .fromTo(".showcase__cta", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.4 }, RING_IN + 0.3);
+
+        // Card ring: turn one card at a time and pause on each, so every card can be read.
+        // Hide cards turned away from the viewer — backface-visibility alone leaves edge seams.
+        const face = () => {
+          const spin = Number(gsap.getProperty(spinEl, "rotateY"));
+          cards.forEach((c, i) => {
+            const facing = Math.cos(((spin + i * 60) * Math.PI) / 180);
+            c.style.visibility = facing > -0.05 ? "visible" : "hidden";
+          });
+        };
+        gsap.set(spinEl, { rotateY: 0 });
+        face();
+        let at = RING_IN + 0.5 + READ;
+        for (let i = 1; i <= STEPS; i++) {
+          tl.fromTo(
+            spinEl,
+            { rotateY: -(i - 1) * 60 },
+            { rotateY: -i * 60, duration: STEP, ease: "power2.inOut", onUpdate: face, immediateRender: false },
+            at,
+          );
+          at += STEP + READ;
+        }
         return () => {
           delete el.dataset.motion;
         };
@@ -201,7 +215,18 @@ export function Intro() {
             </h1>
 
             <figure className="hero__media" style={{ margin: 0 }}>
-              <img src="/media/stay/tower-snow-night.jpg" alt="Serene Heights Nathia Gali in winter" fetchPriority="high" />
+              {/* Drone loop over the resort, cut from the Nathia Gali walkthrough (11 s, seamless). */}
+              <video
+                className="hero__video"
+                src="/media/video/hero-loop.mp4"
+                poster="/media/video/hero-loop.jpg"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                aria-label="Aerial flight over Serene Heights Nathia Gali in winter"
+              />
               <figcaption>
                 <span>Nathia Gali</span>
                 <span>7,906 ft</span>
