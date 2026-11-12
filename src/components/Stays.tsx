@@ -8,7 +8,8 @@ import { BOOKING_URL, rooms, stayImages } from "@/lib/site";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Hand-placed so the centre stays clear for the booking panel.
+// Hand-placed around the edges (vw, vh) so the centre stays clear for the booking panel;
+// order alternates sides so the corridor feels balanced as images fly past.
 const SPOTS: { x: number; y: number; w: number; r: number }[] = [
   { x: -38, y: -26, w: 15, r: 0.75 },
   { x: 30, y: -30, w: 13, r: 1.25 },
@@ -19,6 +20,14 @@ const SPOTS: { x: number; y: number; w: number; r: number }[] = [
   { x: -42, y: 2, w: 12, r: 1.2 },
   { x: 42, y: -4, w: 14, r: 0.8 },
   { x: -24, y: -34, w: 16, r: 1.4 },
+  { x: 24, y: 34, w: 15, r: 1.3 },
+  { x: -40, y: -12, w: 13, r: 0.85 },
+  { x: 40, y: 10, w: 12, r: 1.2 },
+  { x: 8, y: -40, w: 14, r: 1.35 },
+  { x: -16, y: 38, w: 12, r: 1.1 },
+  { x: 30, y: -16, w: 11, r: 0.75 },
+  { x: -32, y: 14, w: 12, r: 1.25 },
+  { x: 44, y: 30, w: 13, r: 1 },
 ];
 
 const iso = (d: Date) => d.toISOString().slice(0, 10);
@@ -44,7 +53,9 @@ export function Stays() {
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         el.dataset.motion = "on";
-        const span = 3200; // total depth of the corridor, px
+        // Corridor depth grows with the image count (~300 px between images).
+        const span = imgs.length * 300;
+        const SPEED = 1.05; // px of depth travelled per px scrolled (was ~1.75) — calmer fly-through
         // Spread along the corridor so a few images are already in view when the pin starts.
         const base = imgs.map((_, i) => -span * 0.72 + (i / imgs.length) * span * 0.95);
         const place = (p: number) => {
@@ -66,8 +77,9 @@ export function Stays() {
           scrollTrigger: {
             trigger: ".stays__stage",
             start: "top top",
-            end: "+=240%",
+            end: () => `+=${Math.round((span + 600) / SPEED)}`,
             scrub: 1.2,
+            invalidateOnRefresh: true,
             pin: true,
             anticipatePin: 1,
           },

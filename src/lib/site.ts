@@ -107,6 +107,14 @@ export const stayImages = [
   { src: "/media/stay/sunset-terrace.jpg", alt: "Sunset terrace dining" },
   { src: "/media/stay/aerial-pool-portrait.jpg", alt: "Aerial view of the pool deck" },
   { src: "/media/ng/rooftop-view.webp", alt: "View from the rooftop" },
+  { src: "/media/stay/aerial-rooftop-pool.jpg", alt: "Rooftop infinity pool from above" },
+  { src: "/media/stay/aerial-snow-resort.jpg", alt: "The resort under snow" },
+  { src: "/media/stay/tower-sunset-forest.jpg", alt: "Tower at sunset above the pines" },
+  { src: "/media/stay/adventure-park.jpg", alt: "Adventure park" },
+  { src: "/media/stay/rooftop-crown.jpg", alt: "Rooftop crown of the tower" },
+  { src: "/media/stay/mini-golf.jpg", alt: "Mini golf course" },
+  { src: "/media/stay/rooftop-restaurant.jpg", alt: "Rooftop restaurant" },
+  { src: "/media/stay/hero-tower-mist.jpg", alt: "Tower rising out of the mist" },
 ];
 
 // Published payment plans — figures exactly as issued on the Nathia Gali site.

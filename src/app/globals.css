@@ -1816,3 +1816,8 @@ button {
 .light .section-head .eyebrow {
   color: var(--ink);
 }
+
+/* Keep "7,906 ft" on one line */
+.stays__panel h2 .soft {
+  white-space: nowrap;
+}
