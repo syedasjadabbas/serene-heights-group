@@ -1,26 +1,34 @@
 import type { NextConfig } from "next";
 
-// Serene Booking is a separate Next.js app (its own repo and Vercel project) served inside this site
-// at /booking — Next.js Multi-Zones. Every /booking request is rewritten to the Booking deployment,
-// which is built with basePath "/booking", so visitors stay on the group domain throughout.
-// BOOKING_ORIGIN = that deployment's URL, e.g. https://serene-booking.vercel.app (no trailing slash).
+// Serene Booking and Serene Investors are separate Next.js apps (own repos and Vercel projects) served
+// inside this site under their own paths — Next.js Multi-Zones. Each path is rewritten to that app's
+// deployment, which is built with the matching basePath, so visitors stay on the group domain throughout.
+// *_ORIGIN = that deployment's URL, e.g. https://serene-booking-web.vercel.app (no trailing slash).
 export const BOOKING_PATH = "/booking";
+export const INVESTORS_PATH = "/serene-investors";
 const BOOKING_ORIGIN = (process.env.BOOKING_ORIGIN || "").replace(/\/$/, "");
+const INVESTORS_ORIGIN = (process.env.INVESTORS_ORIGIN || "").replace(/\/$/, "");
+
+/** Rewrites that serve another app's deployment at `path` (and everything under it). */
+const zone = (path: string, origin: string) =>
+  origin
+    ? [
+        { source: path, destination: `${origin}${path}` },
+        { source: `${path}/:path*`, destination: `${origin}${path}/:path*` },
+      ]
+    : [];
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  // Booking links point at /booking whenever the zone is wired up; an explicit
-  // NEXT_PUBLIC_BOOKING_URL still wins, and with neither they fall back to WhatsApp.
+  // Links point at a zone whenever it is wired up. For Booking an explicit NEXT_PUBLIC_BOOKING_URL still
+  // wins, and with neither its buttons fall back to WhatsApp; the Investors button only shows when wired.
   env: {
     NEXT_PUBLIC_BOOKING_URL: process.env.NEXT_PUBLIC_BOOKING_URL || (BOOKING_ORIGIN ? BOOKING_PATH : ""),
+    NEXT_PUBLIC_INVESTORS_URL: INVESTORS_ORIGIN ? INVESTORS_PATH : "",
   },
   async rewrites() {
-    if (!BOOKING_ORIGIN) return [];
-    return [
-      { source: BOOKING_PATH, destination: `${BOOKING_ORIGIN}${BOOKING_PATH}` },
-      { source: `${BOOKING_PATH}/:path*`, destination: `${BOOKING_ORIGIN}${BOOKING_PATH}/:path*` },
-    ];
+    return [...zone(BOOKING_PATH, BOOKING_ORIGIN), ...zone(INVESTORS_PATH, INVESTORS_ORIGIN)];
   },
   async headers() {
     return [

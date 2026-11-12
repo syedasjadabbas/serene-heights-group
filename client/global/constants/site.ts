@@ -7,6 +7,9 @@
 export const BOOKING_URL = (process.env.NEXT_PUBLIC_BOOKING_URL || "").replace(/\/$/, "");
 export const HAS_BOOKING = BOOKING_URL !== "";
 
+// Serene Investors, served at /serene-investors when INVESTORS_ORIGIN is set (see next.config.ts).
+export const INVESTORS_URL = process.env.NEXT_PUBLIC_INVESTORS_URL || "";
+
 export const site = {
   name: "Serene Heights Group",
   short: "Serene Heights",

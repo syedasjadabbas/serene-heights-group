@@ -210,3 +210,10 @@
       grid-template-columns: 1fr;
     }
 }
+
+/* Description + "Open Serene Investors" button on the right of the section head */
+.section-head__aside {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+}

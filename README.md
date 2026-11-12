@@ -67,18 +67,23 @@ server/                      # (added when the first API feature lands: Express 
    - `BOOKING_ORIGIN` — the Serene Booking website's Vercel URL (e.g. `https://serene-booking.vercel.app`).
      When set, this site serves Booking at **`/booking`** and every booking button opens it in the same tab.
      Leave empty and booking buttons open a pre-filled WhatsApp enquiry instead.
+   - `INVESTORS_ORIGIN` — the Serene Investors Vercel URL. When set, this site serves it at
+     **`/serene-investors`** and the Investors section shows an "Open Serene Investors" button.
    - `NEXT_PUBLIC_SITE_URL` — only needed once a custom domain is attached.
    - `NEXT_PUBLIC_ALLOW_INDEXING=true` — only on the real public domain after facts are signed off
      (pages are `noindex` otherwise, so a client preview never shows up in Google).
 3. Every push to `main` redeploys.
 
-## Serene Booking at `/booking` (Multi-Zones)
+## Serene Booking at `/booking` and Serene Investors at `/serene-investors` (Multi-Zones)
 Serene Booking stays its own repo and Vercel project but appears inside this site at `/booking`.
 `client/next.config.ts` rewrites `/booking` and `/booking/:path*` to `BOOKING_ORIGIN`; Booking is built with
 `basePath: "/booking"` and sets its login cookie on `/booking/api/v1/auth`. Moving between the two apps is a
 normal page load. `npm run check` confirms the rewrite exists and (when the Booking repo sits alongside)
 that both apps agree on the path.
 
-**Run both locally:** start Serene Booking's API and website (website on any port, e.g. 3020), then put
-`BOOKING_ORIGIN=http://localhost:3020` in `client/.env.local` and start this site — `localhost:3010/booking`
-is Booking.
+Serene Investors (repo `serene-investors`, local folder `stake-clone`) works the same way at `/serene-investors`
+(`INVESTORS_ORIGIN`); its images, plain links and API calls go through `withBase()`.
+
+**Run locally:** start Serene Booking (API on 4000, website on 3000) and Serene Investors (`next dev -p 3030`),
+then put `BOOKING_ORIGIN=http://localhost:3000` and `INVESTORS_ORIGIN=http://localhost:3030` in
+`client/.env.local` and start this site — `localhost:3010/booking` and `localhost:3010/serene-investors`.

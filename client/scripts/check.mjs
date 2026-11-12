@@ -100,22 +100,28 @@ const rel = (f) => relative(ROOT, f).replaceAll("\\", "/");
   check("Share metadata fits previews", problems.length === 0, problems.join(", "));
 }
 
-// 10. Booking zone: /booking is rewritten (page + sub-paths) and matches Serene Booking's base path.
+// 10. Zones (Next.js Multi-Zones): each path is rewritten (page + sub-paths) and matches the other app's
+//     base path when its repo sits alongside this one.
 {
   const cfg = read(join(ROOT, "next.config.ts"));
-  const path = (cfg.match(/BOOKING_PATH = "([^"]+)"/) || [])[1];
-  const problems = [];
-  if (!path) problems.push("BOOKING_PATH missing in next.config.ts");
-  if (!/source: BOOKING_PATH,/.test(cfg) || !/source: `\$\{BOOKING_PATH\}\/:path\*`/.test(cfg)) problems.push("rewrites must cover /booking and /booking/:path*");
-  // When the Serene Booking repo sits next to this one (local dev), compare base paths directly.
-  const sibling = join(ROOT, "../../Serene Booking/client/next.config.mjs");
-  let note = "";
-  if (existsSync(sibling)) {
-    const bp = (read(sibling).match(/NEXT_PUBLIC_BASE_PATH \?\? "([^"]*)"/) || [])[1];
-    if (bp !== path) problems.push(`Serene Booking basePath is "${bp}", group site expects "${path}"`);
-    else note = `matches Serene Booking basePath "${bp}"`;
-  } else note = "Serene Booking repo not alongside — base path not compared";
-  check("Booking zone wired at " + (path || "?"), problems.length === 0, problems.length ? problems.join(", ") : note);
+  const zones = [
+    { name: "Booking", constant: "BOOKING_PATH", repo: "../../Serene Booking/client/next.config.mjs" },
+    { name: "Investors", constant: "INVESTORS_PATH", repo: "../../stake-clone/next.config.mjs" },
+  ];
+  for (const z of zones) {
+    const path = (cfg.match(new RegExp(`${z.constant} = "([^"]+)"`)) || [])[1];
+    const problems = [];
+    if (!path) problems.push(`${z.constant} missing in next.config.ts`);
+    if (!cfg.includes(`zone(${z.constant},`)) problems.push(`no rewrite for ${z.constant}`);
+    let note = "";
+    const sibling = join(ROOT, z.repo);
+    if (existsSync(sibling)) {
+      const bp = (read(sibling).match(/NEXT_PUBLIC_BASE_PATH \?\? ["']([^"']*)["']/) || [])[1];
+      if (bp !== path) problems.push(`${z.name} basePath is "${bp}", group site expects "${path}"`);
+      else note = `matches ${z.name} basePath "${bp}"`;
+    } else note = `${z.name} repo not alongside — base path not compared`;
+    check(`${z.name} zone wired at ${path || "?"}`, problems.length === 0, problems.length ? problems.join(", ") : note);
+  }
 }
 
 // 11. No secrets or .env files tracked by git (only .env.example).

@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { investorReasons, plans, site } from "@/global/constants/site";
+import { INVESTORS_URL, investorReasons, plans, site } from "@/global/constants/site";
 import { pkr, spoken } from "@/global/lib/format";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -132,10 +132,17 @@ export function Investors() {
             <span className="soft">of the heights.</span>
           </h2>
         </div>
-        <p>
-          Smart Property Units let you own part of a working hotel — fully managed, with profit shared every quarter.
-          Or own a whole apartment, with nights reserved for you each year.
-        </p>
+        <div className="section-head__aside">
+          <p>
+            Smart Property Units let you own part of a working hotel — fully managed, with profit shared every
+            quarter. Or own a whole apartment, with nights reserved for you each year.
+          </p>
+          {INVESTORS_URL && (
+            <a className="btn btn--ink" href={INVESTORS_URL}>
+              Open Serene Investors <span className="arr">→</span>
+            </a>
+          )}
+        </div>
       </div>
 
       <div className="inv">
