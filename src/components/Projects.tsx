@@ -19,7 +19,14 @@ export function Projects() {
 
       mm.add("(min-width: 901px) and (prefers-reduced-motion: no-preference)", () => {
         el.dataset.motion = "on";
-        const dist = () => Math.max(0, track.scrollWidth - window.innerWidth);
+        // Slide until the last card's right edge sits one gutter inside the visible area
+        // (clientWidth excludes the scrollbar; scrollWidth ignores the track's end padding).
+        const dist = () => {
+          const last = track.lastElementChild as HTMLElement | null;
+          if (!last) return 0;
+          const gutter = parseFloat(getComputedStyle(track).paddingRight) || 0;
+          return Math.max(0, last.offsetLeft + last.offsetWidth + gutter - document.documentElement.clientWidth);
+        };
         // One pinned, scrubbed timeline: settle on the first card, slide across, brief rest.
         // Durations are in scroll pixels so the slide maps 1:1 to the track width.
         const HOLD = Math.round(window.innerHeight * 0.35);
