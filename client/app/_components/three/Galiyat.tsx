@@ -175,10 +175,16 @@ function Terrain({ dem, progress, labels }: { dem: Int16Array; progress: React.R
       const canvasTop = state.gl.domElement.getBoundingClientRect().top;
       const minY = Math.max(0, 180 - canvasTop);
       const py = Math.max((-tip.y * 0.5 + 0.5) * state.size.height, minY);
-      // Above the beam on wide screens; beside it on phones, where the canvas top would clip it.
-      el.style.transform = narrow
-        ? `translate(${px}px, ${py}px) translate(14px, -30%)`
-        : `translate(${px}px, ${py}px) translate(-50%, -100%)`;
+      // Above the beam on wide screens; beside it on phones, where the canvas top would clip it. On a
+      // narrow screen a label near an edge would run off it, so it flips to the other side of its beam
+      // and is kept inside the canvas.
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      const pad = 8;
+      let left = narrow ? px + 14 : px - w / 2;
+      if (narrow && left + w > state.size.width - pad) left = px - 14 - w;
+      left = Math.min(Math.max(left, pad), Math.max(pad, state.size.width - w - pad));
+      el.style.transform = `translate(${left}px, ${narrow ? py - h * 0.3 : py - h}px)`;
       el.style.opacity = tip.z < 1 ? "1" : "0";
     };
     place(labels.ng.current, 0, resortY + 2.35, 0);

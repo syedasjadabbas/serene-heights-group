@@ -331,20 +331,21 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .intro:not([data-motion="on"]) .marquee {
-      animation: marquee 40s linear infinite;
+      animation: marquee-slide 40s linear infinite;
     }
   .intro:not([data-motion="on"]) .ring__spin {
-      animation: spin 24s linear infinite;
+      animation: ring-turn 24s linear infinite;
     }
 }
 
-@keyframes marquee {
+@keyframes marquee-slide {
   to {
     transform: translateX(-50%);
   }
 }
 
-@keyframes spin {
+/* named ring-turn: Tailwind has its own flat "spin" keyframes, which would win and spin the ring like a wheel */
+@keyframes ring-turn {
   to {
     transform: rotateY(-360deg);
   }
