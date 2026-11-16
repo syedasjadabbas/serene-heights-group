@@ -181,6 +181,24 @@
     }
 }
 
+/* Reduced motion (e.g. Windows "Animation effects" off): there is no pinned sideways slide, so stack the
+   cards as on phones instead of leaving a row wider than the screen. Matches the condition in Projects.tsx. */
+@media (min-width: 901px) and (prefers-reduced-motion: reduce) {
+  .projects__track {
+    flex-direction: column;
+  }
+  .pcard {
+    flex-basis: auto;
+    height: min(78svh, 680px);
+    min-height: 520px;
+  }
+  .pcard--note {
+    flex-basis: auto;
+    height: auto;
+    min-height: 260px;
+  }
+}
+
 /* Projects — pinned horizontal mode */
 .projects[data-motion="on"] {
   height: 100svh;
