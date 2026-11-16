@@ -200,24 +200,40 @@
 }
 
 /* Projects — pinned horizontal mode */
+/* The pinned section is exactly one screen: the heading takes what it needs and the cards fill the rest,
+   so they always fit, whatever the window's height (short laptop screens with display scaling included). */
 .projects[data-motion="on"] {
   height: 100svh;
-  padding: 92px 0 0;
+  padding: clamp(68px, 11svh, 92px) 0 var(--gutter);
   box-sizing: border-box;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .projects[data-motion="on"] .section-head {
-  margin-bottom: 24px;
+  flex: none;
+  margin-bottom: clamp(12px, 3svh, 24px);
 }
 
+/* scales with the window's height as well as its width, so a short screen leaves room for the cards */
 .projects[data-motion="on"] .section-head h2 {
-  font-size: clamp(40px, 4.4vw, 72px);
+  margin-top: clamp(6px, 1.5svh, 14px);
+  font-size: clamp(32px, min(4.4vw, 8svh), 72px);
+}
+
+.projects[data-motion="on"] .projects__track {
+  flex: 1;
+  min-height: 0;
 }
 
 .projects[data-motion="on"] .pcard {
-  height: calc(100svh - 92px - 24px - clamp(130px, 13vw, 190px) - var(--gutter));
-  min-height: 380px;
+  height: auto;
+  min-height: 0;
+}
+
+.projects[data-motion="on"] .pcard__name {
+  font-size: clamp(44px, min(8vw, 15svh), 128px);
 }
 
 /* Completed-project card with a photo: image behind, readable text on a gradient */
