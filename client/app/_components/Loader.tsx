@@ -6,6 +6,8 @@ import { useGSAP } from "@gsap/react";
 import { Emblem } from "@/global/components/Emblem";
 import { isReturning } from "@/global/lib/scrollMemory";
 
+let played = false; // once per visit: moving around the site never replays the splash
+
 /** Short brand moment while fonts and the first image settle. */
 export function Loader() {
   const root = useRef<HTMLDivElement>(null);
@@ -14,11 +16,12 @@ export function Loader() {
   useGSAP(
     () => {
       // Back from another page (e.g. /booking): no splash, straight back to where the visitor was.
-      if (isReturning()) {
+      if (played || isReturning()) {
         setDone(true);
         setTimeout(() => window.dispatchEvent(new Event("serene:ready")), 0);
         return;
       }
+      played = true;
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const tl = gsap.timeline({ onComplete: () => setDone(true) });
       if (reduce) {

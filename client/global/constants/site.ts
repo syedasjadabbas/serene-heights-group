@@ -2,22 +2,6 @@
 // Every figure here is taken from the sibling Serene project sites; items marked
 // "CONFIRM" still need sign-off from the client before launch.
 
-// Where the Serene Booking guest app is deployed. Empty until it goes live — booking links then
-// fall back to a pre-filled WhatsApp enquiry (see global/lib/booking.ts).
-export const BOOKING_URL = (process.env.NEXT_PUBLIC_BOOKING_URL || "").replace(/\/$/, "");
-export const HAS_BOOKING = BOOKING_URL !== "";
-
-// Serene Investors, served at /serene-investors when INVESTORS_ORIGIN is set (see next.config.ts).
-export const INVESTORS_URL = process.env.NEXT_PUBLIC_INVESTORS_URL || "";
-
-// The Serene Heights Nathia Gali site, served at /serene-heights-nathiagali when NATHIAGALI_ORIGIN is set
-// (see next.config.ts); until then the project card opens its own deployment.
-export const NATHIAGALI_URL = process.env.NEXT_PUBLIC_NATHIAGALI_URL || "https://serene-nathiagali.vercel.app/";
-
-// The Serene Heights Lahore site, served at /serene-heights-lahore when LAHORE_ORIGIN is set; until then the
-// project card opens its own deployment.
-export const LAHORE_URL = process.env.NEXT_PUBLIC_LAHORE_URL || "https://serene-heights-lahore-five.vercel.app/";
-
 export const site = {
   name: "Serene Heights Group",
   short: "Serene Heights",
@@ -62,14 +46,6 @@ export const site = {
   ],
 };
 
-export const nav = [
-  { label: "Projects", href: "#projects" },
-  { label: "Bookings", href: "#stays" },
-  { label: "Upcoming", href: "#upcoming" },
-  { label: "Investors", href: "#investors" },
-  { label: "About", href: "#about" },
-];
-
 export type Project = {
   slug: string;
   name: string;
@@ -94,7 +70,7 @@ export const projects: Project[] = [
     since: "Since 2021",
     kind: "Hotel & Resort",
     image: "/media/ng/tower-forest-mist.webp",
-    url: NATHIAGALI_URL,
+    url: "/nathiagali",
     email: "info@sereneheightsnathiagali.com",
     phone: "042-111-111-744",
     summary:
@@ -109,7 +85,7 @@ export const projects: Project[] = [
     since: "LDA approved",
     kind: "Mixed-use tower",
     image: "/media/lhr/tower.jpg",
-    url: LAHORE_URL,
+    url: "/lahore",
     email: "info@sereneheightslahore.com",
     phone: "0304-1111106",
     summary:
@@ -130,88 +106,10 @@ export const completed: { name: string; place: string; note: string; image?: str
   },
 ];
 
-// Room types and counts as defined in the Serene Booking inventory (official floor plans).
-export const rooms = [
-  {
-    slug: "classic-one-bedroom",
-    name: "Classic One-Bedroom",
-    tagline: "A cosy mountain base with its own balcony",
-    size: "Under 600 sq ft",
-    guests: "Up to 3 guests",
-    units: 37,
-    image: "/media/ng/tower-closeup.webp",
-  },
-  {
-    slug: "premier-one-bedroom",
-    name: "Premier One-Bedroom",
-    tagline: "More room, with a sofa bed for the family",
-    size: "600–699 sq ft",
-    guests: "Up to 4 guests",
-    units: 44,
-    image: "/media/stay/tower-sunset-forest.jpg",
-  },
-  {
-    slug: "grand-one-bedroom",
-    name: "Grand One-Bedroom",
-    tagline: "A wide balcony facing the Galiyat",
-    size: "700–799 sq ft",
-    guests: "Up to 4 guests",
-    units: 25,
-    image: "/media/ng/snow-tower.webp",
-  },
-  {
-    slug: "signature-corner-suite",
-    name: "Signature Corner Suite",
-    tagline: "Corner living with views on two sides",
-    size: "800+ sq ft",
-    guests: "Up to 4 guests",
-    units: 4,
-    image: "/media/stay/rooftop-crown.jpg",
-  },
-  {
-    slug: "terrace-apartment",
-    name: "Terrace Apartment",
-    tagline: "Eighth floor, with a private terrace",
-    size: "500–980 sq ft",
-    guests: "Up to 4 guests",
-    units: 20,
-    image: "/media/stay/sunset-terrace.jpg",
-  },
-];
-
-export const stayImages = [
-  { src: "/media/stay/glass-roof-pool.jpg", alt: "Heated glass-roof pool" },
-  { src: "/media/stay/ski-slope.jpg", alt: "Ski slope beside the resort" },
-  { src: "/media/stay/sky-lounge.jpg", alt: "Rooftop sky lounge" },
-  { src: "/media/stay/winter-trails.jpg", alt: "Winter trails through the pines" },
-  { src: "/media/stay/rooftop-sunset.jpg", alt: "Rooftop at sunset" },
-  { src: "/media/stay/archery.jpg", alt: "Archery range" },
-  { src: "/media/stay/sunset-terrace.jpg", alt: "Sunset terrace dining" },
-  { src: "/media/stay/aerial-pool-portrait.jpg", alt: "Aerial view of the pool deck" },
-  { src: "/media/ng/rooftop-view.webp", alt: "View from the rooftop" },
-  { src: "/media/stay/aerial-rooftop-pool.jpg", alt: "Rooftop infinity pool from above" },
-  { src: "/media/stay/aerial-snow-resort.jpg", alt: "The resort under snow" },
-  { src: "/media/stay/tower-sunset-forest.jpg", alt: "Tower at sunset above the pines" },
-  { src: "/media/stay/adventure-park.jpg", alt: "Adventure park" },
-  { src: "/media/stay/rooftop-crown.jpg", alt: "Rooftop crown of the tower" },
-  { src: "/media/stay/mini-golf.jpg", alt: "Mini golf course" },
-  { src: "/media/stay/rooftop-restaurant.jpg", alt: "Rooftop restaurant" },
-  { src: "/media/stay/hero-tower-mist.jpg", alt: "Tower rising out of the mist" },
-];
-
 // Published payment plans — figures exactly as issued on the Nathia Gali site.
 export const plans = [
   { id: "spu", area: 50, kind: "Smart Property Unit", project: "Nathia Gali", total: 2250000, down: 675000, monthly: 43750 },
   { id: "1bhk-667", area: 667, kind: "1 BHK apartment", project: "Nathia Gali", total: 26680000, down: 8004000, monthly: 518778 },
   { id: "1bhk-673", area: 673, kind: "1 BHK apartment", project: "Nathia Gali", total: 26920000, down: 8076000, monthly: 523444 },
   { id: "1bhk-734", area: 734, kind: "1 BHK apartment", project: "Nathia Gali", total: 29360000, down: 8808000, monthly: 570889 },
-];
-
-export const investorReasons = [
-  { t: "Managed as one hotel", d: "DM Consortium runs rentals, upkeep and returns in-house — no unions, no third-party operators." },
-  { t: "Quarterly profit share", d: "Smart Property owners in Nathia Gali share in hotel revenue every quarter." },
-  { t: "Low entry", d: "Own a share of a hotel from PKR 2 million, with 30% down and 36 monthly instalments." },
-  { t: "Owner stays", d: "Nathia Gali owners get 28 free nights a year and zero maintenance fees." },
-  { t: "Assured delivery", d: "Serene Heights Lahore carries a 2-year delivery commitment and LDA approval." },
-  { t: "Shariah-compliant", d: "Every transaction is structured to be Shariah-compliant and legally secure." },
 ];

@@ -1,91 +1,130 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { nav } from "@/global/constants/site";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { menus } from "@/global/site/menus";
 import { Emblem } from "./Emblem";
 
-export function SiteHeader() {
-  const [active, setActive] = useState<string>("");
+const inside = (path: string, href: string) => path === href || (href !== "/" && path.startsWith(href + "/"));
+
+/** The client's two headers: investing (green) and hotel (orange), each with its own menus and phone menu. */
+export function SiteHeader({ hotel }: { hotel: boolean }) {
+  const menu = hotel ? menus.hotel : menus.invest;
+  const path = usePathname();
   const [open, setOpen] = useState(false);
-  const [shown, setShown] = useState(false);
-  const [dark, setDark] = useState(false);
+  const [section, setSection] = useState<string | null>(null);
+  const [drop, setDrop] = useState<string | null>(null);
 
-  // The bar stays out of the way on the hero and slides in once the hero has gone.
   useEffect(() => {
-    let raf = 0;
-    const check = () => {
-      raf = 0;
-      const card = document.querySelector<HTMLElement>(".hero__card");
-      if (!card) return setShown(true);
-      const gone = getComputedStyle(card).visibility === "hidden" || card.getBoundingClientRect().bottom < 140;
-      setShown(gone);
-      // Over a dark section the bar turns transparent glass with white text.
-      const under = document
-        .elementsFromPoint(window.innerWidth / 2, 40)
-        .find((n) => !n.closest(".nav") && n.closest("[data-nav]"));
-      setDark(under?.closest<HTMLElement>("[data-nav]")?.dataset.nav === "dark");
+    setOpen(false);
+    setDrop(null);
+  }, [path]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      setDrop(null);
     };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(check);
-    };
-    check();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.style.overflow = open ? "hidden" : "";
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      document.documentElement.style.overflow = "";
     };
-  }, []);
-
-  useEffect(() => {
-    const ids = nav.map((n) => n.href.slice(1));
-    const els = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
-      },
-      { rootMargin: "-45% 0px -50% 0px" },
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    const close = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    window.addEventListener("keydown", close);
-    return () => window.removeEventListener("keydown", close);
   }, [open]);
 
   return (
-    <>
-      <nav className="nav" aria-label="Primary" data-hidden={!shown && !open ? "true" : undefined} data-theme={dark && !open ? "dark" : undefined}>
-        <a href="#top" className="nav__mark" aria-label="Serene Heights Group — back to top">
-          <Emblem className="w-[13px]" />
-        </a>
-        {nav.map((n) => (
-          <a key={n.href} href={n.href} className="nav__link" aria-current={active === n.href.slice(1) ? "true" : undefined}>
-            {n.label}
-          </a>
-        ))}
-        <button className="nav__menu" aria-expanded={open} aria-controls="nav-sheet" onClick={() => setOpen((v) => !v)}>
-          {open ? "Close" : "Menu"}
-        </button>
-        <a href="#contact" className="btn btn--ink nav__cta">
-          Enquire
-        </a>
-      </nav>
-      {open && (
-        <div id="nav-sheet" className="nav__sheet" onClick={() => setOpen(false)}>
-          {nav.map((n) => (
-            <a key={n.href} href={n.href}>
-              {n.label}
-            </a>
+    <header className={`head${hotel ? " head--hotel" : ""}`}>
+      <div className="head__bar">
+        <Link href={menu.home} className="head__logo" aria-label={hotel ? "Serene Heights Hotels and Resorts" : "Serene Heights Group"}>
+          <Emblem className="w-[17px]" />
+          <span>
+            Serene Heights
+            <small>{hotel ? "Hotels and Resorts" : "Group"}</small>
+          </span>
+        </Link>
+
+        <nav className="head__nav" aria-label="Main">
+          {menu.items.map((m) => (
+            <div
+              key={m.label}
+              className="head__item"
+              data-open={drop === m.label || undefined}
+              onMouseEnter={() => setDrop(m.items ? m.label : null)}
+              onMouseLeave={() => setDrop(null)}
+              onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setDrop(null)}
+            >
+              <Link href={m.href} aria-current={inside(path, m.href) ? "true" : undefined} onFocus={() => setDrop(m.items ? m.label : null)}>
+                {m.label}
+              </Link>
+              {m.items && (
+                <ul className="head__drop">
+                  {m.items.map((s) => (
+                    <li key={s.href}>
+                      <Link href={s.href} aria-current={path === s.href ? "page" : undefined}>
+                        {s.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           ))}
-          <a href="#contact">Enquire</a>
-        </div>
+        </nav>
+
+        <Link href={menu.cross.href} className="head__cross">
+          {menu.cross.label}
+        </Link>
+        <Link href={menu.cta.href} className="btn btn--main head__cta">
+          {menu.cta.label}
+        </Link>
+        <button className="head__toggle" aria-expanded={open} aria-controls="phone-menu" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((v) => !v)}>
+          <i />
+          <i />
+        </button>
+      </div>
+
+      {open && (
+        <nav id="phone-menu" className="sheet" aria-label="Main">
+          {menu.items.map((m) =>
+            m.items ? (
+              <div key={m.label} className="sheet__group">
+                <button aria-expanded={section === m.label} onClick={() => setSection(section === m.label ? null : m.label)}>
+                  {m.label} <span aria-hidden>{section === m.label ? "−" : "+"}</span>
+                </button>
+                {section === m.label && (
+                  <ul>
+                    <li>
+                      <Link href={m.href} onClick={() => setOpen(false)}>
+                        All of {m.label.toLowerCase()}
+                      </Link>
+                    </li>
+                    {m.items.map((s) => (
+                      <li key={s.href}>
+                        <Link href={s.href} onClick={() => setOpen(false)}>
+                          {s.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ) : (
+              <Link key={m.label} href={m.href} onClick={() => setOpen(false)}>
+                {m.label}
+              </Link>
+            ),
+          )}
+          <Link href={menu.cross.href} onClick={() => setOpen(false)}>
+            {menu.cross.label}
+          </Link>
+        </nav>
       )}
-    </>
+    </header>
   );
 }

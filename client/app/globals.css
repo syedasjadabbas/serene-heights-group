@@ -5,12 +5,6 @@
 @import "./_styles/base.css";
 @import "./_styles/ui.css";
 @import "./_styles/loader.css";
-@import "./_styles/header.css";
-@import "./_styles/intro.css";
-@import "./_styles/about.css";
+@import "./_styles/calculator.css";
 @import "./_styles/projects.css";
-@import "./_styles/stays.css";
-@import "./_styles/upcoming.css";
-@import "./_styles/investors.css";
-@import "./_styles/finale.css";
-@import "./_styles/footer.css";
+@import "./_styles/site.css";

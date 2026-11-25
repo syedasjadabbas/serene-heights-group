@@ -29,7 +29,7 @@ const rel = (f) => relative(ROOT, f).replaceAll("\\", "/");
   const code = (f) => read(f).replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
   for (const f of sources) {
     for (const [, p] of code(f).matchAll(/["'`(](\/(?:media|data)\/[^"'`)\s]+)/g)) {
-      if (!existsSync(join(ROOT, "public", p))) missing.push(`${p} (${rel(f)})`);
+      if (!p.includes("${") && !existsSync(join(ROOT, "public", p))) missing.push(`${p} (${rel(f)})`);
     }
   }
   check("Every referenced asset exists in public/", missing.length === 0, missing.join(", "));
@@ -52,17 +52,59 @@ const rel = (f) => relative(ROOT, f).replaceAll("\\", "/");
   check("Payment plans: 30% down + 36 instalments = total", bad.length === 0, bad.map((p) => p.id).join(", "));
 }
 
-// 4. Room inventory matches Serene Booking (130 one-bedroom apartments).
+// 4. The client's site plan: every address exists once, with its template's parts in order.
+const { TEMPLATE_PARTS } = await import("../global/site/types.ts");
+const { menus, footers } = await import("../global/site/menus.ts");
+const all = [];
+for (const f of readdirSync(join(ROOT, "global/site/pages")))
+  all.push(...Object.values(await import(`../global/site/pages/${f}`)).filter(Array.isArray).flat());
+const paths = new Set(all.map((p) => p.path));
 {
-  const total = site.rooms.reduce((n, r) => n + r.units, 0);
-  check("Room units total 130 (Serene Booking inventory)", total === 130, `got ${total}`);
+  const H = "/hotels/nathia-gali";
+  const PLAN = [
+    "/ /about /about/leadership /about/track-record /documents /projects /contact /faq /owners /press /partners",
+    "/invest /invest/how-it-works /invest/earnings /invest/buying-steps /invest/risks-and-exit /invest/compare /site-visit",
+    "/overseas /overseas/steps /overseas/paying-from-abroad /overseas/documents /overseas/gulf /overseas/uk /overseas/usa-canada /overseas/australia-new-zealand",
+    "/nathiagali " + "co-ownership apartments floor-plans payment-plan progress location amenities documents faq gallery".split(" ").map((x) => "/nathiagali/" + x).join(" "),
+    `/hotels ${H} ` + "accommodation accommodation/one-bedroom accommodation/two-bedroom accommodation/three-bedroom dining experiences offers gallery location things-to-do events policies faq contact book".split(" ").map((x) => `${H}/${x}`).join(" "),
+    "/lahore /lahore/the-project /lahore/invest /lahore/amenities /lahore/location /lahore/progress /lahore/contact",
+    "/insights /insights/investing /insights/nathia-gali /insights/updates",
+    "/thank-you/enquiry /thank-you/site-visit /thank-you/stay /404 /privacy-policy /terms /cookies /sitemap /disclaimer",
+  ].join(" ").split(" ");
+  const missing = PLAN.filter((p) => !paths.has(p));
+  const extra = [...paths].filter((p) => !PLAN.includes(p) && !/^\/insights\/[a-z0-9-]+$|^\/insights\/authors\/[a-z0-9-]+$/.test(p));
+  check("Every page in the client's plan exists", !missing.length && !extra.length && paths.size === all.length, [...missing.map((m) => "missing " + m), ...extra.map((m) => "extra " + m), paths.size !== all.length ? "duplicate addresses" : ""].filter(Boolean).join(", ") || `${PLAN.length} pages + ${all.length - PLAN.length} articles/authors`);
+
+  const bad = [];
+  for (const p of all) {
+    const ids = p.blocks.map((b) => b.id);
+    let at = -1;
+    for (const part of TEMPLATE_PARTS[p.template]) {
+      const i = ids.indexOf(part, at + 1);
+      if (i < 0) bad.push(`${p.path} lacks "${part}" in order`);
+      else at = i;
+    }
+    if (p.description.length > 160) bad.push(`${p.path} description ${p.description.length}`);
+  }
+  const imgs = [...JSON.stringify(all).matchAll(/"src":"([^"]+)"/g)].map((m) => m[1]);
+  const gone = [...new Set(imgs)].filter((p) => !existsSync(join(ROOT, "public", p)));
+  check("Every page image exists", !gone.length, gone.join(", "));
+  check("Pages follow their templates", !bad.length, bad.join("; "));
 }
 
-// 5. Every fly-through image has a hand-placed position in Stays.
+// 5. Every internal link (menus, footers, pages) goes to a page that exists.
 {
-  const stays = read(join(ROOT, "app/_components/Stays.tsx"));
-  const spots = (stays.slice(stays.indexOf("const SPOTS"), stays.indexOf("];", stays.indexOf("const SPOTS"))).match(/\{ x:/g) || []).length - 1;
-  check("Stays: one position per image", spots === site.stayImages.length, `${site.stayImages.length} images, ${spots} positions`);
+  const dead = new Set();
+  const visit = (v, from) => {
+    if (Array.isArray(v)) v.forEach((x) => visit(x, from));
+    else if (v && typeof v === "object") {
+      if (typeof v.href === "string" && v.href.startsWith("/") && !paths.has(v.href.split("#")[0])) dead.add(`${v.href} (from ${from})`);
+      Object.values(v).forEach((x) => visit(x, from));
+    }
+  };
+  visit([menus, footers], "menus");
+  all.forEach((p) => visit([p.blocks, p.actions ?? []], p.path));
+  check("No dead internal links", !dead.size, [...dead].join(", "));
 }
 
 // 6. Every section stylesheet is imported by globals.css, and every import exists.
@@ -79,15 +121,6 @@ const rel = (f) => relative(ROOT, f).replaceAll("\\", "/");
 {
   const offenders = sources.filter((f) => /localhost|127\.0\.0\.1/.test(read(f))).map(rel);
   check("No localhost links in shipped code", offenders.length === 0, offenders.join(", "));
-}
-
-// 8. Booking links only go through global/lib/booking (so they fall back to WhatsApp until booking is live).
-{
-  const offenders = sources
-    .filter((f) => !/global[\\/](lib[\\/]booking|constants[\\/]site)\.ts$/.test(f))
-    .filter((f) => /\bBOOKING_URL\b/.test(read(f)))
-    .map(rel);
-  check("Booking links use global/lib/booking", offenders.length === 0, offenders.join(", "));
 }
 
 // 9. Share metadata fits where it is shown: title ≤ 60 and description ≤ 160 characters (Google/WhatsApp
@@ -107,8 +140,6 @@ const rel = (f) => relative(ROOT, f).replaceAll("\\", "/");
   const zones = [
     { name: "Booking", constant: "BOOKING_PATH", repo: "../../Serene Booking/client/next.config.mjs" },
     { name: "Investors", constant: "INVESTORS_PATH", repo: "../../stake-clone/next.config.mjs" },
-    { name: "Nathia Gali", constant: "NATHIAGALI_PATH", repo: "../../serene nathiagali/vite.config.ts" },
-    { name: "Lahore", constant: "LAHORE_PATH", repo: "../../serene heights lahore/next.config.ts" },
   ];
   for (const z of zones) {
     const path = (cfg.match(new RegExp(`${z.constant} = "([^"]+)"`)) || [])[1];
@@ -139,6 +170,10 @@ const rel = (f) => relative(ROOT, f).replaceAll("\\", "/");
   }
   check("No .env files committed", tracked.length === 0, tracked.join(", "));
 }
+
+const pending = all.filter((p) => p.pending?.length);
+if (process.argv.includes("--pending")) for (const p of pending) console.log(`${p.path}\n  - ${p.pending.join("\n  - ")}`);
+else console.log(`  ${pending.reduce((n, p) => n + p.pending.length, 0)} items still needed from the client (npm run check -- --pending)\n`);
 
 for (const p of passes) console.log(`  ✓ ${p}`);
 for (const f of failures) console.log(`  ✗ ${f}`);
