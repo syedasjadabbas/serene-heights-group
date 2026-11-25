@@ -1,11 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 /** Dates and guests → the Reservations page with them filled in. */
 export function BookingBar() {
-  const router = useRouter();
   const [error, setError] = useState("");
   return (
     <form
@@ -16,7 +14,7 @@ export function BookingBar() {
         const a = String(d.get("checkIn"));
         const b = String(d.get("checkOut"));
         if (!a || !b || b <= a) return setError("Choose an arrival and a later departure.");
-        router.push(`/hotels/nathia-gali/book?checkIn=${a}&checkOut=${b}&guests=${d.get("guests")}`);
+        location.assign(`/hotels/nathia-gali/book?checkIn=${a}&checkOut=${b}&guests=${d.get("guests")}`);
       }}
     >
       <label>

@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { completed, projects } from "@/global/constants/site";
-import Link from "next/link";
+import Link from "@/global/components/Link";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,9 +74,11 @@ export function Projects() {
     <section ref={root} id="projects" className="projects dark" data-nav="dark" aria-labelledby="projects-title">
       <div className="section-head">
         <div>
-          <span className="eyebrow">Serene Heights Group</span>
+          <span className="eyebrow">The projects</span>
           <h2 id="projects-title" className="display">
-            The projects
+            Two addresses.
+            <br />
+            <span className="soft">One standard.</span>
           </h2>
         </div>
         <p>

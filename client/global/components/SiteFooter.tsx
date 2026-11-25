@@ -1,23 +1,19 @@
-import Link from "next/link";
+import Link from "@/global/components/Link";
 import { site } from "@/global/constants/site";
 import { footers } from "@/global/site/menus";
-import { Emblem } from "./Emblem";
 import { isInternal } from "@/global/lib/links";
 
 /** The client's two footers (group and hotel), plus the phone bar at the foot of every page. */
 export function SiteFooter({ hotel }: { hotel: boolean }) {
   const f = hotel ? footers.hotel : footers.invest;
   return (
-    <footer className="foot">
-      <div className="foot__top">
-        <div className="foot__brand">
-          <span className="head__logo">
-            <Emblem className="w-[20px]" />
-            <span>
-              Serene Heights
-              <small>{hotel ? "Hotels and Resorts" : "Group"}</small>
-            </span>
-          </span>
+    <footer className="footer" data-nav="light">
+      <div className="footer__top">
+        <div className="footer__brand">
+          <img src="/media/brand/logo-blue.png" alt="Serene Heights" />
+          <p>
+            {hotel ? "Serene Heights Hotels and Resorts" : "Serene Heights Group — hotels, resorts and city addresses"} developed and managed by {site.developer}, since {site.founded}.
+          </p>
           <a href={site.contact.uanHref}>UAN {site.contact.uan}</a>
           <a href={site.contact.whatsappHref} target="_blank" rel="noopener">
             WhatsApp {site.contact.whatsapp}
@@ -25,7 +21,7 @@ export function SiteFooter({ hotel }: { hotel: boolean }) {
         </div>
         {f.columns.map((c) => (
           <nav key={c.h} aria-label={c.h}>
-            <h2>{c.h}</h2>
+            <h4>{c.h}</h4>
             <ul>
               {c.links.map((l) => (
                 <li key={l.label}>
@@ -42,7 +38,10 @@ export function SiteFooter({ hotel }: { hotel: boolean }) {
           </nav>
         ))}
       </div>
-      <div className="foot__legal">
+      <div className="footer__giant" aria-hidden>
+        serene heights
+      </div>
+      <div className="footer__legal">
         {f.legal.map((l) => (
           <Link key={l.href} href={l.href}>
             {l.label}
@@ -51,7 +50,7 @@ export function SiteFooter({ hotel }: { hotel: boolean }) {
         <span>© {site.name} · {site.developer}</span>
       </div>
       <div className="phonebar">
-        <Link className="btn btn--main" href={hotel ? "/hotels/nathia-gali/book" : "/contact"}>
+        <Link className="btn btn--ink" href={hotel ? "/hotels/nathia-gali/book" : "/contact"}>
           {hotel ? "Request your dates" : "Enquire"}
         </Link>
         <a className="btn btn--line" href={site.contact.whatsappHref} target="_blank" rel="noopener">

@@ -1,12 +1,11 @@
-import Link from "next/link";
+import Link from "@/global/components/Link";
 import type { ReactNode } from "react";
-import { site } from "@/global/constants/site";
 import { isInternal } from "@/global/lib/links";
 import { articles, sections } from "@/global/site";
 import type { Block, Card, LinkTo, Page, Part } from "@/global/site/types";
 import { BookingBar } from "./BookingBar";
 import { Calculator } from "./Calculator";
-import { EnquiryForm } from "./EnquiryForm";
+import { Finale } from "./Finale";
 import { GalleryGrid } from "./GalleryGrid";
 import { TerrainMap } from "./TerrainMap";
 
@@ -24,13 +23,13 @@ export function Go({ href, className, children }: { href: string; className?: st
   );
 }
 
-function Links({ links }: { links?: LinkTo[] }) {
+function Links({ links, tone = "line" }: { links?: LinkTo[]; tone?: "line" | "ghost" }) {
   if (!links?.length) return null;
   return (
     <div className="links">
       {links.map((l) => (
-        <Go key={l.label} href={l.href} className="btn btn--line">
-          {l.label}
+        <Go key={l.label} href={l.href} className={`btn btn--${tone}`}>
+          {l.label} <span className="arr">→</span>
         </Go>
       ))}
     </div>
@@ -40,11 +39,11 @@ function Links({ links }: { links?: LinkTo[] }) {
 function Cards({ cards }: { cards: Card[] }) {
   return (
     <ul className="cards" data-n={Math.min(cards.length, 4)}>
-      {cards.map((c) => (
-        <li key={c.t} className="card">
+      {cards.map((c, n) => (
+        <li key={c.t} className={`card${c.image ? " card--photo" : ""}`}>
           {c.image && <img src={c.image.src} alt={c.image.alt} loading="lazy" />}
           <div>
-            {c.meta && <span className="card__meta">{c.meta}</span>}
+            <span className="card__meta">{c.meta ?? String(n + 1).padStart(2, "0")}</span>
             <h3>{c.href ? <Go href={c.href}>{c.t}</Go> : c.t}</h3>
             <p>{c.d}</p>
             {c.href && (
@@ -149,7 +148,7 @@ function body(b: Block, page: Page): ReactNode {
                 <h3>{i.t}</h3>
                 <p>{i.d}</p>
                 {i.href && (
-                  <Go href={i.href} className="btn btn--line">
+                  <Go href={i.href} className="btn btn--ghost">
                     {i.cta ?? i.t}
                   </Go>
                 )}
@@ -165,7 +164,7 @@ function body(b: Block, page: Page): ReactNode {
           <div>
             <h3>{b.t}</h3>
             <p>{b.text}</p>
-            <Links links={b.links} />
+            <Links links={b.links} tone="ghost" />
           </div>
         </div>
       );
@@ -202,7 +201,7 @@ function body(b: Block, page: Page): ReactNode {
           {/nathia/.test(page.path) ? <TerrainMap /> : b.image && <img src={b.image.src} alt={b.image.alt} loading="lazy" />}
           <div>
             {b.d && <p>{b.d}</p>}
-            <Go href={b.href} className="btn btn--line">
+            <Go href={b.href} className="btn btn--ghost">
               Open directions
             </Go>
           </div>
@@ -258,37 +257,23 @@ export function BlockView({ block: b, page }: { block: Block; page: Page }) {
   if (b.kind === "band" || b.kind === "booking")
     return (
       <section className="band" aria-labelledby={id}>
+        <div className="band__card" data-nav="dark">
         <div>
-          <h2 id={id}>{b.h}</h2>
+          <h2 id={id} className="display">{b.h}</h2>
           {b.d && <p>{b.d}</p>}
         </div>
-        {b.kind === "booking" ? <BookingBar /> : <Links links={b.links} />}
-      </section>
-    );
-  if (b.kind === "form")
-    return (
-      <section className="sec ask" aria-labelledby={id} id="ask">
-        <div>
-          <h2 id={id}>{b.h}</h2>
-          {b.d && <p>{b.d}</p>}
-          <div className="links">
-            <a className="btn btn--line" href={site.contact.whatsappHref} target="_blank" rel="noopener">
-              WhatsApp
-            </a>
-            <a className="btn btn--line" href={site.contact.uanHref}>
-              Call
-            </a>
-          </div>
+        {b.kind === "booking" ? <BookingBar /> : <Links links={b.links} tone="ghost" />}
         </div>
-        <EnquiryForm kind={b.form} about={b.about} />
       </section>
     );
+  if (b.kind === "form") return <Finale heading={b.h} text={b.d} kind={b.form} about={b.about} />;
+  const dark = b.kind === "panels" || b.kind === "media" || b.kind === "gallery" || b.kind === "map";
   return (
-    <section className={`sec sec--${b.kind}`} aria-labelledby={b.h ? id : undefined}>
-      {b.h && <h2 id={id}>{b.h}</h2>}
+    <section className={`sec sec--${b.kind}${dark ? " dark" : ""}`} data-nav={dark ? "dark" : "light"} aria-labelledby={b.h ? id : undefined}>
+      {b.h && <h2 id={id} className="display">{b.h}</h2>}
       {b.d && b.kind !== "map" && <p className="sec__d">{b.d}</p>}
       {body(b, page)}
-      {b.kind !== "media" && b.kind !== "map" && <Links links={b.links} />}
+      {b.kind !== "media" && b.kind !== "map" && <Links links={b.links} tone={dark ? "ghost" : "line"} />}
     </section>
   );
 }

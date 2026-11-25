@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import Link from "@/global/components/Link";
 import { usePathname } from "next/navigation";
 import { menus } from "@/global/site/menus";
 import { Emblem } from "./Emblem";
@@ -15,6 +15,34 @@ export function SiteHeader({ hotel }: { hotel: boolean }) {
   const [open, setOpen] = useState(false);
   const [section, setSection] = useState<string | null>(null);
   const [drop, setDrop] = useState<string | null>(null);
+  const [shown, setShown] = useState(false);
+  const [dark, setDark] = useState(false);
+
+  // On the home page the bar stays out of the way on the hero and slides in once the hero has gone.
+  // Over a dark section it turns transparent glass with white text.
+  useEffect(() => {
+    let raf = 0;
+    const check = () => {
+      raf = 0;
+      const card = document.querySelector<HTMLElement>(".hero__card");
+      setShown(!card || getComputedStyle(card).visibility === "hidden" || card.getBoundingClientRect().bottom < 140);
+      const under = document
+        .elementsFromPoint(window.innerWidth / 2, 40)
+        .find((n) => !n.closest(".nav") && n.closest("[data-nav]"));
+      setDark(under?.closest<HTMLElement>("[data-nav]")?.dataset.nav === "dark");
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
   useEffect(() => {
     setOpen(false);
@@ -39,92 +67,75 @@ export function SiteHeader({ hotel }: { hotel: boolean }) {
   }, [open]);
 
   return (
-    <header className={`head${hotel ? " head--hotel" : ""}`}>
-      <div className="head__bar">
-        <Link href={menu.home} className="head__logo" aria-label={hotel ? "Serene Heights Hotels and Resorts" : "Serene Heights Group"}>
-          <Emblem className="w-[17px]" />
-          <span>
-            Serene Heights
-            <small>{hotel ? "Hotels and Resorts" : "Group"}</small>
-          </span>
+    <>
+      <nav className="nav" aria-label="Main" data-hidden={!shown && !open ? "true" : undefined} data-theme={dark && !open ? "dark" : undefined}>
+        <Link href={menu.home} className="nav__mark" aria-label={hotel ? "Serene Heights Hotels and Resorts" : "Serene Heights Group"}>
+          <Emblem className="w-[13px]" />
         </Link>
-
-        <nav className="head__nav" aria-label="Main">
-          {menu.items.map((m) => (
-            <div
-              key={m.label}
-              className="head__item"
-              data-open={drop === m.label || undefined}
-              onMouseEnter={() => setDrop(m.items ? m.label : null)}
-              onMouseLeave={() => setDrop(null)}
-              onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setDrop(null)}
-            >
-              <Link href={m.href} aria-current={inside(path, m.href) ? "true" : undefined} onFocus={() => setDrop(m.items ? m.label : null)}>
-                {m.label}
-              </Link>
-              {m.items && (
-                <ul className="head__drop">
-                  {m.items.map((s) => (
-                    <li key={s.href}>
-                      <Link href={s.href} aria-current={path === s.href ? "page" : undefined}>
-                        {s.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
-        </nav>
-
-        <Link href={menu.cross.href} className="head__cross">
+        {menu.items.map((m) => (
+          <div
+            key={m.label}
+            className="nav__item"
+            data-open={drop === m.label || undefined}
+            onMouseEnter={() => setDrop(m.items ? m.label : null)}
+            onMouseLeave={() => setDrop(null)}
+            onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setDrop(null)}
+          >
+            <Link href={m.href} className="nav__link" aria-current={inside(path, m.href) ? "true" : undefined} onFocus={() => setDrop(m.items ? m.label : null)}>
+              {m.label}
+            </Link>
+            {m.items && (
+              <ul className="nav__drop">
+                {m.items.map((s) => (
+                  <li key={s.href}>
+                    <Link href={s.href} aria-current={path === s.href ? "page" : undefined}>
+                      {s.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+        <Link href={menu.cross.href} className="nav__link nav__cross">
           {menu.cross.label}
         </Link>
-        <Link href={menu.cta.href} className="btn btn--main head__cta">
+        <button className="nav__menu" aria-expanded={open} aria-controls="nav-sheet" onClick={() => setOpen((v) => !v)}>
+          {open ? "Close" : "Menu"}
+        </button>
+        <Link href={menu.cta.href} className="btn btn--ink nav__cta">
           {menu.cta.label}
         </Link>
-        <button className="head__toggle" aria-expanded={open} aria-controls="phone-menu" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((v) => !v)}>
-          <i />
-          <i />
-        </button>
-      </div>
-
+      </nav>
       {open && (
-        <nav id="phone-menu" className="sheet" aria-label="Main">
+        <div id="nav-sheet" className="nav__sheet" data-lenis-prevent>
           {menu.items.map((m) =>
             m.items ? (
-              <div key={m.label} className="sheet__group">
+              <div key={m.label} className="nav__group">
                 <button aria-expanded={section === m.label} onClick={() => setSection(section === m.label ? null : m.label)}>
                   {m.label} <span aria-hidden>{section === m.label ? "−" : "+"}</span>
                 </button>
                 {section === m.label && (
-                  <ul>
-                    <li>
-                      <Link href={m.href} onClick={() => setOpen(false)}>
-                        All of {m.label.toLowerCase()}
-                      </Link>
-                    </li>
+                  <div>
+                    <Link href={m.href}>All of {m.label.toLowerCase()}</Link>
                     {m.items.map((s) => (
-                      <li key={s.href}>
-                        <Link href={s.href} onClick={() => setOpen(false)}>
-                          {s.label}
-                        </Link>
-                      </li>
+                      <Link key={s.href} href={s.href}>
+                        {s.label}
+                      </Link>
                     ))}
-                  </ul>
+                  </div>
                 )}
               </div>
             ) : (
-              <Link key={m.label} href={m.href} onClick={() => setOpen(false)}>
+              <Link key={m.label} href={m.href}>
                 {m.label}
               </Link>
             ),
           )}
-          <Link href={menu.cross.href} onClick={() => setOpen(false)}>
-            {menu.cross.label}
-          </Link>
-        </nav>
+          <Link href={menu.cross.href}>{menu.cross.label}</Link>
+          <Link href={menu.cta.href}>{menu.cta.label}</Link>
+        </div>
       )}
-    </header>
+    </>
   );
 }

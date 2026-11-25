@@ -3,14 +3,12 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { site } from "@/global/constants/site";
 import type { FormKind } from "@/global/site/types";
 import { enquiryMessage, enquirySchema, FIELDS, SUBMIT, THANKS, type EnquiryValues } from "../_lib/enquiry";
 
 /** One short form for every ask. It opens WhatsApp with the message filled in; nothing is stored on the site. */
 export function EnquiryForm({ kind, about }: { kind: FormKind; about: string }) {
-  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -28,11 +26,11 @@ export function EnquiryForm({ kind, about }: { kind: FormKind; about: string }) 
 
   const onSubmit = (v: EnquiryValues) => {
     window.open(`${site.contact.whatsappHref}?text=${encodeURIComponent(enquiryMessage(kind, about, v))}`, "_blank", "noopener");
-    router.push(THANKS[kind]);
+    location.assign(THANKS[kind]);
   };
 
   return (
-    <form className="ask__form" onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form className="askform" onSubmit={handleSubmit(onSubmit)} noValidate>
       {FIELDS[kind].map((f) => (
         <label key={f.name}>
           {f.label}

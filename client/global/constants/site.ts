@@ -106,10 +106,39 @@ export const completed: { name: string; place: string; note: string; image?: str
   },
 ];
 
+export const stayImages = [
+  { src: "/media/stay/glass-roof-pool.jpg", alt: "Heated glass-roof pool" },
+  { src: "/media/stay/ski-slope.jpg", alt: "Ski slope beside the resort" },
+  { src: "/media/stay/sky-lounge.jpg", alt: "Rooftop sky lounge" },
+  { src: "/media/stay/winter-trails.jpg", alt: "Winter trails through the pines" },
+  { src: "/media/stay/rooftop-sunset.jpg", alt: "Rooftop at sunset" },
+  { src: "/media/stay/archery.jpg", alt: "Archery range" },
+  { src: "/media/stay/sunset-terrace.jpg", alt: "Sunset terrace dining" },
+  { src: "/media/stay/aerial-pool-portrait.jpg", alt: "Aerial view of the pool deck" },
+  { src: "/media/ng/rooftop-view.webp", alt: "View from the rooftop" },
+  { src: "/media/stay/aerial-rooftop-pool.jpg", alt: "Rooftop infinity pool from above" },
+  { src: "/media/stay/aerial-snow-resort.jpg", alt: "The resort under snow" },
+  { src: "/media/stay/tower-sunset-forest.jpg", alt: "Tower at sunset above the pines" },
+  { src: "/media/stay/adventure-park.jpg", alt: "Adventure park" },
+  { src: "/media/stay/rooftop-crown.jpg", alt: "Rooftop crown of the tower" },
+  { src: "/media/stay/mini-golf.jpg", alt: "Mini golf course" },
+  { src: "/media/stay/rooftop-restaurant.jpg", alt: "Rooftop restaurant" },
+  { src: "/media/stay/hero-tower-mist.jpg", alt: "Tower rising out of the mist" },
+];
+
 // Published payment plans — figures exactly as issued on the Nathia Gali site.
 export const plans = [
   { id: "spu", area: 50, kind: "Smart Property Unit", project: "Nathia Gali", total: 2250000, down: 675000, monthly: 43750 },
   { id: "1bhk-667", area: 667, kind: "1 BHK apartment", project: "Nathia Gali", total: 26680000, down: 8004000, monthly: 518778 },
   { id: "1bhk-673", area: 673, kind: "1 BHK apartment", project: "Nathia Gali", total: 26920000, down: 8076000, monthly: 523444 },
   { id: "1bhk-734", area: 734, kind: "1 BHK apartment", project: "Nathia Gali", total: 29360000, down: 8808000, monthly: 570889 },
+];
+
+export const investorReasons = [
+  { t: "Managed as one hotel", d: "DM Consortium runs rentals, upkeep and returns in-house — no unions, no third-party operators." },
+  { t: "Quarterly profit share", d: "Smart Property owners in Nathia Gali share in hotel revenue every quarter." },
+  { t: "Low entry", d: "Own a share of a hotel from PKR 2 million, with 30% down and 36 monthly instalments." },
+  { t: "Owner stays", d: "Nathia Gali owners get 28 free nights a year and zero maintenance fees." },
+  { t: "Assured delivery", d: "Serene Heights Lahore carries a 2-year delivery commitment and LDA approval." },
+  { t: "Shariah-compliant", d: "Every transaction is structured to be Shariah-compliant and legally secure." },
 ];

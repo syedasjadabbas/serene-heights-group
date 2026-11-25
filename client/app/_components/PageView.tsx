@@ -1,14 +1,24 @@
-import Link from "next/link";
+import Link from "@/global/components/Link";
 import { SiteFooter } from "@/global/components/SiteFooter";
 import { SiteHeader } from "@/global/components/SiteHeader";
 import { site } from "@/global/constants/site";
 import { isHotel, trail } from "@/global/site";
 import type { Page } from "@/global/site/types";
 import { BlockView, Go, slugify, when } from "./Blocks";
-import { Projects } from "./Projects";
+import { SmoothScroll } from "@/global/components/SmoothScroll";
+import { Appear } from "./Appear";
 
-// Templates whose opening is a full-width picture with the heading in a box, as the client drew them.
-const PICTURE_OPENING = new Set(["home", "project", "hotel-home", "accommodation", "hotel-content"]);
+// Every opening is the framed card; pages without their own picture use their section's.
+const PICTURES: [prefix: string, src: string][] = [
+  ["/hotels", "/media/ng/snow-aerial-sunset.webp"],
+  ["/nathiagali", "/media/ng/aerial-clouds.webp"],
+  ["/lahore", "/media/lhr/dusk.jpg"],
+  ["/invest", "/media/ng/tower-sky.webp"],
+  ["/overseas", "/media/farms/mist-valley.webp"],
+  ["/insights", "/media/ng/rooftop-view.webp"],
+  ["/about", "/media/stay/tower-snow-night.jpg"],
+];
+const TALL = new Set(["project", "hotel-home", "accommodation", "hotel-content"]);
 
 function structuredData(page: Page) {
   const crumbs = [...trail(page), page];
@@ -38,8 +48,8 @@ function structuredData(page: Page) {
 export function PageView({ page }: { page: Page }) {
   const hotel = isHotel(page);
   const crumbs = trail(page);
-  const picture = PICTURE_OPENING.has(page.template) && page.image;
-  const orange = hotel || page.side === "hotel";
+  const picture = page.image?.src ?? PICTURES.find(([p]) => page.path.startsWith(p))?.[1] ?? "/media/ng/snow-valley.webp";
+  const label = hotel ? "Serene Heights Hotels and Resorts" : "Serene Heights Group";
 
   // "On this page": sub-headings for explainers and articles, subjects for long question pages.
   const toc = page.blocks.flatMap((b) =>
@@ -47,7 +57,8 @@ export function PageView({ page }: { page: Page }) {
   );
 
   const opening = (
-    <div className="open__text">
+    <div className="phero__text">
+      {crumbs.length === 0 && <span className="eyebrow">{label}</span>}
       {crumbs.length > 0 && (
         <nav className="crumbs" aria-label="Breadcrumb">
           {crumbs.map((c) => (
@@ -57,7 +68,7 @@ export function PageView({ page }: { page: Page }) {
           ))}
         </nav>
       )}
-      <h1>{page.title}</h1>
+      <h1 className="display">{page.title}</h1>
       <p>{page.intro}</p>
       {page.article && (
         <p className="byline">
@@ -67,7 +78,7 @@ export function PageView({ page }: { page: Page }) {
       {page.actions && (
         <div className="links">
           {page.actions.map((a, i) => (
-            <Go key={a.label} href={a.href} className={`btn ${i === 0 ? "btn--main" : "btn--line"}`}>
+            <Go key={a.label} href={a.href} className={`btn ${i === 0 ? "btn--white" : "btn--ghost"}`}>
               {a.label}
             </Go>
           ))}
@@ -82,17 +93,21 @@ export function PageView({ page }: { page: Page }) {
   const blocks = picturesFirst ? rest : page.blocks;
 
   return (
-    <div className={`site${orange ? " site--hotel" : ""}`}>
+    <div className="site">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData(page) }} />
       <a href="#main" className="skip">
         Skip to content
       </a>
+      <SmoothScroll />
+      <Appear />
       <SiteHeader hotel={hotel} />
-      <main id="main" data-template={page.template}>
+      <main id="main" data-template={page.template} data-nav="light">
         {picturesFirst && <BlockView block={{ ...first, h: "" }} page={page} />}
-        <header className={`open${picture ? " open--picture" : ""}`}>
-          {picture && <img className="open__img" src={page.image!.src} alt={page.image!.alt} fetchPriority="high" />}
-          {opening}
+        <header className={`phero${TALL.has(page.template) ? " phero--tall" : ""}`}>
+          <div className="phero__card" data-nav="dark">
+            <img className="phero__img" src={picture} alt={page.image?.alt ?? ""} fetchPriority="high" />
+            {opening}
+          </div>
         </header>
         {toc.length > 1 && (
           <nav className="toc" aria-label="On this page">
@@ -117,9 +132,9 @@ export function PageView({ page }: { page: Page }) {
             ))}
           </nav>
         )}
-        {blocks.map((b, i) =>
-          page.path === "/" && b.id === "projects" ? <Projects key={i} /> : <BlockView key={i} block={b} page={page} />,
-        )}
+        {blocks.map((b, i) => (
+          <BlockView key={i} block={b} page={page} />
+        ))}
       </main>
       <SiteFooter hotel={hotel} />
     </div>

@@ -17,6 +17,7 @@ export function Calculator() {
 
   return (
     <div className="calc">
+      <h3>Payment plan</h3>
       <p>Published plans for Serene Heights Nathia Gali — 30% down, then 36 monthly instalments.</p>
       <div className="calc__plans" role="group" aria-label="Choose a unit">
         {plans.map((p) => (
