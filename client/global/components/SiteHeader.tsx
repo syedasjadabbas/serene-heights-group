@@ -112,12 +112,14 @@ export function SiteHeader({ hotel }: { hotel: boolean }) {
           {menu.items.map((m) =>
             m.items ? (
               <div key={m.label} className="nav__group">
-                <button aria-expanded={section === m.label} onClick={() => setSection(section === m.label ? null : m.label)}>
-                  {m.label} <span aria-hidden>{section === m.label ? "−" : "+"}</span>
-                </button>
+                <div className="nav__row">
+                  <Link href={m.href}>{m.label}</Link>
+                  <button aria-label={`${m.label} menu`} aria-expanded={section === m.label} onClick={() => setSection(section === m.label ? null : m.label)}>
+                    {section === m.label ? "−" : "+"}
+                  </button>
+                </div>
                 {section === m.label && (
-                  <div>
-                    <Link href={m.href}>All of {m.label.toLowerCase()}</Link>
+                  <div className="nav__list">
                     {m.items.map((s) => (
                       <Link key={s.href} href={s.href}>
                         {s.label}

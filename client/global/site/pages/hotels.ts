@@ -231,7 +231,7 @@ export const hotelPages: Page[] = [
     side: "hotel",
     template: "accommodation",
     name: "Accommodation",
-    title: "Apartments at Serene Heights Nathia Gali",
+    title: "Accommodation",
     description: "Compare one-, two- and three-bedroom furnished apartments at Serene Heights Nathia Gali: layouts, sizes and what each apartment includes.",
     intro: "You will stay in a furnished apartment with a place to sleep, sit and make a simple meal. Compare the three types, then ask for your dates.",
     image: room("living-room-wide", "Apartment living room with a curved orange sofa, armchair and green rug"),
@@ -460,7 +460,7 @@ export const hotelPages: Page[] = [
     side: "hotel",
     template: "hotel-content",
     name: "Dining",
-    title: "Dining at Serene Heights Nathia Gali",
+    title: "Dining",
     description: "Rooftop dining at 7,906 ft, a restaurant by the lobby and room service: the dining planned at Serene Heights Nathia Gali.",
     intro: "Meals are planned on the roof, beside the lobby and in your own apartment. Here is what the design includes.",
     image: ng("rooftop-dining", "Render of the glass-walled rooftop restaurant"),
@@ -469,7 +469,7 @@ export const hotelPages: Page[] = [
       {
         id: "panels",
         kind: "panels",
-        h: "Where you will eat",
+        h: "Eating at the hotel",
         items: [
           { t: "The rooftop restaurant", d: "By Coffee, Tea & Company. Breakfast, lunch and dinner behind glass at 7,906 ft.", image: stay("rooftop-restaurant", "Render of tables in the glass-walled rooftop restaurant") },
           { t: "The terraces", d: "Open and covered seating on the roof, with the forest around it.", image: ng("rooftop-terrace", "Render of planted rooftop terrace with tables and chairs") },

@@ -252,7 +252,21 @@ function SiteMap() {
   );
 }
 
-export function BlockView({ block: b, page }: { block: Block; page: Page }) {
+/** Extra content inside a drawn section: a sub-heading and its body. */
+function Sub({ block: b, page, dark }: { block: Block; page: Page; dark: boolean }) {
+  return (
+    <div className="sub">
+      {b.h && <h3 className="sub__h">{b.h}</h3>}
+      {b.d && <p className="sec__d">{b.d}</p>}
+      {body(b, page)}
+      <Links links={b.links} tone={dark ? "ghost" : "line"} />
+    </div>
+  );
+}
+
+type ViewProps = { block: Block; page: Page; before?: Block[]; after?: Block[]; also?: Page[] };
+
+export function BlockView({ block: b, page, before = [], after = [], also = [] }: ViewProps) {
   const id = slugify(b.h || b.id);
   if (b.kind === "band" || b.kind === "booking")
     return (
@@ -269,11 +283,24 @@ export function BlockView({ block: b, page }: { block: Block; page: Page }) {
   if (b.kind === "form") return <Finale heading={b.h} text={b.d} kind={b.form} about={b.about} />;
   const dark = b.kind === "panels" || b.kind === "media" || b.kind === "gallery" || b.kind === "map";
   return (
-    <section className={`sec sec--${b.kind}${dark ? " dark" : ""}`} data-nav={dark ? "dark" : "light"} aria-labelledby={b.h ? id : undefined}>
+    <section data-part={b.id} className={`sec sec--${b.kind}${dark ? " dark" : ""}`} data-nav={dark ? "dark" : "light"} aria-labelledby={b.h ? id : undefined}>
       {b.h && <h2 id={id} className="display">{b.h}</h2>}
       {b.d && b.kind !== "map" && <p className="sec__d">{b.d}</p>}
       {body(b, page)}
       {b.kind !== "media" && b.kind !== "map" && <Links links={b.links} tone={dark ? "ghost" : "line"} />}
+      {[...before, ...after].map((s) => (
+        <Sub key={s.id} block={s} page={page} dark={dark} />
+      ))}
+      {also.length > 0 && (
+        <p className="also">
+          See also{" "}
+          {also.map((p) => (
+            <Link key={p.path} href={p.path}>
+              {p.article ? p.title : p.name}
+            </Link>
+          ))}
+        </p>
+      )}
     </section>
   );
 }

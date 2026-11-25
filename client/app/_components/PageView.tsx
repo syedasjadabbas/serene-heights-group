@@ -2,8 +2,10 @@ import Link from "@/global/components/Link";
 import { SiteFooter } from "@/global/components/SiteFooter";
 import { SiteHeader } from "@/global/components/SiteHeader";
 import { site } from "@/global/constants/site";
-import { isHotel, trail } from "@/global/site";
+import { getPage, isHotel, trail } from "@/global/site";
 import type { Page } from "@/global/site/types";
+import { related } from "@/global/site/clusters";
+import { TEMPLATE_PARTS, type Block } from "@/global/site/types";
 import { BlockView, Go, slugify, when } from "./Blocks";
 import { SmoothScroll } from "@/global/components/SmoothScroll";
 import { Appear } from "./Appear";
@@ -92,6 +94,25 @@ export function PageView({ page }: { page: Page }) {
   const picturesFirst = page.template === "room" && first?.kind === "pictures";
   const blocks = picturesFirst ? rest : page.blocks;
 
+  // Only the client's drawn parts are sections. Anything else sits inside the part before it
+  // (or the next one, when that is a form or a band).
+  const drawn = TEMPLATE_PARTS[page.template];
+  const groups: { block: Block; before: Block[]; after: Block[] }[] = [];
+  let waiting: Block[] = [];
+  for (const block of blocks) {
+    const last = groups.at(-1);
+    if (drawn.includes(block.id)) {
+      groups.push({ block, before: waiting, after: [] });
+      waiting = [];
+    } else if (last && !["form", "band", "booking"].includes(last.block.kind)) last.after.push(block);
+    else waiting.push(block);
+  }
+
+  // Links the plan draws between topics that this page does not already carry.
+  const linked = JSON.stringify([page.blocks, page.actions]) + crumbs.map((c) => `"${c.path}"`).join();
+  const also = related(page.path).filter((p) => !linked.includes(`"${p}"`)).map((p) => getPage(p)!);
+  const alsoAt = groups.findLastIndex((g) => !["form", "band", "booking"].includes(g.block.kind));
+
   return (
     <div className="site">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData(page) }} />
@@ -132,8 +153,8 @@ export function PageView({ page }: { page: Page }) {
             ))}
           </nav>
         )}
-        {blocks.map((b, i) => (
-          <BlockView key={i} block={b} page={page} />
+        {groups.map((g, i) => (
+          <BlockView key={i} block={g.block} page={page} before={g.before} after={g.after} also={i === alsoAt ? also : []} />
         ))}
       </main>
       <SiteFooter hotel={hotel} />

@@ -50,7 +50,7 @@ export const groupPages: Page[] = [
       {
         id: "projects",
         kind: "cards",
-        h: "Our projects",
+        h: "The projects",
         cards: [
           {
             t: "Nathia Gali",
@@ -111,7 +111,7 @@ export const groupPages: Page[] = [
       {
         id: "guides",
         kind: "listing",
-        h: "Guides for buyers and travellers",
+        h: "Guides",
         links: [{ label: "All insights", href: "/insights" }],
       },
       {
@@ -505,16 +505,6 @@ export const groupPages: Page[] = [
           { label: "Directions to the Lahore site", href: LHR_MAP },
         ],
       },
-      {
-        id: "other",
-        kind: "cards",
-        h: "Looking for something else?",
-        cards: [
-          { t: "A stay at the hotel", d: "Send your dates to the hotel team.", href: "/hotels/nathia-gali/contact", cta: "Contact the hotel" },
-          { t: "A site visit", d: "See the Nathia Gali site or the Lahore site.", href: "/site-visit", cta: "Book a site visit" },
-          { t: "Partners and brokers", d: "Talk to us about working together.", href: "/partners", cta: "Partners and brokers" },
-        ],
-      },
     ],
     pending: [
       "Office opening hours",
@@ -528,7 +518,7 @@ export const groupPages: Page[] = [
     side: "both",
     template: "questions",
     name: "Questions",
-    title: "Questions",
+    title: "Questions about Serene Heights",
     description: "Plain answers about Serene Heights: the projects, prices, income, risks, buying from abroad, site visits and staying at the hotel.",
     intro: "Short answers to the questions we hear most. If yours is not here, ask us at the end of the page.",
     image: { src: "/media/ng/rooftop-view.webp", alt: "Render of the view from the rooftop at Serene Heights Nathia Gali" },
@@ -660,13 +650,6 @@ export const groupPages: Page[] = [
           ["Now selling", "Serene Heights Lahore: a 21-storey mixed-use tower on Gulberg Main Boulevard"],
           ["Completed", "Serene Farms, Barki Road, Lahore"],
         ],
-      },
-      {
-        id: "contact",
-        kind: "band",
-        h: "Contact for the press",
-        d: "Please credit project images as renders. They show the design, not a finished building.",
-        links: [{ label: "Contact us", href: "/contact" }, CALL],
       },
     ],
     pending: [

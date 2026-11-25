@@ -92,6 +92,13 @@ const paths = new Set(all.map((p) => p.path));
   check("Pages follow their templates", !bad.length, bad.join("; "));
 }
 
+// The client's "How pages link" board only names pages that exist.
+{
+  const { clusters, steps } = await import("../global/site/clusters.ts");
+  const bad = [...Object.entries(clusters), ...Object.entries(steps)].flatMap(([h, m]) => [h, ...m]).filter((p) => !paths.has(p));
+  check("Topic links name real pages", !bad.length, bad.join(", "));
+}
+
 // 5. Every internal link (menus, footers, pages) goes to a page that exists.
 {
   const dead = new Set();

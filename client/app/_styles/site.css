@@ -1169,24 +1169,27 @@
   overflow-y: auto;
 }
 
-.nav__group > button {
+.nav__row {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 14px;
-  font-size: 17px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+}
+
+.nav__row a {
+  flex: 1;
+}
+
+.nav__row button {
+  width: 52px;
+  font-size: 20px;
   background: none;
   border: 0;
 }
 
-.nav__group > div {
+.nav__list {
   display: grid;
   padding-left: 12px;
 }
 
-.nav__group > div a {
+.nav__list a {
   padding: 11px 14px;
   font-size: 15px;
 }
@@ -1326,5 +1329,70 @@
   }
   .reveal__copy p:nth-of-type(2) {
     display: none;
+  }
+}
+
+/* Extra content kept inside a drawn section, and the plan's topic links */
+.sub {
+  margin-top: clamp(32px, 4vw, 56px);
+}
+
+.sub__h {
+  margin: 0 0 18px;
+  font-size: clamp(22px, 2.2vw, 32px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.sub .sec__d {
+  margin: 0 0 18px;
+}
+
+.sec > .sub ~ .facts {
+  margin-top: 36px;
+}
+
+.sec.dark .card {
+  --ink-2: #2b3a35;
+  --muted: #6f6a5e;
+  color: var(--ink);
+}
+
+.also {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin: 32px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.also a {
+  padding: 4px 0;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.sec.dark .also a {
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  /* drawn for phones: the calculator comes before the plan */
+  main[data-template="payment"] {
+    display: flex;
+    flex-direction: column;
+  }
+  main[data-template="payment"] > * {
+    order: 2;
+  }
+  main[data-template="payment"] > .phero {
+    order: 0;
+  }
+  main[data-template="payment"] > [data-part="calculator"] {
+    order: 1;
   }
 }

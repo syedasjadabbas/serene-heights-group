@@ -201,10 +201,10 @@ export function Intro() {
             <div className="hero__grain" />
             <h1 className="hero__title display">
               <span className="line">
-                <span>Built for the</span>
+                <span>Serene Heights</span>
               </span>
               <span className="line soft">
-                <span>heights ahead</span>
+                <span>Group</span>
               </span>
             </h1>
 

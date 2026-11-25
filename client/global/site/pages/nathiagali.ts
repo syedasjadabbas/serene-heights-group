@@ -994,7 +994,7 @@ export const nathiagaliPages: Page[] = [
     side: "both",
     template: "gallery",
     name: "Photos and films",
-    title: "Photos and films of Serene Heights Nathia Gali",
+    title: "Photos and films, dated",
     description: "Renders of the building, rooftop, grounds and winter, pictures of furnished interiors, and dated site films of Serene Heights Nathia Gali.",
     intro: "Pictures of the building and grounds are renders of the finished design. The interior pictures show how an apartment is furnished. The films show the real site.",
     image: { src: "/media/ng/sunset-rooftop.webp", alt: "Render of the rooftop terraces at sunset" },

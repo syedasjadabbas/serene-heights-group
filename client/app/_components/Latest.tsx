@@ -65,6 +65,9 @@ export function Latest({ abroad, latest, guides }: Props) {
             <p>{latest.text}</p>
             <a href={latest.link.href} className="btn btn--ghost">
               {latest.link.label} <span className="arr">→</span>
+            </a>{" "}
+            <a href="/nathiagali/gallery" className="btn btn--ghost">
+              Photos and films
             </a>
           </div>
         </div>
