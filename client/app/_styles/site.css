@@ -1324,8 +1324,18 @@
   .phero--tall .phero__card {
     min-height: calc(100svh - 92px);
   }
+  /* the map has its own space above the text, with one label */
+  .reveal__dark {
+    gap: 24px;
+  }
   .reveal__canvas {
-    inset: 96px 0 56% 0;
+    position: relative;
+    inset: auto;
+    flex: 1 0 300px;
+    margin: 0 -20px;
+  }
+  .pin-label--far {
+    display: none;
   }
   .reveal__copy p:nth-of-type(2) {
     display: none;
@@ -1394,5 +1404,58 @@
   }
   main[data-template="payment"] > [data-part="calculator"] {
     order: 1;
+  }
+}
+
+/* The doors are wider than the old booking panel they replaced */
+.stays__panel {
+  width: min(680px, 100%);
+}
+
+.doors {
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  /* long button labels wrap instead of running off the screen */
+  .site main .btn {
+    height: auto;
+    min-height: 44px;
+    max-width: 100%;
+    padding-block: 10px;
+    white-space: normal;
+  }
+  .section-head__aside {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .footer__giant {
+    font-size: 14.6vw;
+  }
+}
+
+@media (max-width: 360px) {
+  .reveal__stats {
+    gap: 14px;
+  }
+  .stat {
+    min-width: 0;
+  }
+  .stat b {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 1020px) {
+  /* emblem above, heading and form below */
+  .finale__card {
+    align-content: flex-end;
+    align-items: flex-end;
+    padding-top: 46svh;
+  }
+  .finale__canvas {
+    left: 0;
+    bottom: auto;
+    height: 52svh;
   }
 }
