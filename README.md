@@ -36,7 +36,7 @@ npm run dev          # http://localhost:3010
 | `npm run build` | Production build (every page is pre-rendered) |
 | `npm run start` | Serves the production build on port 3010 |
 | `npm run typecheck` | TypeScript check without building |
-| `npm run check` | The project's 15 rule checks (see [Quality checks](#quality-checks)) |
+| `npm run check` | The project's 17 rule checks (see [Quality checks](#quality-checks)) |
 | `npm run check -- --pending` | The same, plus every fact or file the client still has to supply, page by page |
 
 > The scripts call `node node_modules/next/...` directly because the `&` in the local folder name
@@ -149,7 +149,7 @@ database. Form fields and messages live in `app/_lib/enquiry.ts`.
 
 ## Search and sharing
 
-- `sitemap.xml` lists every public page, plus the booking and investor sites. The thank-you and 404 pages are left out.
+- `sitemap.xml` lists every public page in the plan. The thank-you and 404 pages are left out.
 - `robots.txt` and each page's robots tag keep search engines out of the client preview. They open only when
   `NEXT_PUBLIC_ALLOW_INDEXING=true`.
 - Inner pages carry structured data: breadcrumbs, and FAQ and Article markup where they apply.
@@ -166,8 +166,20 @@ Next.js Multi-Zones, rewritten in `next.config.ts`:
 
 | Path | App | Set |
 |---|---|---|
-| `/booking` | Serene Booking (built with `basePath: "/booking"`) | `BOOKING_ORIGIN` |
+| `/hotels/nathia-gali` | Serene Booking (built with `basePath: "/hotels/nathia-gali"`) | `BOOKING_ORIGIN` |
 | `/invest` | Serene Investors (built with `basePath: "/invest"`) | `INVESTORS_ORIGIN` |
+
+**`/hotels/nathia-gali` is the plan's hotel home, served by Serene Booking** in its own design:
+- Its front page follows the Hotel home board: A hotel in the highlands, Apartments, Time at the hotel, Nathia
+  Gali, Where Serene Heights takes guests, Why book with the hotel directly, Own a unit on the same site, and
+  Guest questions. Booking's search sits in the opening.
+- It carries the client's hotel menu and footer.
+- The plan's hotel pages under that address stay in this site (`HOTEL_PAGES` in `next.config.ts`):
+  accommodation, dining, experiences, events, offers, gallery, location, faq, book (Reservations), policies,
+  contact and things-to-do.
+- Booking's own pages live under it: `/rooms`, `/checkout`, `/manage` (Find a booking), `/booking/<ref>`,
+  `/login` and `/account`. The hotel pages' **Book online** buttons open `/hotels/nathia-gali/rooms`.
+- Old `/booking` addresses redirect there.
 
 **`/invest` is the plan's Investing page, served by Serene Investors** in its own design:
 - Its front page follows the Hub page board: Start here, Key facts, What you can check, Questions buyers ask,
@@ -184,7 +196,9 @@ Next.js Multi-Zones, rewritten in `next.config.ts`:
 `npm run check` confirms:
 - both rewrites exist;
 - when the sibling repositories sit alongside this one, each app's base path matches;
-- Serene Investors' Investing page, menu and footer still match this site's wording, figures and links.
+- every plan page under `/invest` or `/hotels/nathia-gali` stays with this site;
+- Serene Investors' Investing page and Serene Booking's hotel home, with each app's menu and footer, still
+  match this site's wording, figures and links.
 
 **Running all three locally:**
 
@@ -197,7 +211,7 @@ Next.js Multi-Zones, rewritten in `next.config.ts`:
    INVESTORS_ORIGIN=http://localhost:3030
    ```
 
-4. Start this site and open `localhost:3010/booking` and `localhost:3010/invest`.
+4. Start this site and open `localhost:3010/hotels/nathia-gali` and `localhost:3010/invest`.
 
 ---
 
@@ -208,7 +222,7 @@ All are optional; see `client/.env.example`. Never commit `.env` files.
 | Variable | Purpose |
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | Public URL, once a custom domain is attached. On Vercel the production URL is used automatically. |
-| `BOOKING_ORIGIN` | Serene Booking deployment served at `/booking`. If it is empty, booking buttons open WhatsApp. |
+| `BOOKING_ORIGIN` | Serene Booking deployment, which serves the hotel home at `/hotels/nathia-gali`. |
 | `INVESTORS_ORIGIN` | Serene Investors deployment, which serves the Investing page at `/invest`. |
 | `NEXT_PUBLIC_ALLOW_INDEXING` | Set to `true` only on the real domain once the client signs off the facts. |
 
@@ -237,10 +251,12 @@ All are optional; see `client/.env.example`. Never commit `.env` files.
 9. Every stylesheet in `_styles` is imported, with no imports pointing at missing files.
 10. No `localhost` links in shipped code.
 11. Share titles and descriptions fit link previews.
-12. The Booking zone is wired at `/booking` and matches Booking's base path.
+12. The Booking zone is wired at `/hotels/nathia-gali` and matches Booking's base path.
 13. The Investors zone is wired at `/invest` and matches Investors' base path.
-14. The Investing page in Serene Investors matches this site's wording, figures, links, menu and footer.
-15. No `.env` files are committed.
+14. Plan pages under those two addresses stay with this site.
+15. The Investing page in Serene Investors matches this site's wording, figures, links, menu and footer.
+16. The hotel home in Serene Booking matches this site's wording, links, menu and footer.
+17. No `.env` files are committed.
 
 ---
 

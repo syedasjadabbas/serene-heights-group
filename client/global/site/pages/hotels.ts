@@ -7,6 +7,8 @@ const WHATSAPP: LinkTo = { label: "WhatsApp us", href: "https://wa.me/9230084979
 const DIRECTIONS = "https://www.google.com/maps/search/?api=1&query=34.0745,73.379";
 const REQUEST: LinkTo = { label: "Request your dates", href: `${H}/book` };
 const POLICIES: LinkTo = { label: "Read the policies", href: `${H}/policies` };
+/** Serene Booking (served as the hotel home): live availability and online booking, beside the request form. */
+const BOOK_ONLINE: LinkTo = { label: "Book online", href: `${H}/rooms` };
 const ADDRESS = "1.5 km, Kala Bagh Air Base Road, Nathia Gali, Khyber Pakhtunkhwa";
 
 const NOT_OPEN = "The hotel is under construction and has not published an opening date. Send the dates you have in mind and the team will tell you plainly whether they can be hosted.";
@@ -135,7 +137,7 @@ export const hotelPages: Page[] = [
     intro: "Furnished apartments in the pines at 7,906 ft, with the valley in front and Islamabad two hours behind you.",
     eyebrow: "Nathia Gali, Khyber Pakhtunkhwa",
     image: ng("tower-forest-mist-xl", "Render of the Serene Heights tower above the pine forest in mist"),
-    actions: [REQUEST, { label: "See all apartments", href: `${H}/accommodation` }],
+    actions: [REQUEST, BOOK_ONLINE, { label: "See all apartments", href: `${H}/accommodation` }],
     blocks: [
       {
         id: "intro",
@@ -196,7 +198,7 @@ export const hotelPages: Page[] = [
           { t: "A straight answer", d: "We confirm whether your dates, apartment and rate are available before you commit." },
           { t: "Everything in one message", d: "Ask about the apartment, meals, parking or a family need at the same time." },
         ],
-        links: [REQUEST, WHATSAPP],
+        links: [REQUEST, BOOK_ONLINE, WHATSAPP],
       },
       {
         id: "own",
@@ -235,7 +237,7 @@ export const hotelPages: Page[] = [
     description: "Compare one-, two- and three-bedroom furnished apartments at Serene Heights Nathia Gali: layouts, sizes and what each apartment includes.",
     intro: "You will stay in a furnished apartment with a place to sleep, sit and make a simple meal. Compare the three types, then ask for your dates.",
     image: room("living-room-wide", "Apartment living room with a curved orange sofa, armchair and green rug"),
-    actions: [REQUEST],
+    actions: [REQUEST, BOOK_ONLINE],
     blocks: [
       {
         id: "compare",
@@ -301,7 +303,7 @@ export const hotelPages: Page[] = [
     description: "A furnished one-bedroom apartment at Serene Heights Nathia Gali: bedroom, sitting room with kitchenette, bathroom and balcony or terrace.",
     intro: "A bedroom, a separate sitting room with a kitchenette, a bathroom and your own balcony. On the 8th floor, the balcony becomes a terrace.",
     image: room("bedroom-arch-window", "Guest opening the curtains beside an arched window in an apartment bedroom"),
-    actions: [REQUEST],
+    actions: [REQUEST, BOOK_ONLINE],
     blocks: [
       {
         id: "pictures",
@@ -365,7 +367,7 @@ export const hotelPages: Page[] = [
     description: "A furnished two-bedroom apartment at Serene Heights Nathia Gali for families or friends. Ask for the layout, area and available dates.",
     intro: "Two bedrooms in one furnished apartment, so a family or two couples can share the evening and still close a door at night.",
     image: room("living-room-wide", "Apartment living room with a curved orange sofa, armchair and green rug"),
-    actions: [REQUEST],
+    actions: [REQUEST, BOOK_ONLINE],
     blocks: [
       { id: "pictures", kind: "pictures", h: "Pictures", d: "These show the furnishing style at Serene Heights, not a particular two-bedroom apartment.", images: sharedPictures },
       {
@@ -407,7 +409,7 @@ export const hotelPages: Page[] = [
     description: "A furnished three-bedroom apartment at Serene Heights Nathia Gali for larger families and groups. Ask for the layout, area and available dates.",
     intro: "Three bedrooms in one furnished apartment, for grandparents, children and everyone in between.",
     image: room("guests-lounge", "Guests playing cards at a table in an apartment"),
-    actions: [REQUEST],
+    actions: [REQUEST, BOOK_ONLINE],
     blocks: [
       {
         id: "pictures",
@@ -945,7 +947,7 @@ export const hotelPages: Page[] = [
     description: "Request dates at Serene Heights Nathia Gali. Tell us when, how many guests and which apartment; the team replies to confirm what is possible.",
     intro: "Tell us when you would like to come and who is travelling. This is a request: the team replies to confirm what is possible.",
     image: ng("snow-tower", "Render of the tower after snowfall"),
-    actions: [WHATSAPP],
+    actions: [BOOK_ONLINE, WHATSAPP],
     blocks: [
       { id: "form", kind: "form", form: "stay", about: "a stay at Nathia Gali", h: "Reservations", d: NOT_OPEN },
       {
@@ -968,6 +970,6 @@ export const hotelPages: Page[] = [
         links: [{ label: "Open directions", href: DIRECTIONS }],
       },
     ],
-    pending: [OPENING, RATES, "Live booking address (NEXT_PUBLIC_BOOKING_URL) once Serene Booking is ready", "Reply time the team can commit to"],
+    pending: [OPENING, RATES, "Confirm online booking in Serene Booking can take real bookings before the opening date", "Reply time the team can commit to"],
   },
 ];
