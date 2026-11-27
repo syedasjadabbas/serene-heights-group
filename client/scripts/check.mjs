@@ -105,7 +105,9 @@ const paths = new Set(all.map((p) => p.path));
   const visit = (v, from) => {
     if (Array.isArray(v)) v.forEach((x) => visit(x, from));
     else if (v && typeof v === "object") {
-      if (typeof v.href === "string" && v.href.startsWith("/") && !paths.has(v.href.split("#")[0])) dead.add(`${v.href} (from ${from})`);
+      // /booking and /serene-investors are the other apps served on this domain (Multi-Zones).
+      const zone = (h) => /^\/(booking|serene-investors)(\/|$)/.test(h);
+      if (typeof v.href === "string" && v.href.startsWith("/") && !zone(v.href) && !paths.has(v.href.split("#")[0])) dead.add(`${v.href} (from ${from})`);
       Object.values(v).forEach((x) => visit(x, from));
     }
   };
