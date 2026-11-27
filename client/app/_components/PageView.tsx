@@ -58,6 +58,11 @@ export function PageView({ page }: { page: Page }) {
     (page.template === "explainer" || page.template === "article") && b.kind === "text" ? b.parts.flatMap((p) => (p.h ? [p.h] : [])) : [],
   );
 
+  // Two-tone heading as on the home page: the words after a colon go soft.
+  const cut = page.title.indexOf(": ");
+  const head = cut > 0 ? page.title.slice(0, cut + 1) : page.title;
+  const tail = cut > 0 ? " " + page.title.slice(cut + 2) : "";
+
   const opening = (
     <div className="phero__text">
       {crumbs.length === 0 && <span className="eyebrow">{label}</span>}
@@ -70,7 +75,10 @@ export function PageView({ page }: { page: Page }) {
           ))}
         </nav>
       )}
-      <h1 className="display">{page.title}</h1>
+      <h1 className="display">
+        {head}
+        {tail && <span className="soft">{tail}</span>}
+      </h1>
       <p>{page.intro}</p>
       {page.article && (
         <p className="byline">
@@ -115,6 +123,10 @@ export function PageView({ page }: { page: Page }) {
   const numbers = groups.map((g, i) => (plain(g.block.kind) && g.block.h ? groups.slice(0, i + 1).filter((x) => plain(x.block.kind) && x.block.h).length : undefined));
   const alsoAt = groups.findLastIndex((g) => !["form", "band", "booking"].includes(g.block.kind));
 
+  // The opening lists what is on the page: sub-headings for explainers and articles, otherwise the sections.
+  const sectionList = groups.filter((g) => plain(g.block.kind) && g.block.h).map((g) => g.block.h);
+  const onPage = toc.length > 1 ? toc : sectionList.length >= 3 ? sectionList : [];
+
   return (
     <div className="site">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData(page) }} />
@@ -130,10 +142,25 @@ export function PageView({ page }: { page: Page }) {
           <div className="phero__card" data-nav="dark">
             <img className="phero__img" src={picture} alt={page.image?.alt ?? ""} fetchPriority="high" />
             {opening}
+            {onPage.length > 0 && (
+              <nav className="phero__nav" aria-label="On this page">
+                <span>On this page</span>
+                <ol>
+                  {onPage.map((t, i) => (
+                    <li key={t}>
+                      <a href={`#${slugify(t)}`}>
+                        <em>{String(i + 1).padStart(2, "0")}</em>
+                        {t}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )}
           </div>
         </header>
         {toc.length > 1 && (
-          <nav className="toc" aria-label="On this page">
+          <nav className="toc toc--phone" aria-label="On this page, short">
             {toc.map((t) => (
               <a key={t} href={`#${slugify(t)}`}>
                 {t}

@@ -587,3 +587,276 @@ main:not([data-template="article"], [data-template="explainer"], [data-template=
     padding: 14px 16px;
   }
 }
+
+/* ───── Pass 2: the home page's language on the inner pages ───── */
+
+/* Dropdowns: solid, so the page behind never shows through */
+.nav__drop {
+  z-index: 2;
+  background: #faf5ea;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Opening: taller card, two-tone heading, and what is on the page in a glass panel */
+.phero__card {
+  min-height: min(82svh, 760px);
+  justify-content: space-between;
+  gap: 32px 56px;
+}
+
+.phero--tall .phero__card {
+  min-height: calc(100svh - 24px);
+}
+
+.phero h1 {
+  max-width: 15ch;
+  font-size: clamp(44px, 6.6vw, 112px);
+}
+
+.phero h1 .soft {
+  color: var(--lavender);
+  opacity: 0.9;
+}
+
+.phero .eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.phero__text > p {
+  max-width: 48ch;
+}
+
+.phero__nav {
+  flex: 0 0 300px;
+  align-self: flex-end;
+  padding: 20px 22px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+}
+
+.phero__nav > span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.phero__nav ol {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.phero__nav a {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 11px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 14px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.86);
+  transition:
+    color 0.3s,
+    padding 0.4s var(--ease);
+}
+
+.phero__nav li:first-child a {
+  border-top: 0;
+}
+
+.phero__nav a:hover {
+  padding-left: 4px;
+  color: #fff;
+}
+
+.phero__nav em {
+  flex: none;
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.toc--phone {
+  display: none;
+}
+
+@media (max-width: 1020px) {
+  .phero__card {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-end;
+  }
+
+  .phero__nav {
+    flex: none;
+    align-self: stretch;
+  }
+}
+
+@media (max-width: 760px) {
+  .phero__nav {
+    display: none;
+  }
+
+  .toc--phone {
+    display: flex;
+  }
+}
+
+/* Section label as on the home page: small capitals and a glowing dot */
+.sec__num {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.sec__num::before {
+  background: var(--dusk-3);
+  box-shadow: 0 0 12px var(--dusk-3);
+}
+
+.sec.dark .sec__num {
+  color: var(--on-night-muted);
+}
+
+.sec__head h2 {
+  scroll-margin-top: 120px;
+}
+
+/* Dark sections: the home page's night green with a soft glow */
+.sec.dark {
+  padding-block: clamp(56px, 7vw, 112px);
+  background:
+    radial-gradient(70% 60% at 92% 0%, rgba(93, 133, 118, 0.34), rgba(93, 133, 118, 0) 70%),
+    radial-gradient(50% 55% at 0% 100%, rgba(223, 236, 228, 0.09), rgba(223, 236, 228, 0) 70%),
+    var(--night);
+}
+
+.sec.dark .sec__head .sec__d {
+  color: var(--on-night-muted);
+}
+
+.sec.dark .prose h3,
+.sec.dark .sub__h,
+.sec.dark .faq summary {
+  color: #fff;
+}
+
+/* Key facts on the dark card: large figures */
+.sec.dark .facts {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: transparent;
+}
+
+.sec.dark .facts div {
+  padding: 28px 28px 30px;
+  background: transparent;
+  box-shadow:
+    1px 0 0 rgba(255, 255, 255, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.sec.dark .facts div:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sec.dark .facts dt {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.sec.dark .facts dd {
+  font-size: clamp(20px, 1.9vw, 28px);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: #fff;
+}
+
+/* Cards: the first of a set is the dark tile, as in the home page's grid */
+.sec:not(.dark) .cards:has(> li:nth-child(3)) > .card:not(.card--photo):first-child {
+  --ink-2: rgba(255, 255, 255, 0.8);
+  --muted: rgba(255, 255, 255, 0.6);
+  color: #fff;
+  border-color: transparent;
+  background:
+    radial-gradient(80% 90% at 15% 115%, rgba(223, 236, 228, 0.42), rgba(223, 236, 228, 0) 70%),
+    radial-gradient(70% 80% at 95% 5%, rgba(93, 133, 118, 0.75), rgba(93, 133, 118, 0) 70%),
+    linear-gradient(180deg, var(--dusk-0), var(--dusk-1) 60%, var(--dusk-2));
+  box-shadow: 0 30px 60px -36px rgba(11, 29, 24, 0.7);
+}
+
+.sec:not(.dark) .cards:has(> li:nth-child(3)) > .card:not(.card--photo):first-child .card__meta {
+  color: var(--gold);
+}
+
+.sec:not(.dark) .cards:has(> li:nth-child(3)) > .card:not(.card--photo):first-child .card__go {
+  color: #fff;
+}
+
+.sec:not(.dark) .cards:has(> li:nth-child(3)) > .card:not(.card--photo):first-child > div::after {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.sec:not(.dark) .cards:has(> li:nth-child(3)) > .card:not(.card--photo):first-child:hover > div::after {
+  background: #fff;
+  border-color: #fff;
+  color: var(--ink);
+}
+
+/* Photo cards: the label is a glass pill, as on the project cards */
+.card--photo .card__meta {
+  align-self: flex-start;
+  margin-bottom: auto;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: #fff;
+}
+
+.card--photo > div {
+  padding-top: 18px;
+}
+
+/* Dark cards and bands keep a small gap between them */
+.sec.dark + .band,
+.band + .sec.dark {
+  margin-top: 12px;
+}
+
+/* The last fact stretches to the end of its row, so no empty tiles are left */
+.facts div:last-child {
+  grid-column-end: -1;
+}
+
+/* Articles and explainers: one centred reading column */
+main:is([data-template="article"], [data-template="explainer"]) .sec--text {
+  max-width: calc(780px + 2 * var(--pad));
+  margin-inline: auto;
+}
+
+main:is([data-template="article"], [data-template="explainer"]) .sec--text .sec__head h2 {
+  font-size: clamp(32px, 3.4vw, 52px);
+}
+
+@media (max-width: 380px) {
+  .phero h1 {
+    font-size: 36px;
+  }
+}

@@ -281,7 +281,7 @@ export function BlockView({ block: b, page, before = [], after = [], also = [], 
       </section>
     );
   if (b.kind === "form") return <Finale heading={b.h} text={b.d} kind={b.form} about={b.about} />;
-  const dark = b.kind === "panels" || b.kind === "media" || b.kind === "gallery" || b.kind === "map";
+  const dark = b.kind === "panels" || b.kind === "media" || b.kind === "gallery" || b.kind === "map" || b.kind === "facts";
   return (
     <section data-part={b.id} className={`sec sec--${b.kind}${dark ? " dark" : ""}`} data-nav={dark ? "dark" : "light"} aria-labelledby={b.h ? id : undefined}>
       {b.h && (
