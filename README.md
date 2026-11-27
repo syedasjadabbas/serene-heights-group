@@ -1,89 +1,242 @@
 # Serene Heights Group
 
-Parent website for Serene Heights Group (DM Consortium). One cinematic scroll that links out to every Serene venture.
+The group website for Serene Heights (DM Consortium): **Serene Heights Nathia Gali**, Pakistan's first winter
+resort at 7,906 ft, and **Serene Heights Lahore** on Gulberg Main Boulevard. One site serves two audiences, each
+with its own header and menus:
 
-**Stack:** Next.js 16 · React 19 · Tailwind v4 · GSAP ScrollTrigger · Lenis · Three.js (React Three Fiber)
+- **Investing side** (green): projects, buying a hotel apartment or a share, payment plans, documents, buyers abroad.
+- **Hotel side** (orange, under `/hotels`): accommodation, dining, experiences, offers and stay requests.
+
+The site follows the client's Figma **"Serene Heights Group: Site Plan v1"** page for page, including its
+templates, menus, topic links and visitor journeys.
+
+| | |
+|---|---|
+| **Framework** | Next.js 16 (App Router), React 19, TypeScript |
+| **Styling** | Tailwind CSS v4 and plain CSS split by section |
+| **Motion and 3D** | GSAP ScrollTrigger, Lenis smooth scroll, Three.js with React Three Fiber |
+| **Forms** | React Hook Form and Zod; every enquiry opens WhatsApp with the message ready to send |
+| **Hosting** | Vercel, with Serene Booking and Serene Investors served on the same domain (Multi-Zones) |
+
+---
+
+## Getting started
+
+Requires Node.js 20.9 or later.
 
 ```bash
 cd client
 npm install
-npm run dev        # http://localhost:3010
-npm run build
-npm run check      # project rule checks (assets, no fetch in components, plan maths, …)
+npm run dev          # http://localhost:3010
 ```
 
-Scripts call `node node_modules/next/...` directly because the `&` in the folder path breaks Windows `.cmd` shims.
+| Script | What it does |
+|---|---|
+| `npm run dev` | Development server on port 3010 |
+| `npm run build` | Production build (every page is pre-rendered) |
+| `npm run start` | Serves the production build on port 3010 |
+| `npm run typecheck` | TypeScript check without building |
+| `npm run check` | The project's 14 rule checks (see [Quality checks](#quality-checks)) |
+| `npm run check -- --pending` | The same, plus every fact or file the client still has to supply, page by page |
 
-## Layout
-Follows the same structure as the other Serene apps (Serene Booking, Serene Management):
+> The scripts call `node node_modules/next/...` directly because the `&` in the local folder name
+> (`WEBS & APPS`) breaks the Windows `.cmd` shims.
+
+---
+
+## Project structure
 
 ```
-client/                      # Next.js App Router + TypeScript + Tailwind
+client/
   app/
-    layout.tsx  page.tsx
-    globals.css              # entry: Tailwind + one import per section stylesheet
-    _styles/                 # tokens, base, ui, then one file per section (order matters)
-    _components/             # home-page sections (Intro, Reveal, Projects, Stays, …)
-      three/                 # WebGL scenes (Galiyat terrain, chrome emblem)
+    page.tsx                 Home page (HomeView)
+    [...slug]/page.tsx       Every other page, pre-rendered from the page registry
+    sitemap.ts  robots.ts    Search engine files
+    opengraph-image.tsx      Share cards
+    globals.css              Entry stylesheet: Tailwind, then one import per file in _styles (order matters)
+    _styles/                 tokens, base, ui, header, footer, home sections, site (inner pages), inner (inner page design)
+    _components/             Home sections (Intro, Stays, Projects, Reveal, Investors, Latest, Finale),
+                             PageView and Blocks (inner pages), EnquiryForm, Calculator, GalleryGrid, TerrainMap
+      three/                 WebGL scenes: the Galiyat terrain and the chrome emblem
+    _lib/                    Enquiry fields and WhatsApp messages, share card
   global/
-    components/              # shared UI (SiteHeader, SiteFooter, Emblem, SmoothScroll)
-    hooks/                   # shared hooks (useInView, useDem)
-    lib/                     # shared helpers, no UI (format, galiyat elevation loader)
-    constants/site.ts        # group facts, projects, rooms, plans — single source of truth
-  public/                    # media, elevation data, icon
-  scripts/check.mjs          # `npm run check`
-server/                      # (added when the first API feature lands: Express + Prisma)
+    site/                    The client's site plan as data
+      types.ts               Page, block and template types, and the parts each template must contain
+      pages/*.ts             Every page, grouped by section (group, investing, overseas, nathiagali, lahore, hotels, insights, utility)
+      menus.ts               Both headers and both footers
+      clusters.ts            Topic links and journey steps between pages
+      index.ts               Page lookup, sections and breadcrumbs
+    components/              Shared UI: SiteHeader, SiteFooter, Emblem, Link, SmoothScroll
+    constants/site.ts        Group-level facts: one source of truth
+    lib/  hooks/             Helpers and hooks with no UI (formatting, links, scroll memory, terrain data)
+  public/                    Media, terrain elevation data, icons
+  scripts/check.mjs          `npm run check`
 ```
 
-## Sections
-| Anchor | Section | Notes |
+---
+
+## How pages are built
+
+Every page except the home page is **data**. A page in `global/site/pages/*.ts` names its address, section,
+template, opening (title, intro, picture, buttons) and a list of blocks:
+
+```ts
+{
+  path: "/nathiagali/payment-plan",
+  side: "invest",
+  template: "payment",
+  name: "Payment plan",
+  title: "Payment plan for Serene Heights Nathia Gali",
+  intro: "You pay 30% at booking and the balance in 36 monthly instalments.",
+  blocks: [
+    { id: "plan", kind: "table", h: "The plan", head: [...], rows: [...] },
+    { id: "calculator", kind: "calculator", h: "Work out your payments" },
+    ...
+  ],
+  pending: ["Two- and three-bedroom plans"],   // what the client still owes
+}
+```
+
+- **Templates.** The plan draws 19 templates. `TEMPLATE_PARTS` in `types.ts` lists the parts each one must
+  contain, in order, and `npm run check` fails if a page leaves one out.
+- **Blocks.** Pages are made from 16 block kinds: cards, facts, table, text, questions, panels, media, timeline,
+  pictures, gallery, map, calculator, booking bar, listing, band and form. `Blocks.tsx` renders them.
+- **Links between pages.** `clusters.ts` holds the plan's "How pages link" board (each topic main page and its
+  pages link both ways) and the journey steps that no main page covers. Any of these links a page doesn't
+  already carry appear in its "See also" row.
+- **Adding a page.** Add it to the right file in `pages/`, link it from a menu or main page, then run
+  `npm run check`.
+
+### Journeys
+
+The six journey boards in the plan are covered link by link. Each step's pages link on to the next step's pages.
+The "Thank you" pages are reached by sending a form.
+
+- Where visitors come in
+- Investor in Pakistan
+- Investor abroad
+- Hotel guest
+- Owner
+- Guest to owner, investor to guest
+
+---
+
+## Design
+
+- **Home page:** one cinematic scroll covering a hero card ring, the "Own or stay" doors, the projects gallery,
+  a 3D model of the real Galiyat terrain, the investors section, the latest news and the closing enquiry card
+  with a 3D chrome emblem.
+- **Inner pages:** these use the home page's language:
+  - a framed picture opening with a two-tone heading and an "On this page" panel
+  - night-green sections with a soft glow
+  - numbered section labels
+  - key facts as large figures
+  - card sets led by a dark tile
+  - questions laid out beside their heading
+- **Colours, radii and easing** are tokens on `:root` in `app/_styles/tokens.css`.
+- **Motion respects `prefers-reduced-motion`.** Links are plain anchors, so the Back button returns to the same
+  scroll position.
+
+---
+
+## Enquiries
+
+Forms collect the minimum: name, phone and the question, or dates for a stay. They are validated with Zod and
+open WhatsApp with the message written out, then go to the matching thank-you page. There is no server or
+database. Form fields and messages live in `app/_lib/enquiry.ts`.
+
+---
+
+## Search and sharing
+
+- `sitemap.xml` lists every public page, plus the booking and investor sites. The thank-you and 404 pages are left out.
+- `robots.txt` and each page's robots tag keep search engines out of the client preview. They open only when
+  `NEXT_PUBLIC_ALLOW_INDEXING=true`.
+- Inner pages carry structured data: breadcrumbs, and FAQ and Article markup where they apply.
+- Share cards (`opengraph-image`, `twitter-image`) are sized for WhatsApp, LinkedIn and X previews.
+- Addresses from the earlier Nathia Gali and Lahore sites (`/serene-heights-nathiagali/...`,
+  `/serene-heights-lahore/...`) redirect page by page to their new place (`next.config.ts`).
+
+---
+
+## Serene Booking and Serene Investors on the same domain
+
+Both apps are separate repositories and Vercel projects. This site serves them under their own paths using
+Next.js Multi-Zones, rewritten in `next.config.ts`:
+
+| Path | App | Set |
 |---|---|---|
-| `#top` | Hero → card ring | Hero card tilts away into a marquee + rotating project cards |
-| `#about` | About the group | Capsule-emblem window opens onto a 3D model of the real Galiyat terrain (`public/data/galiyat-dem.bin`) with the resort marked |
-| `#projects` | Ongoing projects | Horizontal pinned gallery → Nathia Gali, Lahore sites |
-| `#stays` | Serene Booking | Fly-through gallery + availability form → Booking app `/rooms` |
-| `#upcoming` | Upcoming projects | Unnamed teasers + WhatsApp interest |
-| `#investors` | Serene Investors | Published payment plans calculator + reasons |
-| `#contact` | Enquire | 3D chrome emblem |
+| `/booking` | Serene Booking (built with `basePath: "/booking"`) | `BOOKING_ORIGIN` |
+| `/serene-investors` | Serene Investors (built with `basePath: "/serene-investors"`) | `INVESTORS_ORIGIN` |
 
-## Config
-- All facts live in `client/global/constants/site.ts` (items marked `CONFIRM` need client sign-off).
-- `NEXT_PUBLIC_BOOKING_URL` — where the Serene Booking app is deployed (see `client/.env.example`).
-- Colour tokens are on `:root` in `client/app/_styles/tokens.css`.
+`npm run check` confirms that both rewrites exist and, when the sibling repositories sit alongside this one,
+that each app's base path matches.
 
-## Rules checked by `npm run check`
-- Every `/media` and `/data` path referenced in code exists in `public/`.
-- No `fetch()` inside components or hooks — data loading lives in `global/lib` (or `global/api`).
-- Payment plans add up (30% down + 36 instalments = total).
-- Room units total 130, matching the Serene Booking inventory.
-- Every fly-through image in Stays has a placed position.
-- Every `_styles` file is imported by `globals.css`, with no dangling imports.
-- No `.env` files are committed (only `.env.example`).
+**Running all three locally:**
 
-## Deploying to Vercel
-1. Import `syedasjadabbas/serene-heights-group` in Vercel and set **Root Directory** to `client`
-   (framework, build command and output are detected automatically).
-2. Environment variables (all optional — see `client/.env.example`):
-   - `BOOKING_ORIGIN` — the Serene Booking website's Vercel URL (e.g. `https://serene-booking.vercel.app`).
-     When set, this site serves Booking at **`/booking`** and every booking button opens it in the same tab.
-     Leave empty and booking buttons open a pre-filled WhatsApp enquiry instead.
-   - `INVESTORS_ORIGIN` — the Serene Investors Vercel URL. When set, this site serves it at
-     **`/serene-investors`** and the Investors section shows an "Open Serene Investors" button.
-   - `NEXT_PUBLIC_SITE_URL` — only needed once a custom domain is attached.
-   - `NEXT_PUBLIC_ALLOW_INDEXING=true` — only on the real public domain after facts are signed off
-     (pages are `noindex` otherwise, so a client preview never shows up in Google).
-3. Every push to `main` redeploys.
+1. Start Serene Booking: API on port 4000, website on port 3000.
+2. Start Serene Investors: `next dev -p 3030`.
+3. Add these lines to `client/.env.local`:
 
-## Serene Booking at `/booking` and Serene Investors at `/serene-investors` (Multi-Zones)
-Serene Booking stays its own repo and Vercel project but appears inside this site at `/booking`.
-`client/next.config.ts` rewrites `/booking` and `/booking/:path*` to `BOOKING_ORIGIN`; Booking is built with
-`basePath: "/booking"` and sets its login cookie on `/booking/api/v1/auth`. Moving between the two apps is a
-normal page load. `npm run check` confirms the rewrite exists and (when the Booking repo sits alongside)
-that both apps agree on the path.
+   ```
+   BOOKING_ORIGIN=http://localhost:3000
+   INVESTORS_ORIGIN=http://localhost:3030
+   ```
 
-Serene Investors (repo `serene-investors`, local folder `stake-clone`) works the same way at `/serene-investors`
-(`INVESTORS_ORIGIN`); its images, plain links and API calls go through `withBase()`.
+4. Start this site and open `localhost:3010/booking` and `localhost:3010/serene-investors`.
 
-**Run locally:** start Serene Booking (API on 4000, website on 3000) and Serene Investors (`next dev -p 3030`),
-then put `BOOKING_ORIGIN=http://localhost:3000` and `INVESTORS_ORIGIN=http://localhost:3030` in
-`client/.env.local` and start this site — `localhost:3010/booking` and `localhost:3010/serene-investors`.
+---
+
+## Environment variables
+
+All are optional; see `client/.env.example`. Never commit `.env` files.
+
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_SITE_URL` | Public URL, once a custom domain is attached. On Vercel the production URL is used automatically. |
+| `BOOKING_ORIGIN` | Serene Booking deployment served at `/booking`. If it is empty, booking buttons open WhatsApp. |
+| `INVESTORS_ORIGIN` | Serene Investors deployment served at `/serene-investors`. |
+| `NEXT_PUBLIC_ALLOW_INDEXING` | Set to `true` only on the real domain once the client signs off the facts. |
+
+---
+
+## Deployment (Vercel)
+
+1. Import the repository and set **Root Directory** to `client`. The framework and build settings are detected automatically.
+2. Add the environment variables above as needed.
+3. Each push to `main` deploys to production. Other branches get preview deployments.
+
+---
+
+## Quality checks
+
+`npm run check` runs before each release and fails the run if any of these break:
+
+1. Every referenced image and data file exists in `public/`.
+2. There is no `fetch()` inside components or hooks.
+3. Payment plans add up: 30% down plus 36 instalments equals the total.
+4. Every page in the client's plan exists (74 pages, plus articles and the author page).
+5. Every page image exists.
+6. Every page contains its template's parts, in order.
+7. Topic links name real pages.
+8. No internal link is broken.
+9. Every stylesheet in `_styles` is imported, with no imports pointing at missing files.
+10. No `localhost` links in shipped code.
+11. Share titles and descriptions fit link previews.
+12. The Booking zone is wired at `/booking` and matches Booking's base path.
+13. The Investors zone is wired at `/serene-investors` and matches Investors' base path.
+14. No `.env` files are committed.
+
+---
+
+## Before launch
+
+Run `npm run check -- --pending` for the full list. In short:
+
+- **From the client:**
+  - Lahore prices, documents and approvals, two- and three-bedroom layouts, and the payment plan PDF
+  - which WhatsApp number to use, and the group's Instagram
+  - the overseas contact person and accepted payment routes for each region
+- **Legal:** a lawyer reviews the privacy policy, terms, cookies notice, investment disclaimer and the overseas pages.
+- **Domains:** redirect the earlier Nathia Gali and Lahore domains to this site.
+- **Go live:** set `NEXT_PUBLIC_ALLOW_INDEXING=true` on the real domain.
