@@ -600,7 +600,7 @@ export const groupPages: Page[] = [
           { h: "Income", p: ["Rental income starts after the hotel is complete and operating. The developer plans to distribute it every quarter. It is not guaranteed."] },
           { h: "Selling or transferring", p: ["Tell us before you agree anything with a buyer. We will explain the steps and papers under your agreement."] },
         ],
-        links: [WHATSAPP, { label: "Write to us", href: "/contact" }],
+        links: [WHATSAPP, { label: "Write to us", href: "/contact" }, { label: "Sign in to your investor account", href: "/serene-investors/login" }],
       },
       {
         id: "next",

@@ -123,6 +123,7 @@ export const footers = {
           link("Press", "/press"),
           link("Partners and brokers", "/partners"),
           link("For owners", "/owners"),
+          link("Investor portal", "/serene-investors"),
           link("Insights", "/insights"),
           link("Contact", "/contact"),
           link("Site map", "/sitemap"),
