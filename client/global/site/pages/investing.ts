@@ -15,10 +15,7 @@ export const investingPages: Page[] = [
     description: "Own a hotel apartment or a 50 sq ft share in Nathia Gali, or space in Lahore. Prices, payment plans, risks and how to check them.",
     intro: "You can buy a whole hotel apartment, a share of one, or space in our Lahore tower. Start with how it works, then read the risks before you look at the price.",
     image: { src: "/media/ng/tower-closeup.webp", alt: "Render of the upper floors and balconies of the Nathia Gali tower" },
-    actions: [
-      { label: "How it works", href: "/invest/how-it-works" },
-      { label: "See the payment plan", href: "/nathiagali/payment-plan" },
-    ],
+    actions: [{ label: "Get the price list and payment plan", href: "#ask" }],
     blocks: [
       {
         id: "start",
@@ -53,18 +50,19 @@ export const investingPages: Page[] = [
       },
       {
         id: "check",
-        kind: "cards",
+        kind: "band",
         h: "What you can check",
-        cards: [
-          { t: "Construction", d: "Dated site films from December 2021 to April 2026.", href: "/nathiagali/progress", cta: "See progress" },
-          { t: "Documents", d: "The papers to ask for, project by project.", href: "/documents", cta: "See documents" },
-          { t: "The developer", d: "What DM Consortium has finished and what it has not.", href: "/about/track-record", cta: "See track record" },
+        d: "Dated site films from December 2021 to April 2026, and the papers to ask for, project by project.",
+        links: [
+          { label: "Documents and approvals", href: "/documents" },
+          { label: "Construction progress", href: "/nathiagali/progress" },
         ],
       },
       {
         id: "questions",
         kind: "faq",
         h: "Questions buyers ask",
+        links: [{ label: "All questions", href: "/faq" }],
         groups: [
           {
             items: [
