@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Emblem } from "@/global/components/Emblem";
-import { isReturning } from "@/global/lib/scrollMemory";
+import { isReturning, navigationType } from "@/global/lib/scrollMemory";
 
 /** Short brand moment while fonts and the first image settle. */
 export function Loader() {
@@ -14,7 +14,8 @@ export function Loader() {
   useGSAP(
     () => {
       // Back from another page (e.g. /booking): no splash, straight back to where the visitor was.
-      if (isReturning()) {
+      const inside = navigationType() === "navigate" && document.referrer.startsWith(location.origin);
+      if (inside || isReturning()) {
         setDone(true);
         setTimeout(() => window.dispatchEvent(new Event("serene:ready")), 0);
         return;

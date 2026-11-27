@@ -174,7 +174,8 @@ function Terrain({ dem, progress, labels }: { dem: Int16Array; progress: React.R
       // Never let a label rise under the fixed nav bar at the top of the screen.
       const canvasTop = state.gl.domElement.getBoundingClientRect().top;
       const minY = Math.max(0, 180 - canvasTop);
-      const py = Math.max((-tip.y * 0.5 + 0.5) * state.size.height, minY);
+      // …and never leave the canvas once it has scrolled past the bar.
+      const py = Math.min(Math.max((-tip.y * 0.5 + 0.5) * state.size.height, minY), state.size.height - 40);
       // Above the beam on wide screens; beside it on phones, where the canvas top would clip it. On a
       // narrow screen a label near an edge would run off it, so it flips to the other side of its beam
       // and is kept inside the canvas.

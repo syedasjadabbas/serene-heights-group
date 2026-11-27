@@ -2,22 +2,6 @@
 // Every figure here is taken from the sibling Serene project sites; items marked
 // "CONFIRM" still need sign-off from the client before launch.
 
-// Where the Serene Booking guest app is deployed. Empty until it goes live — booking links then
-// fall back to a pre-filled WhatsApp enquiry (see global/lib/booking.ts).
-export const BOOKING_URL = (process.env.NEXT_PUBLIC_BOOKING_URL || "").replace(/\/$/, "");
-export const HAS_BOOKING = BOOKING_URL !== "";
-
-// Serene Investors, served at /serene-investors when INVESTORS_ORIGIN is set (see next.config.ts).
-export const INVESTORS_URL = process.env.NEXT_PUBLIC_INVESTORS_URL || "";
-
-// The Serene Heights Nathia Gali site, served at /serene-heights-nathiagali when NATHIAGALI_ORIGIN is set
-// (see next.config.ts); until then the project card opens its own deployment.
-export const NATHIAGALI_URL = process.env.NEXT_PUBLIC_NATHIAGALI_URL || "https://serene-nathiagali.vercel.app/";
-
-// The Serene Heights Lahore site, served at /serene-heights-lahore when LAHORE_ORIGIN is set; until then the
-// project card opens its own deployment.
-export const LAHORE_URL = process.env.NEXT_PUBLIC_LAHORE_URL || "https://serene-heights-lahore-five.vercel.app/";
-
 export const site = {
   name: "Serene Heights Group",
   short: "Serene Heights",
@@ -62,14 +46,6 @@ export const site = {
   ],
 };
 
-export const nav = [
-  { label: "Projects", href: "#projects" },
-  { label: "Bookings", href: "#stays" },
-  { label: "Upcoming", href: "#upcoming" },
-  { label: "Investors", href: "#investors" },
-  { label: "About", href: "#about" },
-];
-
 export type Project = {
   slug: string;
   name: string;
@@ -94,7 +70,7 @@ export const projects: Project[] = [
     since: "Since 2021",
     kind: "Hotel & Resort",
     image: "/media/ng/tower-forest-mist.webp",
-    url: NATHIAGALI_URL,
+    url: "/nathiagali",
     email: "info@sereneheightsnathiagali.com",
     phone: "042-111-111-744",
     summary:
@@ -109,7 +85,7 @@ export const projects: Project[] = [
     since: "LDA approved",
     kind: "Mixed-use tower",
     image: "/media/lhr/tower.jpg",
-    url: LAHORE_URL,
+    url: "/lahore",
     email: "info@sereneheightslahore.com",
     phone: "0304-1111106",
     summary:
@@ -127,55 +103,6 @@ export const completed: { name: string; place: string; note: string; image?: str
     note: "Completed horizontal development",
     // Mood image of the Galiyat (no Serene Farms photo exists yet) — swap for a real photo when available.
     image: "/media/farms/mist-valley.webp",
-  },
-];
-
-// Room types and counts as defined in the Serene Booking inventory (official floor plans).
-export const rooms = [
-  {
-    slug: "classic-one-bedroom",
-    name: "Classic One-Bedroom",
-    tagline: "A cosy mountain base with its own balcony",
-    size: "Under 600 sq ft",
-    guests: "Up to 3 guests",
-    units: 37,
-    image: "/media/ng/tower-closeup.webp",
-  },
-  {
-    slug: "premier-one-bedroom",
-    name: "Premier One-Bedroom",
-    tagline: "More room, with a sofa bed for the family",
-    size: "600–699 sq ft",
-    guests: "Up to 4 guests",
-    units: 44,
-    image: "/media/stay/tower-sunset-forest.jpg",
-  },
-  {
-    slug: "grand-one-bedroom",
-    name: "Grand One-Bedroom",
-    tagline: "A wide balcony facing the Galiyat",
-    size: "700–799 sq ft",
-    guests: "Up to 4 guests",
-    units: 25,
-    image: "/media/ng/snow-tower.webp",
-  },
-  {
-    slug: "signature-corner-suite",
-    name: "Signature Corner Suite",
-    tagline: "Corner living with views on two sides",
-    size: "800+ sq ft",
-    guests: "Up to 4 guests",
-    units: 4,
-    image: "/media/stay/rooftop-crown.jpg",
-  },
-  {
-    slug: "terrace-apartment",
-    name: "Terrace Apartment",
-    tagline: "Eighth floor, with a private terrace",
-    size: "500–980 sq ft",
-    guests: "Up to 4 guests",
-    units: 20,
-    image: "/media/stay/sunset-terrace.jpg",
   },
 ];
 

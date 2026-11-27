@@ -4,9 +4,8 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { HAS_BOOKING, rooms, stayImages } from "@/global/constants/site";
-import { isInternal, linkTarget, roomUrl, searchUrl } from "@/global/lib/booking";
-import { BookingForm } from "./BookingForm";
+import { stayImages } from "@/global/constants/site";
+import type { Card } from "@/global/site/types";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,7 +31,8 @@ const SPOTS: { x: number; y: number; w: number; r: number }[] = [
   { x: 44, y: 30, w: 13, r: 1 },
 ];
 
-export function Stays() {
+/** The client's two doors, with the resort's pictures flying past behind them. */
+export function Stays({ heading, doors }: { heading: string; doors: Card[] }) {
   const root = useRef<HTMLElement>(null);
   useGSAP(
     () => {
@@ -81,14 +81,6 @@ export function Stays() {
           ease: "expo.out",
           scrollTrigger: { trigger: ".stays__stage", start: "top 60%" },
         });
-        gsap.from(".room", {
-          y: 40,
-          autoAlpha: 0,
-          stagger: 0.06,
-          duration: 1,
-          ease: "expo.out",
-          scrollTrigger: { trigger: ".rooms", start: "top 88%" },
-        });
         return () => {
           el.dataset.motion = "off";
         };
@@ -114,51 +106,22 @@ export function Stays() {
         </div>
 
         <div className="stays__panel">
-          <span className="eyebrow">Serene Booking</span>
+          <span className="eyebrow">Serene Heights Group</span>
           <h2 id="stays-title" className="display">
-            Stay at <span className="soft">7,906 ft</span>
+            {heading}
           </h2>
-          <p>
-            Book a fully furnished hotel apartment at Serene Heights Nathia Gali — heated glass-roof pool, rooftop
-            dining, ski slope and trails through the pines, two hours from Islamabad.
-          </p>
-          <BookingForm />
+          <div className="doors">
+            {doors.map((d, i) => (
+              <a key={d.t} href={d.href} className={`door${i === 0 ? " door--own" : ""}`}>
+                <b>{d.t}</b>
+                <p>{d.d}</p>
+                <span className="btn btn--white">
+                  {d.t} <span className="arr">→</span>
+                </span>
+              </a>
+            ))}
+          </div>
         </div>
-      </div>
-
-      <div className="rooms-head">
-        <div>
-          <span className="eyebrow">Room types</span>
-          <h3 className="display">
-            Five ways <span className="soft">to stay</span>
-          </h3>
-        </div>
-        <a className="btn btn--ghost" href={searchUrl()} {...linkTarget(searchUrl())}>
-          {HAS_BOOKING ? "Browse all rooms" : "Ask about availability"}{" "}
-          <span className="arr">{isInternal(searchUrl()) ? "→" : "↗"}</span>
-        </a>
-      </div>
-      <div className="rooms" aria-label="Room types">
-        {rooms.map((r, i) => (
-          <a key={r.slug} className="room" href={roomUrl(r)} {...linkTarget(roomUrl(r))}>
-            <img src={r.image} alt="" loading="lazy" />
-            <div className="room__top">
-              <i>0{i + 1}</i>
-              <span className="room__count">{r.units} apartments</span>
-            </div>
-            <div className="room__body">
-              <b>{r.name}</b>
-              <p>{r.tagline}</p>
-              <div className="room__specs">
-                <span>{r.size}</span>
-                <span>{r.guests}</span>
-              </div>
-            </div>
-            <span className="room__go" aria-hidden>
-              →
-            </span>
-          </a>
-        ))}
       </div>
     </section>
   );

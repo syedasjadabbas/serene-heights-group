@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useInView } from "@/global/hooks/useInView";
 import { site } from "@/global/constants/site";
+import type { Card } from "@/global/site/types";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,7 +21,7 @@ const STATS = [
 ];
 
 /** About the group: a capsule window opens onto a field of mist. */
-export function Reveal() {
+export function Reveal({ heading, checks }: { heading: string; checks: Card[] }) {
   const root = useRef<HTMLElement>(null);
   const progress = useRef(1);
   const active = useInView(root);
@@ -98,19 +99,19 @@ export function Reveal() {
   );
 
   return (
-    <section ref={root} id="about" className="reveal" aria-labelledby="about-title">
+    <section ref={root} id="check" className="reveal" aria-labelledby="about-title">
       <div className="reveal__stage">
         <div className="reveal__dark" data-nav="dark">
           <div className="reveal__glow" />
           <div className="reveal__canvas" aria-hidden>
             <Galiyat progress={progress} active={active} />
           </div>
-          <span className="reveal__label eyebrow">About the group</span>
+          <span className="reveal__label eyebrow">{heading}</span>
           <span className="reveal__caption">Real elevation of the Galiyat · 18 km across · contours every 100 m</span>
 
           <div className="reveal__copy">
             <h2 id="about-title" className="sr-only">
-              About Serene Heights Group
+              {heading}
             </h2>
             <p>
               <strong>Serene Heights Group</strong> is home to the developments of {site.developer} — hotels, resorts
@@ -120,6 +121,13 @@ export function Reveal() {
               Led by Chief Executive {site.ceo}, the group started in the Galiyat with Pakistan&apos;s first winter
               resort, and now rises on Gulberg Main Boulevard. Before both came Serene Farms on Barki Road, Lahore.
             </p>
+            <div className="reveal__checks">
+              {checks.map((c) => (
+                <a key={c.t} href={c.href} className="btn btn--ghost">
+                  {c.cta ?? c.t} <span className="arr">→</span>
+                </a>
+              ))}
+            </div>
           </div>
 
           <div className="reveal__stats">

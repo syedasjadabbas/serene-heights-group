@@ -16,10 +16,10 @@ type Card =
 
 const CARDS: Card[] = [
   { kind: "image", src: "/media/ng/tower-sky.webp", tag: "Nathia Gali", top: "A haven in", bottom: "the highlands" },
-  { kind: "violet", tag: "Serene Investors", top: "Own a share", bottom: "from PKR 2M" },
+  { kind: "violet", tag: "Own with us", top: "Own a share", bottom: "from PKR 2M" },
   { kind: "image", src: "/media/lhr/dusk.jpg", tag: "Lahore", top: "Own the", bottom: "address" },
-  { kind: "image", src: "/media/stay/glass-roof-pool.jpg", tag: "Serene Booking", top: "Stay at", bottom: "7,906 ft" },
-  { kind: "image", src: "/media/ng/aerial-clouds.webp", tag: "Upcoming", top: "Beyond", bottom: "the mountains" },
+  { kind: "image", src: "/media/stay/glass-roof-pool.jpg", tag: "The hotel", top: "Stay at", bottom: "7,906 ft" },
+  { kind: "image", src: "/media/ng/aerial-clouds.webp", tag: "Overseas buyers", top: "Buy from", bottom: "abroad" },
   { kind: "image", src: "/media/ng/night-facade.webp", tag: "Hotels & Resorts", top: "Managed as", bottom: "one hotel" },
 ];
 
@@ -201,10 +201,10 @@ export function Intro() {
             <div className="hero__grain" />
             <h1 className="hero__title display">
               <span className="line">
-                <span>Built for the</span>
+                <span>Serene Heights</span>
               </span>
               <span className="line soft">
-                <span>heights ahead</span>
+                <span>Group</span>
               </span>
             </h1>
 
@@ -223,11 +223,11 @@ export function Intro() {
                   or own a share of what we build.
                 </p>
                 <div className="hero__actions">
-                  <a href="#projects" className="btn btn--ghost">
-                    Our projects
+                  <a href="/invest" className="btn btn--ghost">
+                    Own with us
                   </a>
-                  <a href="#stays" className="btn btn--white">
-                    Book a stay <span className="arr">→</span>
+                  <a href="/hotels/nathia-gali" className="btn btn--white">
+                    Stay at the hotel <span className="arr">→</span>
                   </a>
                 </div>
               </div>

@@ -7,12 +7,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useInView } from "@/global/hooks/useInView";
 import { site } from "@/global/constants/site";
+import type { FormKind } from "@/global/site/types";
+import { EnquiryForm } from "./EnquiryForm";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const ChromeEmblem = dynamic(() => import("./three/ChromeEmblem"), { ssr: false });
 
-export function Finale() {
+/** Every page's ask: the closing card with the chrome emblem and one short form. */
+export function Finale({ heading, text, kind, about }: { heading: string; text?: string; kind: FormKind; about: string }) {
   const root = useRef<HTMLElement>(null);
   const active = useInView(root);
 
@@ -48,30 +51,26 @@ export function Finale() {
   );
 
   return (
-    <section ref={root} id="contact" className="finale" aria-labelledby="finale-title">
+    <section ref={root} id="ask" className="finale" aria-labelledby="finale-title">
       <div className="finale__card" data-nav="dark">
         <div className="finale__canvas" aria-hidden>
           <ChromeEmblem active={active} />
         </div>
         <div className="finale__copy">
           <h2 id="finale-title" className="display">
-            Rise above
-            <br />
-            <span className="soft">the ordinary</span>
+            {heading}
           </h2>
-          <p>
-            Talk to the Serene Heights team about a project, a stay or an investment. We reply on WhatsApp and by phone,
-            seven days a week.
-          </p>
+          <p>{text ?? "Talk to the Serene Heights team. We reply on WhatsApp and by phone, seven days a week."}</p>
           <div className="hero__actions">
             <a className="btn btn--white" href={site.contact.whatsappHref} target="_blank" rel="noopener">
-              Enquire on WhatsApp <span className="arr">→</span>
+              WhatsApp <span className="arr">→</span>
             </a>
             <a className="btn btn--ghost" href={site.contact.uanHref}>
-              Call {site.contact.uan}
+              Call
             </a>
           </div>
         </div>
+        <EnquiryForm kind={kind} about={about} />
       </div>
     </section>
   );

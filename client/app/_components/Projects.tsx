@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { completed, projects } from "@/global/constants/site";
-import { linkArrow, linkTarget } from "@/global/lib/links";
+import Link from "@/global/components/Link";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,7 +74,7 @@ export function Projects() {
     <section ref={root} id="projects" className="projects dark" data-nav="dark" aria-labelledby="projects-title">
       <div className="section-head">
         <div>
-          <span className="eyebrow">Ongoing projects</span>
+          <span className="eyebrow">The projects</span>
           <h2 id="projects-title" className="display">
             Two addresses.
             <br />
@@ -89,7 +89,7 @@ export function Projects() {
 
       <div className="projects__track">
         {projects.map((p) => (
-          <a key={p.slug} href={p.url} {...linkTarget(p.url)} className="pcard">
+          <Link key={p.slug} href={p.url} className="pcard">
             <img src={p.image} alt={`Serene Heights ${p.name}`} loading="lazy" />
             <div className="pcard__meta">
               <span>Serene Heights</span>
@@ -112,11 +112,11 @@ export function Projects() {
                   ))}
                 </div>
                 <span className="btn btn--white" style={{ justifySelf: "start" }}>
-                  Visit project site <span className="arr">{linkArrow(p.url)}</span>
+                  See the project <span className="arr">→</span>
                 </span>
               </div>
             </div>
-          </a>
+          </Link>
         ))}
 
         <div className={`pcard pcard--note${completed[0]?.image ? " pcard--photo" : ""}`}>
@@ -131,10 +131,10 @@ export function Projects() {
                 </p>
               </div>
             ))}
-            <p style={{ marginTop: 28 }}>Next on the map: see what we are preparing beyond the mountains.</p>
-            <a href="#upcoming" className="btn btn--ghost" style={{ marginTop: 16 }}>
-              Upcoming projects <span className="arr">→</span>
-            </a>
+            <p style={{ marginTop: 28 }}>What the group has built and delivered before.</p>
+            <Link href="/about/track-record" className="btn btn--ghost" style={{ marginTop: 16 }}>
+              Track record <span className="arr">→</span>
+            </Link>
           </div>
         </div>
       </div>

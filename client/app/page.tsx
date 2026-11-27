@@ -1,33 +1,13 @@
-import { SmoothScroll } from "@/global/components/SmoothScroll";
-import { SiteHeader } from "@/global/components/SiteHeader";
-import { SiteFooter } from "@/global/components/SiteFooter";
-import { structuredDataJson } from "@/global/lib/structuredData";
 import { Loader } from "./_components/Loader";
-import { Intro } from "./_components/Intro";
-import { Reveal } from "./_components/Reveal";
-import { Projects } from "./_components/Projects";
-import { Stays } from "./_components/Stays";
-import { Upcoming } from "./_components/Upcoming";
-import { Investors } from "./_components/Investors";
-import { Finale } from "./_components/Finale";
+import { HomeView } from "./_components/HomeView";
+import { structuredDataJson } from "@/global/lib/structuredData";
 
 export default function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredDataJson() }} />
-      <SmoothScroll />
       <Loader />
-      <SiteHeader />
-      <main>
-        <Intro />
-        <Reveal />
-        <Projects />
-        <Stays />
-        <Upcoming />
-        <Investors />
-        <Finale />
-      </main>
-      <SiteFooter />
+      <HomeView />
     </>
   );
 }
