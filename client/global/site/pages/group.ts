@@ -410,6 +410,7 @@ export const groupPages: Page[] = [
     description: "Serene Heights Nathia Gali, Serene Heights Lahore and the completed Serene Farms: what each is, where it stands and what you can buy.",
     intro: "Two projects are for sale today: a mountain hotel in Nathia Gali and a city tower in Lahore. One earlier development is complete.",
     image: { src: "/media/ng/snow-aerial-sunset.webp", alt: "Render of Serene Heights Nathia Gali in snow at sunset, seen from the air" },
+    actions: [{ label: "Get the price list and payment plan", href: "#ask" }],
     blocks: [
       {
         id: "start",
