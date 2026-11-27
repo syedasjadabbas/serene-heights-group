@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { site } from "@/global/constants/site";
 import { pages } from "@/global/site";
 
-// Every page in the client's plan (/invest is served by Serene Investors), plus Booking once it is connected.
+// Every page in the client's plan (/invest is served by Serene Investors, /hotels/nathia-gali by Serene Booking).
 // Thank-you and 404 pages are left out: nobody should land on them from a search.
 export default function sitemap(): MetadataRoute.Sitemap {
   const url = (path: string) => new URL(path, site.url).toString();
@@ -14,7 +14,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ...(p.article && { lastModified: p.article.date }),
         priority: p.path === "/" ? 1 : p.path.split("/").length === 2 ? 0.8 : 0.6,
       })),
-    // The booking site, once its deployment is connected.
-    ...(process.env.BOOKING_ORIGIN ? [{ url: url("/booking"), priority: 0.8 }] : []),
   ];
 }

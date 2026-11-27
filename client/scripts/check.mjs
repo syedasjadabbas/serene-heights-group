@@ -105,8 +105,9 @@ const paths = new Set(all.map((p) => p.path));
   const visit = (v, from) => {
     if (Array.isArray(v)) v.forEach((x) => visit(x, from));
     else if (v && typeof v === "object") {
-      // Pages of the other apps served on this domain (Multi-Zones): Booking, and Serene Investors' own pages.
-      const zone = (h) => /^\/(booking(\/|$)|invest\/(login|signup|dashboard|get-started|glossary)(\/|$))/.test(h);
+      // Pages of the other apps served on this domain (Multi-Zones): Serene Booking's and Serene Investors' own pages.
+      const zone = (h) =>
+        /^\/(hotels\/nathia-gali\/(rooms|checkout|manage|booking|account|login|register)|invest\/(login|signup|dashboard|get-started|glossary))([/?#]|$)/.test(h);
       if (typeof v.href === "string" && v.href.startsWith("/") && !zone(v.href) && !paths.has(v.href.split("#")[0])) dead.add(`${v.href} (from ${from})`);
       Object.values(v).forEach((x) => visit(x, from));
     }
@@ -154,7 +155,7 @@ const paths = new Set(all.map((p) => p.path));
     const path = (cfg.match(new RegExp(`${z.constant} = "([^"]+)"`)) || [])[1];
     const problems = [];
     if (!path) problems.push(`${z.constant} missing in next.config.ts`);
-    if (!cfg.includes(`zone(${z.constant},`) && !cfg.includes(`source: ${z.constant},`)) problems.push(`no rewrite for ${z.constant}`);
+    if (!cfg.includes(`app(${z.constant},`)) problems.push(`no rewrite for ${z.constant}`);
     let note = "";
     const sibling = join(ROOT, z.repo);
     if (existsSync(sibling)) {
@@ -167,29 +168,53 @@ const paths = new Set(all.map((p) => p.path));
   }
 }
 
-// 10b. /invest is served by Serene Investors: its Hub page, menu and footer must say what this site's plan says.
+// 10a. Every plan page under an address another app serves is on that address's keep list, so the app never
+//      swallows it (e.g. /hotels/nathia-gali/events must stay this site's page).
 {
-  const repo = join(ROOT, "../../stake-clone/src");
-  const hubFile = join(repo, "app/(home)/_lib/hub.ts");
-  const navFile = join(repo, "global/data/groupNav.ts");
-  if (!existsSync(hubFile) || !existsSync(navFile)) check("Investing page matches Serene Investors", true, "Investors repo not alongside — not compared");
-  else {
-    const hubSrc = read(hubFile);
+  const cfg = read(join(ROOT, "next.config.ts"));
+  const list = (name) => JSON.parse((cfg.match(new RegExp(`${name} = (\\[[^\\]]*\\])`)) || [, "[]"])[1]);
+  const served = [
+    { base: "/hotels/nathia-gali", keep: list("HOTEL_PAGES") },
+    { base: "/invest", keep: list("INVEST_GUIDES") },
+  ];
+  const lost = all
+    .map((p) => p.path)
+    .filter((path) => served.some((s) => path.startsWith(`${s.base}/`) && !s.keep.includes(path.slice(s.base.length + 1).split("/")[0])));
+  check("Plan pages under the other apps' addresses stay with this site", lost.length === 0, lost.join(", "));
+}
+
+// 10b. Pages served by the other apps must say what this site's plan says: the page's wording, figures and
+//     links, and the app's menu and footer. Compared when the app's repo sits alongside this one.
+{
+  const apps = [
+    { name: "Investing page matches Serene Investors", path: "/invest", base: "/invest", side: "invest", repo: "../../stake-clone/src", data: "app/(home)/_lib/hub.ts", nav: "global/data/groupNav.ts" },
+    { name: "Hotel home matches Serene Booking", path: "/hotels/nathia-gali", base: "/hotels/nathia-gali", side: "hotel", repo: "../../Serene Booking/client", data: "app/_lib/hotelHome.ts", nav: "global/constants/hotelNav.ts" },
+  ];
+  const quoted = (src, v) => src.includes(`'${v}'`) || src.includes(`"${v}"`);
+  for (const a of apps) {
+    const dataFile = join(ROOT, a.repo, a.data);
+    const navFile = join(ROOT, a.repo, a.nav);
+    if (!existsSync(dataFile) || !existsSync(navFile)) {
+      check(a.name, true, "repo not alongside — not compared");
+      continue;
+    }
+    const dataSrc = read(dataFile);
     const navSrc = read(navFile);
-    const invest = all.find((p) => p.path === "/invest");
-    const texts = [invest.title, invest.intro];
+    const page = all.find((p) => p.path === a.path);
+    const texts = [page.title, page.intro];
     const hrefs = [];
     const take = (v) => {
       if (Array.isArray(v)) v.forEach(take);
       else if (v && typeof v === "object") {
-        for (const k of ["t", "d", "h", "q", "a", "label"]) if (typeof v[k] === "string") texts.push(v[k]);
+        for (const k of ["t", "d", "h", "q", "a", "label", "text"]) if (typeof v[k] === "string") texts.push(v[k]);
         if (typeof v.href === "string" && v.href.startsWith("/")) hrefs.push(v.href);
         Object.values(v).forEach(take);
       } else if (typeof v === "string" && /PKR|sq ft|%|nights/.test(v)) texts.push(v);
     };
-    take([invest.blocks, invest.actions ?? []]);
-    const missing = [...new Set(texts)].filter((t) => !hubSrc.includes(t.replace(/'/g, "\\'")) && !hubSrc.includes(t));
-    const missingLinks = [...new Set(hrefs)].filter((h) => !hubSrc.includes(`'${h}'`));
+    take([page.blocks, page.actions ?? []]);
+    const missing = [...new Set(texts)].filter((t) => !dataSrc.includes(t.replace(/'/g, "\'")) && !dataSrc.includes(t));
+    // The app's own pages appear without its base path (e.g. /rooms for /hotels/nathia-gali/rooms).
+    const missingLinks = [...new Set(hrefs)].filter((h) => !quoted(dataSrc, h) && !(h.startsWith(`${a.base}/`) && quoted(dataSrc, h.slice(a.base.length))));
     const menuHrefs = [];
     const takeHrefs = (v) => {
       if (Array.isArray(v)) v.forEach(takeHrefs);
@@ -198,14 +223,14 @@ const paths = new Set(all.map((p) => p.path));
         Object.values(v).forEach(takeHrefs);
       }
     };
-    takeHrefs([menus.invest, footers.invest.columns, footers.invest.legal]);
-    const missingNav = [...new Set(menuHrefs)].filter((h) => !navSrc.includes(`'${h}'`));
+    takeHrefs([menus[a.side], footers[a.side].columns, footers[a.side].legal]);
+    const missingNav = [...new Set(menuHrefs)].filter((h) => !quoted(navSrc, h));
     const problems = [
       ...missing.map((t) => `text "${t.slice(0, 40)}…"`),
       ...missingLinks.map((h) => `link ${h}`),
       ...missingNav.map((h) => `menu/footer link ${h}`),
     ];
-    check("Investing page matches Serene Investors", problems.length === 0, problems.length ? `missing in Investors: ${problems.join(", ")}` : "wording, figures, links, menu and footer");
+    check(a.name, problems.length === 0, problems.length ? `missing in the app: ${problems.join(", ")}` : "wording, figures, links, menu and footer");
   }
 }
 
