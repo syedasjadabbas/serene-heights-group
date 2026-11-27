@@ -29,6 +29,9 @@ export const steps: Record<string, string[]> = {
   "/owners": ["/insights/updates", "/documents", `${N}/payment-plan`, H, `${H}/book`, `${I}/earnings`, `${I}/risks-and-exit`, I],
   [I]: ["/site-visit", "/contact"],
   [`${H}/book`]: [`${H}/location`, `${H}/policies`],
+  // Investor abroad: after the papers, the apartments; after talking to someone, the place.
+  "/documents": [`${N}/apartments`],
+  [`${O}/steps`]: [`${N}/location`],
 };
 
 /** Addresses the plan connects to this page, nearest first. */
