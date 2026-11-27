@@ -111,6 +111,8 @@ export function PageView({ page }: { page: Page }) {
   // Links the plan draws between topics that this page does not already carry.
   const linked = JSON.stringify([page.blocks, page.actions]) + crumbs.map((c) => `"${c.path}"`).join();
   const also = related(page.path).filter((p) => !linked.includes(`"${p}"`)).map((p) => getPage(p)!);
+  const plain = (k: string) => !["form", "band", "booking"].includes(k);
+  const numbers = groups.map((g, i) => (plain(g.block.kind) && g.block.h ? groups.slice(0, i + 1).filter((x) => plain(x.block.kind) && x.block.h).length : undefined));
   const alsoAt = groups.findLastIndex((g) => !["form", "band", "booking"].includes(g.block.kind));
 
   return (
@@ -154,7 +156,7 @@ export function PageView({ page }: { page: Page }) {
           </nav>
         )}
         {groups.map((g, i) => (
-          <BlockView key={i} block={g.block} page={page} before={g.before} after={g.after} also={i === alsoAt ? also : []} />
+          <BlockView key={i} block={g.block} page={page} before={g.before} after={g.after} also={i === alsoAt ? also : []} n={numbers[i]} />
         ))}
       </main>
       <SiteFooter hotel={hotel} />

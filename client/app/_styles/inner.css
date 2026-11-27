@@ -1,0 +1,589 @@
+/* Inner pages, premium pass: numbered section headings, ledger facts, arrow cards, two-column questions. */
+.site {
+  --gap: clamp(64px, 8vw, 128px);
+  --gold-ink: #9c7b45;
+}
+
+/* Light sections are divided by a hairline inside the gutters */
+.sec:not(.dark) + .sec:not(.dark) {
+  background: linear-gradient(var(--line), var(--line)) top center / calc(100% - 2 * var(--pad)) 1px no-repeat;
+}
+
+/* Section heading: number, large heading, short text beside it (as on the home page) */
+.sec__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 18px 48px;
+}
+
+.sec__head > div {
+  flex: 1 1 520px;
+  min-width: 0;
+}
+
+.sec__head h2 {
+  margin: 0;
+  max-width: 18ch;
+  font-size: clamp(36px, 4.8vw, 76px);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.sec__num {
+  margin-bottom: 18px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--gold-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.sec__num::before {
+  background: var(--gold);
+  box-shadow: 0 0 14px rgba(200, 164, 106, 0.7);
+}
+
+.sec.dark .sec__num {
+  color: var(--gold);
+}
+
+.sec__head .sec__d {
+  flex: 0 1 40ch;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.sec > .sec__head + * {
+  margin-top: clamp(32px, 3.6vw, 56px);
+}
+
+/* Buttons inside sections: pills */
+.sec .btn,
+.band .btn,
+.sub .btn {
+  border-radius: 999px;
+  padding: 0 22px;
+}
+
+.sec .btn--line {
+  background: transparent;
+  border-color: rgba(15, 31, 27, 0.18);
+}
+
+.sec .btn--line:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.sec .btn:hover .arr,
+.band .btn:hover .arr {
+  transform: translateX(4px);
+}
+
+.sec .links {
+  margin-top: 32px;
+}
+
+/* Cards: warm tiles with a round arrow; photo cards keep the picture */
+.cards {
+  gap: 16px;
+}
+
+.card {
+  border-radius: 24px;
+  transition:
+    transform 0.5s var(--ease),
+    box-shadow 0.5s var(--ease),
+    border-color 0.3s;
+}
+
+.card:not(.card--photo) {
+  background: linear-gradient(180deg, #fcf8f0, #f6efe2);
+  border-color: rgba(200, 164, 106, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.card > div {
+  padding: clamp(22px, 2.2vw, 30px);
+  min-height: 230px;
+}
+
+.card__meta {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--gold-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.card h3 {
+  font-size: clamp(21px, 1.7vw, 26px);
+  letter-spacing: -0.03em;
+}
+
+.card:not(.card--photo) h3 {
+  padding-right: 44px;
+}
+
+.card p {
+  font-size: 14.5px;
+}
+
+.card__go {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 22px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+.card:has(h3 a) > div::after {
+  content: "\2197";
+  position: absolute;
+  top: clamp(18px, 2vw, 26px);
+  right: clamp(18px, 2vw, 26px);
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(15, 31, 27, 0.14);
+  font-size: 15px;
+  color: var(--ink);
+  transition:
+    background 0.4s var(--ease),
+    color 0.4s var(--ease),
+    rotate 0.5s var(--ease),
+    border-color 0.4s;
+}
+
+.card--photo:has(h3 a) > div::after {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+.card:has(h3 a):hover {
+  transform: translateY(-4px);
+  border-color: rgba(200, 164, 106, 0.55);
+  box-shadow: 0 30px 60px -34px rgba(15, 31, 27, 0.45);
+}
+
+.card:has(h3 a):hover > div::after {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--gold);
+  rotate: 45deg;
+}
+
+.card--photo {
+  min-height: 440px;
+}
+
+/* Key facts: a ledger of tiles */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--card);
+}
+
+.facts div {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 26px 26px;
+  border: 0;
+  background: var(--card);
+  box-shadow: 1px 0 0 var(--line), 0 1px 0 var(--line);
+  transition: background 0.3s;
+}
+
+.facts div:hover {
+  background: #fdfaf3;
+}
+
+.facts dt {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.facts dd {
+  font-size: clamp(17px, 1.4vw, 21px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.sec.dark .facts,
+.sec.dark .facts div {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sec.dark .facts dd {
+  color: #fff;
+}
+
+/* Tables: a rounded sheet */
+.datatable {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--card);
+}
+
+.datatable thead th {
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.datatable th,
+.datatable td {
+  padding: 18px 22px;
+}
+
+.datatable tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.datatable tbody tr:hover {
+  background: #fdfaf3;
+}
+
+/* Text sections made of several short parts (outside articles): numbered columns */
+main:not([data-template="article"], [data-template="explainer"], [data-template="plain"]) .sec--text > .prose:has(> div:nth-child(2) > h3) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 40px 56px;
+  max-width: none;
+  counter-reset: part;
+}
+
+main:not([data-template="article"], [data-template="explainer"], [data-template="plain"]) .sec--text > .prose:has(> div:nth-child(2) > h3) > div {
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  font-size: 15.5px;
+}
+
+main:not([data-template="article"], [data-template="explainer"], [data-template="plain"]) .sec--text > .prose:has(> div:nth-child(2) > h3) h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+main:not([data-template="article"], [data-template="explainer"], [data-template="plain"]) .sec--text > .prose:has(> div:nth-child(2) > h3) h3::before {
+  counter-increment: part;
+  content: counter(part, decimal-leading-zero);
+  display: block;
+  margin-bottom: 16px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--gold-ink);
+}
+
+@media (min-width: 900px) {
+  main .sec--text > .prose:has(> div:nth-child(2) > h3):not(:has(> div:nth-child(3):last-child)) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  main .sec--text > .prose:has(> div:nth-child(3):last-child > h3) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Articles and explainers: calmer reading column */
+.prose h3 {
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  font-size: clamp(22px, 2vw, 28px);
+}
+
+/* Questions: heading on the left, questions on the right */
+.faq h3 {
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+
+.faq > details:first-of-type {
+  border-top: 1px solid var(--line);
+}
+
+.faq summary {
+  align-items: center;
+  padding: 24px 0;
+  font-size: clamp(17px, 1.35vw, 20px);
+  letter-spacing: -0.02em;
+  transition: color 0.3s;
+}
+
+.faq summary:hover {
+  color: var(--dusk-2);
+}
+
+.faq summary::after,
+.faq details[open] summary::after {
+  content: "+";
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(15, 31, 27, 0.15);
+  font-size: 18px;
+  color: var(--ink);
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+
+.faq details[open] summary::after {
+  content: "\2212";
+  background: var(--ink);
+  color: var(--gold);
+  border-color: var(--ink);
+}
+
+.faq details p {
+  margin-bottom: 26px;
+  font-size: 15.5px;
+}
+
+@media (min-width: 1000px) {
+  .sec--faq {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(48px, 6vw, 112px);
+    align-items: start;
+  }
+
+  .sec--faq > * {
+    grid-column: 2;
+  }
+
+  .sec--faq > .sec__head {
+    grid-column: 1;
+    grid-row: 1 / span 40;
+    position: sticky;
+    top: 110px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sec--faq > .sec__head > div,
+  .sec--faq > .sec__head .sec__d {
+    flex: none;
+  }
+
+  .sec--faq > .sec__head + * {
+    margin-top: 0;
+  }
+}
+
+/* Timeline: gold dots on a line */
+.timeline {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 32px 28px;
+}
+
+.timeline li {
+  position: relative;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.timeline li::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 4px var(--paper);
+}
+
+.sec.dark .timeline li::before {
+  box-shadow: 0 0 0 4px var(--night);
+}
+
+.timeline span {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+
+.timeline img {
+  border-radius: 18px;
+}
+
+.pictures img,
+.gallery img {
+  border-radius: 20px;
+}
+
+/* On this page / filters: pills */
+.toc {
+  gap: 8px;
+  padding: 20px var(--pad);
+  border-block: 0;
+}
+
+.toc a {
+  padding: 9px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  transition:
+    background 0.3s,
+    color 0.3s,
+    border-color 0.3s;
+}
+
+.toc a:hover,
+.toc a[aria-current] {
+  text-decoration: none;
+  color: #fff;
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+/* See also: chips */
+.also {
+  align-items: center;
+  gap: 8px;
+  margin-top: 48px;
+  padding-top: 24px;
+}
+
+.also > span {
+  margin-right: 8px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.also a {
+  padding: 8px 15px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  text-decoration: none;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    border-color 0.3s;
+}
+
+.also a:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.sec.dark .also a:hover {
+  background: #fff;
+  color: var(--ink);
+}
+
+/* Opening: breadcrumb as a glass pill, a gold rule under the heading */
+.phero .crumbs {
+  display: inline-flex;
+  margin: 0;
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  font-size: 12.5px;
+}
+
+.phero .crumbs a + a::before {
+  color: var(--gold);
+}
+
+.phero h1 {
+  margin-top: 22px;
+}
+
+.phero h1::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 1px;
+  margin-top: 28px;
+  background: var(--gold);
+}
+
+.phero .links .btn {
+  border-radius: 999px;
+  padding: 0 22px;
+}
+
+/* Bands, dark sections and the opening: a touch more depth */
+.band__card,
+.sec.dark,
+.phero__card {
+  box-shadow: 0 40px 80px -50px rgba(11, 29, 24, 0.6);
+}
+
+@media (max-width: 760px) {
+  .sec__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sec__head > div,
+  .sec__head .sec__d {
+    flex: none;
+  }
+
+  .card > div {
+    min-height: 0;
+  }
+
+  .card:not(.card--photo) .card__meta {
+    padding-bottom: 22px;
+  }
+
+  .card--photo {
+    min-height: 380px;
+  }
+
+  .facts div {
+    gap: 8px;
+    padding: 16px 20px 18px;
+  }
+
+  .faq summary {
+    padding: 20px 0;
+  }
+
+  .datatable th,
+  .datatable td {
+    padding: 14px 16px;
+  }
+}

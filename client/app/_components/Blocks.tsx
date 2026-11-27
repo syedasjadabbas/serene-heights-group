@@ -264,9 +264,9 @@ function Sub({ block: b, page, dark }: { block: Block; page: Page; dark: boolean
   );
 }
 
-type ViewProps = { block: Block; page: Page; before?: Block[]; after?: Block[]; also?: Page[] };
+type ViewProps = { block: Block; page: Page; before?: Block[]; after?: Block[]; also?: Page[]; n?: number };
 
-export function BlockView({ block: b, page, before = [], after = [], also = [] }: ViewProps) {
+export function BlockView({ block: b, page, before = [], after = [], also = [], n }: ViewProps) {
   const id = slugify(b.h || b.id);
   if (b.kind === "band" || b.kind === "booking")
     return (
@@ -284,8 +284,16 @@ export function BlockView({ block: b, page, before = [], after = [], also = [] }
   const dark = b.kind === "panels" || b.kind === "media" || b.kind === "gallery" || b.kind === "map";
   return (
     <section data-part={b.id} className={`sec sec--${b.kind}${dark ? " dark" : ""}`} data-nav={dark ? "dark" : "light"} aria-labelledby={b.h ? id : undefined}>
-      {b.h && <h2 id={id} className="display">{b.h}</h2>}
-      {b.d && b.kind !== "map" && <p className="sec__d">{b.d}</p>}
+      {b.h && (
+        <header className="sec__head">
+          <div>
+            {n !== undefined && <span className="eyebrow sec__num">{String(n).padStart(2, "0")}</span>}
+            <h2 id={id} className="display">{b.h}</h2>
+          </div>
+          {b.d && b.kind !== "map" && <p className="sec__d">{b.d}</p>}
+        </header>
+      )}
+      {!b.h && b.d && b.kind !== "map" && <p className="sec__d">{b.d}</p>}
       {body(b, page)}
       {b.kind !== "media" && b.kind !== "map" && <Links links={b.links} tone={dark ? "ghost" : "line"} />}
       {[...before, ...after].map((s) => (
@@ -293,7 +301,7 @@ export function BlockView({ block: b, page, before = [], after = [], also = [] }
       ))}
       {also.length > 0 && (
         <p className="also">
-          See also{" "}
+          <span>See also</span>
           {also.map((p) => (
             <Link key={p.path} href={p.path}>
               {p.article ? p.title : p.name}

@@ -1459,3 +1459,174 @@
     height: 52svh;
   }
 }
+
+/* Premium nav: pill glass bar, gold hairlines, underline links */
+.nav {
+  gap: 2px;
+  padding: 5px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(252, 249, 242, 0.86), rgba(245, 238, 225, 0.8));
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid rgba(200, 164, 106, 0.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 1px 2px rgba(15, 31, 27, 0.05),
+    0 22px 44px -22px rgba(15, 31, 27, 0.4);
+  font-size: 13.5px;
+  letter-spacing: 0.005em;
+}
+.nav__mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, #24403a, var(--ink) 70%);
+  color: var(--gold);
+  box-shadow: inset 0 0 0 1px rgba(200, 164, 106, 0.35);
+  margin-right: 6px;
+  transition: transform 0.5s var(--ease);
+}
+.nav__mark:hover {
+  transform: rotate(-8deg) scale(1.04);
+}
+.nav__link {
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-weight: 450;
+  color: rgba(15, 31, 27, 0.7);
+}
+.nav__link:hover {
+  background: transparent;
+  color: var(--ink);
+}
+.nav__link::after,
+.nav__link[aria-current="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  width: 0;
+  height: 1px;
+  border-radius: 0;
+  translate: -50% 0;
+  background: var(--gold);
+  transition: width 0.4s var(--ease);
+}
+.nav__link:hover::after,
+.nav__link[aria-current="true"]::after {
+  width: 18px;
+}
+.nav__link[aria-current="true"] {
+  color: var(--ink);
+  font-weight: 500;
+}
+.nav__cross {
+  margin-left: 8px;
+  padding: 9px 16px;
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid rgba(200, 164, 106, 0.55);
+}
+.nav__cross::after {
+  display: none;
+}
+.nav__cross:hover {
+  background: rgba(200, 164, 106, 0.12);
+}
+.nav__cta {
+  height: 38px;
+  padding: 0 20px;
+  margin-left: 6px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: linear-gradient(180deg, #1d3530, var(--ink));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 6px 16px -8px rgba(15, 31, 27, 0.6);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.nav__cta:hover {
+  background: linear-gradient(180deg, #24403a, #142822);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 10px 22px -10px rgba(15, 31, 27, 0.7);
+}
+.nav__drop {
+  margin-top: 14px;
+  padding: 8px;
+  border-radius: 18px;
+  border: 1px solid rgba(200, 164, 106, 0.25);
+  background: rgba(250, 245, 234, 0.96);
+  backdrop-filter: blur(20px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 30px 60px -24px rgba(15, 31, 27, 0.45);
+}
+.nav__drop::before {
+  inset: -16px 0 auto;
+  height: 16px;
+}
+.nav__drop a {
+  border-radius: 10px;
+  color: rgba(15, 31, 27, 0.78);
+  transition: background 0.2s, color 0.2s, padding 0.3s var(--ease);
+}
+.nav__drop a:hover,
+.nav__drop a[aria-current] {
+  background: rgba(200, 164, 106, 0.14);
+  color: var(--ink);
+  padding-left: 16px;
+}
+.nav__menu {
+  border-radius: 999px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+.nav__sheet {
+  border-radius: 22px;
+  border: 1px solid rgba(200, 164, 106, 0.25);
+}
+
+/* over dark sections */
+.nav[data-theme="dark"] {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 22px 44px -22px rgba(0, 0, 0, 0.5);
+}
+.nav[data-theme="dark"] .nav__link:hover,
+.nav[data-theme="dark"] .nav__link[aria-current="true"] {
+  background: transparent;
+}
+.nav[data-theme="dark"] .nav__link[aria-current="true"]::after {
+  background: var(--gold);
+}
+.nav[data-theme="dark"] .nav__mark {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--gold);
+}
+.nav[data-theme="dark"] .nav__cross {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.32);
+}
+.nav[data-theme="dark"] .nav__cross:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.nav[data-theme="dark"] .nav__cta {
+  background: #fff;
+  color: var(--ink);
+}
+
+@media (max-width: 1020px) {
+  .nav__mark {
+    width: 40px;
+    height: 40px;
+    margin-right: 0;
+  }
+  .nav__cta {
+    height: 40px;
+  }
+}
