@@ -34,10 +34,7 @@ export const overseasPages: Page[] = [
     description: "Buying with Serene Heights from abroad: the steps, payments, documents and signing, with notes for the Gulf, UK, North America and Australasia.",
     intro: "You can choose, check and pay for a Serene Heights property from another country. This guide shows what to do from home and where you may need someone in Pakistan.",
     image: { src: "/media/ng/sunset-rooftop.webp", alt: "Render of the rooftop at Serene Heights Nathia Gali at sunset" },
-    actions: [
-      { label: "Steps to buy from abroad", href: "/overseas/steps" },
-      { label: "WhatsApp +92 300 8497999", href: "https://wa.me/923008497999" },
-    ],
+    actions: [{ label: "Get the price list and payment plan", href: "#ask" }],
     blocks: [
       {
         id: "start",
@@ -69,19 +66,19 @@ export const overseasPages: Page[] = [
       },
       {
         id: "check",
-        kind: "cards",
+        kind: "band",
         h: "What you can check",
-        d: "Much of this can be done before you travel.",
-        cards: [
-          { t: "The building", d: "Dated site films from December 2021 to April 2026.", href: "/nathiagali/progress", cta: "See progress" },
-          { t: "The papers", d: "Ask for copies and have a lawyer in Pakistan check them at source.", href: "/documents", cta: "See documents" },
-          { t: "The place", d: "Visit on your next trip, or ask a relative you trust to go.", href: "/site-visit", cta: "Book a site visit" },
+        d: "Much of this can be done before you travel: watch the site films, and have a lawyer in Pakistan check the papers at source.",
+        links: [
+          { label: "Documents and approvals", href: "/documents" },
+          { label: "Construction progress", href: "/nathiagali/progress" },
         ],
       },
       {
         id: "questions",
         kind: "faq",
         h: "Questions buyers ask",
+        links: [{ label: "All questions", href: "/faq" }],
         groups: [
           {
             items: [

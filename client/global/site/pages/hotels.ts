@@ -66,7 +66,7 @@ export const hotelPages: Page[] = [
     intro: "Our first hotel is at Nathia Gali: furnished apartments in the pines, about two hours' drive from Islamabad. It is being built now. Here is what guests will find, and how to ask about a stay.",
     eyebrow: "Destinations",
     image: ng("tower-forest-mist-xl", "Render of the Serene Heights tower above the pine forest in mist"),
-    actions: [{ label: "See the hotel at Nathia Gali", href: H }, REQUEST],
+    actions: [{ label: "Get the price list and payment plan", href: "#ask" }],
     blocks: [
       {
         id: "start",
@@ -94,19 +94,19 @@ export const hotelPages: Page[] = [
       },
       {
         id: "check",
-        kind: "cards",
+        kind: "band",
         h: "What you can check",
         d: "The hotel is not finished, so you should be able to see where it stands.",
-        cards: [
-          { t: "Construction progress", d: "Site updates, newest first.", href: "/nathiagali/progress", cta: "See progress" },
-          { t: "Floor plans", d: "Every published floor, with apartment numbers and areas.", href: "/nathiagali/floor-plans", cta: "See the plans" },
-          { t: "Documents and approvals", d: "What you can ask to see, and how.", href: "/documents", cta: "See documents" },
+        links: [
+          { label: "Documents and approvals", href: "/documents" },
+          { label: "Construction progress", href: "/nathiagali/progress" },
         ],
       },
       {
         id: "questions",
         kind: "faq",
         h: "Questions buyers ask",
+        links: [{ label: "All questions", href: "/hotels/nathia-gali/faq" }],
         groups: [
           {
             items: [

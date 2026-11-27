@@ -840,9 +840,11 @@ main:not([data-template="article"], [data-template="explainer"], [data-template=
   margin-top: 12px;
 }
 
-/* The last fact stretches to the end of its row, so no empty tiles are left */
-.facts div:last-child {
-  grid-column-end: -1;
+/* On wide screens (four facts a row), a last fact alone on its row spans the whole row */
+@media (min-width: 1200px) {
+  .facts div:last-child:nth-child(4n + 1) {
+    grid-column: 1 / -1;
+  }
 }
 
 /* Articles and explainers: one centred reading column */
@@ -858,5 +860,12 @@ main:is([data-template="article"], [data-template="explainer"]) .sec--text .sec_
 @media (max-width: 380px) {
   .phero h1 {
     font-size: 36px;
+  }
+}
+
+/* Four cards sit in one row on wide screens instead of leaving one alone */
+@media (min-width: 1100px) {
+  .cards[data-n="4"] {
+    grid-template-columns: repeat(4, 1fr);
   }
 }

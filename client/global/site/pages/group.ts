@@ -438,18 +438,19 @@ export const groupPages: Page[] = [
       },
       {
         id: "check",
-        kind: "cards",
+        kind: "band",
         h: "What you can check",
-        cards: [
-          { t: "Progress", d: "Dated films from the Nathia Gali site.", href: "/nathiagali/progress", cta: "See progress" },
-          { t: "Documents", d: "What to ask for on each project.", href: "/documents", cta: "See documents" },
-          { t: "Track record", d: "What has been completed and what has not.", href: "/about/track-record", cta: "See track record" },
+        d: "Dated films from the Nathia Gali site, and what to ask for on each project.",
+        links: [
+          { label: "Documents and approvals", href: "/documents" },
+          { label: "Construction progress", href: "/nathiagali/progress" },
         ],
       },
       {
         id: "questions",
         kind: "faq",
         h: "Questions buyers ask",
+        links: [{ label: "All questions", href: "/faq" }],
         groups: [
           {
             items: [
