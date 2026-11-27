@@ -8,7 +8,12 @@ with its own header and menus:
 - **Hotel side** (orange, under `/hotels`): accommodation, dining, experiences, offers and stay requests.
 
 The site follows the client's Figma **"Serene Heights Group: Site Plan v1"** page for page, including its
-templates, menus, topic links and visitor journeys.
+templates, menus, topic links and visitor journeys. Two of its pages are served by sister apps in their own design:
+- the Investing page (`/invest`) by **Serene Investors**
+- the hotel home (`/hotels/nathia-gali`) by **Serene Booking**
+
+**Live:** https://serene-heights-group.vercel.app (branch `main`; work happens on `structure-v2` and is merged by
+pull request).
 
 | | |
 |---|---|
@@ -143,6 +148,7 @@ The "Thank you" pages are reached by sending a form.
 
 Forms collect the minimum: name, phone and the question, or dates for a stay. They are validated with Zod and
 open WhatsApp with the message written out, then go to the matching thank-you page. There is no server or
+database on this site. Online booking is the one exception: it lives in Serene Booking, which has its own API and
 database. Form fields and messages live in `app/_lib/enquiry.ts`.
 
 ---
@@ -230,9 +236,40 @@ All are optional; see `client/.env.example`. Never commit `.env` files.
 
 ## Deployment (Vercel)
 
-1. Import the repository and set **Root Directory** to `client`. The framework and build settings are detected automatically.
-2. Add the environment variables above as needed.
-3. Each push to `main` deploys to production. Other branches get preview deployments.
+Four Vercel projects make up the live site. All of them deploy when their repository's `main` branch changes.
+
+| Project | Repository and root | Serves |
+|---|---|---|
+| `serene-heights-group` | this repo, `client` | everything not listed below |
+| `serene-investors` | `serene-investors`, `.` | `/invest` (through this site) |
+| `serene-booking-web` | `serene-booking`, `client` | `/hotels/nathia-gali` (through this site) |
+| `serene-booking-api` | `serene-booking`, `server` | Booking's API, with its Neon database |
+
+1. **This site:** import the repository, set **Root Directory** to `client`, and add the environment variables
+   above. Each push to `main` deploys to production; other branches get preview deployments.
+2. **Order of deploys:** when an app's base path or its pages change, deploy the app first and this site
+   second. Otherwise this site briefly sends the address to an app that doesn't serve it yet.
+3. **Git connection:** every project must be connected to its repository (**Settings → Git**). A project uploaded
+   with the Vercel CLI (deployments marked `>_`) doesn't redeploy on push, and **Redeploy** only rebuilds the old
+   upload.
+4. **Apps' own settings:** each app's README lists them.
+   - Booking: `SITE_URL` must be the hotel home's public address, and the API's `CLIENT_ORIGIN` must include
+     this site.
+   - Investors: `OTP_DEMO_CODES` and `RESEND_API_KEY`.
+
+---
+
+## Where the site differs from the Figma
+
+These were agreed with the developer. The client should confirm them, ideally by updating the plan.
+
+- **`/invest` and `/hotels/nathia-gali`** are served by Serene Investors and Serene Booking:
+  - **What matches the plan:** their sections, wording, menus, footers and onward links (checked by `npm run check`).
+  - **What differs:** they keep the apps' own design, and their menu opens from a **Menu** button instead of
+    the bar with dropdowns.
+- **The apps add working pages the plan doesn't draw:** booking search, checkout and Find a booking; investor
+  sign-in and dashboard. They don't replace any plan page.
+- **The hotel pages carry Book online buttons** beside Request your dates. These lead to live booking.
 
 ---
 
@@ -268,6 +305,15 @@ Run `npm run check -- --pending` for the full list. In short:
   - Lahore prices, documents and approvals, two- and three-bedroom layouts, and the payment plan PDF
   - which WhatsApp number to use, and the group's Instagram
   - the overseas contact person and accepted payment routes for each region
+  - the hotel's opening date, real nightly rates and policies, and approval to take online bookings: the
+    hotel pages still say the hotel is not open
+  - approval of the two app pages (see above)
 - **Legal:** a lawyer reviews the privacy policy, terms, cookies notice, investment disclaimer and the overseas pages.
-- **Domains:** redirect the earlier Nathia Gali and Lahore domains to this site.
-- **Go live:** set `NEXT_PUBLIC_ALLOW_INDEXING=true` on the real domain.
+- **Serene Investors:** turn off the demo sign-in codes and add the Resend email key.
+- **Testing:** make one live booking on the hotel home, then cancel it with Find a booking.
+- **Domains:**
+  - Attach the real domain to this project, and redirect the earlier Nathia Gali and Lahore domains to it.
+  - Update Booking's `SITE_URL` and `CLIENT_ORIGIN` to the new domain.
+- **Go live:**
+  - Set `NEXT_PUBLIC_ALLOW_INDEXING=true` on the real domain.
+  - Online payment stays off until a payment gateway is connected.
