@@ -27,7 +27,8 @@ export const clusters: Record<string, string[]> = {
 /** One-way steps in the journeys that no hub covers. */
 export const steps: Record<string, string[]> = {
   "/owners": ["/insights/updates", "/documents", `${N}/payment-plan`, H, `${H}/book`, `${I}/earnings`, `${I}/risks-and-exit`, I],
-  [I]: ["/site-visit", "/contact"],
+  [I]: ["/site-visit", "/contact", `${N}/location`],
+  "/site-visit": [`${N}/documents`],
   [`${H}/book`]: [`${H}/location`, `${H}/policies`],
   // Investor abroad: after the papers, the apartments; after talking to someone, the place.
   "/documents": [`${N}/apartments`],
