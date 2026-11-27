@@ -105,8 +105,8 @@ const paths = new Set(all.map((p) => p.path));
   const visit = (v, from) => {
     if (Array.isArray(v)) v.forEach((x) => visit(x, from));
     else if (v && typeof v === "object") {
-      // /booking and /serene-investors are the other apps served on this domain (Multi-Zones).
-      const zone = (h) => /^\/(booking|serene-investors)(\/|$)/.test(h);
+      // Pages of the other apps served on this domain (Multi-Zones): Booking, and Serene Investors' own pages.
+      const zone = (h) => /^\/(booking(\/|$)|invest\/(login|signup|dashboard|get-started|glossary)(\/|$))/.test(h);
       if (typeof v.href === "string" && v.href.startsWith("/") && !zone(v.href) && !paths.has(v.href.split("#")[0])) dead.add(`${v.href} (from ${from})`);
       Object.values(v).forEach((x) => visit(x, from));
     }
@@ -154,7 +154,7 @@ const paths = new Set(all.map((p) => p.path));
     const path = (cfg.match(new RegExp(`${z.constant} = "([^"]+)"`)) || [])[1];
     const problems = [];
     if (!path) problems.push(`${z.constant} missing in next.config.ts`);
-    if (!cfg.includes(`zone(${z.constant},`)) problems.push(`no rewrite for ${z.constant}`);
+    if (!cfg.includes(`zone(${z.constant},`) && !cfg.includes(`source: ${z.constant},`)) problems.push(`no rewrite for ${z.constant}`);
     let note = "";
     const sibling = join(ROOT, z.repo);
     if (existsSync(sibling)) {
@@ -164,6 +164,48 @@ const paths = new Set(all.map((p) => p.path));
       else note = `matches ${z.name} basePath "${bp}"`;
     } else note = `${z.name} repo not alongside — base path not compared`;
     check(`${z.name} zone wired at ${path || "?"}`, problems.length === 0, problems.length ? problems.join(", ") : note);
+  }
+}
+
+// 10b. /invest is served by Serene Investors: its Hub page, menu and footer must say what this site's plan says.
+{
+  const repo = join(ROOT, "../../stake-clone/src");
+  const hubFile = join(repo, "app/(home)/_lib/hub.ts");
+  const navFile = join(repo, "global/data/groupNav.ts");
+  if (!existsSync(hubFile) || !existsSync(navFile)) check("Investing page matches Serene Investors", true, "Investors repo not alongside — not compared");
+  else {
+    const hubSrc = read(hubFile);
+    const navSrc = read(navFile);
+    const invest = all.find((p) => p.path === "/invest");
+    const texts = [invest.title, invest.intro];
+    const hrefs = [];
+    const take = (v) => {
+      if (Array.isArray(v)) v.forEach(take);
+      else if (v && typeof v === "object") {
+        for (const k of ["t", "d", "h", "q", "a", "label"]) if (typeof v[k] === "string") texts.push(v[k]);
+        if (typeof v.href === "string" && v.href.startsWith("/")) hrefs.push(v.href);
+        Object.values(v).forEach(take);
+      } else if (typeof v === "string" && /PKR|sq ft|%|nights/.test(v)) texts.push(v);
+    };
+    take([invest.blocks, invest.actions ?? []]);
+    const missing = [...new Set(texts)].filter((t) => !hubSrc.includes(t.replace(/'/g, "\\'")) && !hubSrc.includes(t));
+    const missingLinks = [...new Set(hrefs)].filter((h) => !hubSrc.includes(`'${h}'`));
+    const menuHrefs = [];
+    const takeHrefs = (v) => {
+      if (Array.isArray(v)) v.forEach(takeHrefs);
+      else if (v && typeof v === "object") {
+        if (typeof v.href === "string" && v.href.startsWith("/")) menuHrefs.push(v.href);
+        Object.values(v).forEach(takeHrefs);
+      }
+    };
+    takeHrefs([menus.invest, footers.invest.columns, footers.invest.legal]);
+    const missingNav = [...new Set(menuHrefs)].filter((h) => !navSrc.includes(`'${h}'`));
+    const problems = [
+      ...missing.map((t) => `text "${t.slice(0, 40)}…"`),
+      ...missingLinks.map((h) => `link ${h}`),
+      ...missingNav.map((h) => `menu/footer link ${h}`),
+    ];
+    check("Investing page matches Serene Investors", problems.length === 0, problems.length ? `missing in Investors: ${problems.join(", ")}` : "wording, figures, links, menu and footer");
   }
 }
 

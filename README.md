@@ -36,7 +36,7 @@ npm run dev          # http://localhost:3010
 | `npm run build` | Production build (every page is pre-rendered) |
 | `npm run start` | Serves the production build on port 3010 |
 | `npm run typecheck` | TypeScript check without building |
-| `npm run check` | The project's 14 rule checks (see [Quality checks](#quality-checks)) |
+| `npm run check` | The project's 15 rule checks (see [Quality checks](#quality-checks)) |
 | `npm run check -- --pending` | The same, plus every fact or file the client still has to supply, page by page |
 
 > The scripts call `node node_modules/next/...` directly because the `&` in the local folder name
@@ -167,10 +167,24 @@ Next.js Multi-Zones, rewritten in `next.config.ts`:
 | Path | App | Set |
 |---|---|---|
 | `/booking` | Serene Booking (built with `basePath: "/booking"`) | `BOOKING_ORIGIN` |
-| `/serene-investors` | Serene Investors (built with `basePath: "/serene-investors"`) | `INVESTORS_ORIGIN` |
+| `/invest` | Serene Investors (built with `basePath: "/invest"`) | `INVESTORS_ORIGIN` |
 
-`npm run check` confirms that both rewrites exist and, when the sibling repositories sit alongside this one,
-that each app's base path matches.
+**`/invest` is the plan's Investing page, served by Serene Investors** in its own design:
+- Its front page follows the Hub page board: Start here, Key facts, What you can check, Questions buyers ask,
+  the price-list form, and the plan's onward links.
+- It carries the client's investing menu and footer.
+- The plan's five guides under `/invest` stay in this site: how-it-works, earnings, buying-steps,
+  risks-and-exit and compare. The rewrite skips them.
+- Serene Investors' own pages that repeat a plan page (FAQ, progress, smart property, calculator and others)
+  redirect to the plan page.
+- Its sign-in and dashboard live at `/invest/login` and `/invest/dashboard`.
+- Old `/serene-investors` addresses redirect to `/invest`.
+- The group site's `/invest` entry in `pages/investing.ts` stays as the source of the wording.
+
+`npm run check` confirms:
+- both rewrites exist;
+- when the sibling repositories sit alongside this one, each app's base path matches;
+- Serene Investors' Investing page, menu and footer still match this site's wording, figures and links.
 
 **Running all three locally:**
 
@@ -183,7 +197,7 @@ that each app's base path matches.
    INVESTORS_ORIGIN=http://localhost:3030
    ```
 
-4. Start this site and open `localhost:3010/booking` and `localhost:3010/serene-investors`.
+4. Start this site and open `localhost:3010/booking` and `localhost:3010/invest`.
 
 ---
 
@@ -195,7 +209,7 @@ All are optional; see `client/.env.example`. Never commit `.env` files.
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | Public URL, once a custom domain is attached. On Vercel the production URL is used automatically. |
 | `BOOKING_ORIGIN` | Serene Booking deployment served at `/booking`. If it is empty, booking buttons open WhatsApp. |
-| `INVESTORS_ORIGIN` | Serene Investors deployment served at `/serene-investors`. |
+| `INVESTORS_ORIGIN` | Serene Investors deployment, which serves the Investing page at `/invest`. |
 | `NEXT_PUBLIC_ALLOW_INDEXING` | Set to `true` only on the real domain once the client signs off the facts. |
 
 ---
@@ -224,8 +238,9 @@ All are optional; see `client/.env.example`. Never commit `.env` files.
 10. No `localhost` links in shipped code.
 11. Share titles and descriptions fit link previews.
 12. The Booking zone is wired at `/booking` and matches Booking's base path.
-13. The Investors zone is wired at `/serene-investors` and matches Investors' base path.
-14. No `.env` files are committed.
+13. The Investors zone is wired at `/invest` and matches Investors' base path.
+14. The Investing page in Serene Investors matches this site's wording, figures, links, menu and footer.
+15. No `.env` files are committed.
 
 ---
 
